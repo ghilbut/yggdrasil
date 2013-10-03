@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Dashboard</title>
+
+<!--<link rel="stylesheet" type="text/css" href="http://s3.ihappening.net/test_media/third_party/jquery/css/jquery-ui-1.9.2.custom.css" />-->
+
+<!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
+<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script> -->
+<!--<script type="text/javascript" src="http://s3.ihappening.net/test_media/third_party/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>-->
+
+<!-- head scripts -->
+
+<!--<link rel="stylesheet" href="/static/css/account.css" type="text/css" media="all" />-->
+
+<style type="text/css">
+#remote_ui {
+	width: 960px;
+	height: 540px;
+	background-color: #ccc;
+	text-align: center;
+	vertical-align: middle;
+}
+</style>
+
+</head>
+
+
+<body>
+
+<h3>Main</h3>
+<!--
+<div>
+	<label for="service_id">Input service ID: </lebal>
+	<input id="service_id"></input>
+	<button id="service_indert">INSERT</button>
+	<button id="service_remove">REMOVE</button>
+</div>
+-->
+<div>
+	<label for="device_id">Input device ID: </lebal>
+	<input id="device_id"></input>
+	<button id="device_insert">INSERT</button>
+	<button id="device_remove">REMOVE</button>
+</div>
+
+<hr/>
+
+<div id="device_list">
+</div>
+
+<hr/>
+
+<div>
+	<label for="socket_text">WEBSOCKET: </lebal>
+	<input id="socket_text"></input>
+	<button id="socket_send">SEND</button>
+</div>
+<div>
+	<label for="socket_result">RESULT: </lebal>
+	<a id="socket_result"></a>
+</div>
+
+<hr/>
+
+<div id="remote_ui"></div>
+
+<!-- body scripts -->
+
+<script type="text/javascript">
+
+var urlList = {};
+var currentUI = false;
+
+function closeRemoteUI() {
+	if (currentUI) {
+		currentUI = false;
+		var root = document.getElementById('remote_ui');
+		if (root.firstChild) {
+			root.removeChild(root.firstChild);
+		}
+	}
+}
+
+function openRemoteUI(id) {
+	closeRemoteUI();
+
+	var root = document.getElementById('remote_ui');
+	var iframe = document.createElement('iframe');
+	iframe.src = urlList[id];
+	root.appendChild(iframe);
+	currentUI = id;
+}
+
+function getDeviceListResult() {
+	if (this.readyState === this.DONE 
+		&& this.status === 200) {
+		console.log(typeof(this.response), this.response);
+		
+		var json = JSON.parse(this.responseText);
+		for (var i = 0; i < json.length; ++i) {
+		
+			if (i != 0) {
+				var br = document.createElement('br');
+				document.getElementById('device_list').appendChild(br);
+			}
+
+			var item = json[i];
+			var button = document.createElement('button');
+			button.id = item.id;
+			// location.host
+			// location.hostname
+			urlList[item.id] = location.origin + ':' + item.port;
+			button.onclick = function () {
+				openRemoteUI(this.id);
+			};
+			button.textContent = '[' + item.id + '] ' + item.nickname + ' (' + item.device + ')';
+			button.disabled = item.disabled;
+			document.getElementById('device_list').appendChild(button);
+		}
+	}
+}
+
+window.onload = function () {
+	var xhr = new XMLHttpRequest();
+	xhr.responseType = 'json';
+	xhr.onreadystatechange = getDeviceListResult;
+	xhr.open('GET', '/do/get/device/list', true);
+	xhr.send();	
+};
+
+
+
+document.getElementById('device_insert').onclick = function () {
+	var txt = document.getElementById('device_id').value;
+	if (txt.length > 0) {
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '/do/device/insert', false);
+		xhr.send('id="' + txt + '"');
+		if (xhr.readyState === xhr.DONE) {
+			if (xhr.status === 200) {
+
+			} else {
+
+			}
+		}
+	}
+}
+
+document.getElementById('device_remove').onclick = function () {
+	var txt = document.getElementById('device_id').value;
+	if (txt.length > 0) {
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', '/do/device/remove', false);
+		xhr.send('id="' + txt + '"');
+		if (xhr.readyState === xhr.DONE) {
+			if (xhr.status === 200) {
+
+			} else {
+				
+			}
+		}
+	}	
+}
+
+
+
+var begin = new Date();
+var s = new WebSocket('ws://' + window.location.host);
+s.onopen = function (event) { 
+	console.log('onopen', event);
+
+	
+	
+	return;
+	setInterval(function () {
+		//s.send('Hello, world!');
+		var end = new Date();
+		var sec = (end-begin) / 1000.0;
+		console.log('timeout', '['+sec+' sec]');
+	}, 30000);
+};
+s.onmessage = function (event) { 
+	var end = new Date();
+	var sec = (end-begin) / 1000.0;
+	console.log('onmessage', '['+sec+' sec]', event);
+	document.getElementById('socket_result').textContent = 'onmessage: ' + event.data + ' ['+sec+' sec]';
+	
+	var json = JSON.parse(event.data);
+	if (json.event === "onconnected") {
+		document.getElementById(json.id).disabled = false;
+		return;
+	}
+	if (json.event === "ondisconnected") {
+		document.getElementById(json.id).disabled = true;
+		return;
+	}
+};
+s.onclose = function (event) { 
+	console.log('onclose', event);
+	var end = new Date();
+	console.log((end-begin) / 1000.0 + ' sec');
+};
+s.onerror = function (event) { 
+	console.log('onerror', event);
+};
+
+document.getElementById('socket_send').onclick = function () {
+	s.send(document.getElementById('socket_text').value);
+}
+
+</script>
+
+</body>
+</html>

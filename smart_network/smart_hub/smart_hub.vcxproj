@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{54FF5BB4-E46D-497C-8254-CB6A8D458275}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>smart_hub</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;USE_WEBSOCKET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\;$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\jsoncpp-0.5.0\include;$(SolutionDir)..\third_party\mongoose-3.9;$(SolutionDir)..\smart_hub;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\boost_1_54_0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;USE_WEBSOCKET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\;$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\jsoncpp-0.5.0\include;$(SolutionDir)..\third_party\mongoose-3.9;$(SolutionDir)..\smart_hub;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\boost_1_54_0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="channel.h" />
+    <ClInclude Include="ctrl_point.h" />
+    <ClInclude Include="device\device_info.h" />
+    <ClInclude Include="device\device_pool.h" />
+    <ClInclude Include="http\http_fwd.h" />
+    <ClInclude Include="http\http_object.h" />
+    <ClInclude Include="http\http_request.h" />
+    <ClInclude Include="http\http_server.h" />
+    <ClInclude Include="http\http_websocket.h" />
+    <ClInclude Include="service\service.h" />
+    <ClInclude Include="service\service_info.h" />
+    <ClInclude Include="service\service_pool.h" />
+    <ClInclude Include="tcp_channel.h" />
+    <ClInclude Include="asio_fwd.h" />
+    <ClInclude Include="tcp_server.h" />
+    <ClInclude Include="uart_channel.h" />
+    <ClInclude Include="uart_server.h" />
+    <ClInclude Include="udp_server.h" />
+    <ClInclude Include="zigbee_driver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ctrl_point.cpp" />
+    <ClCompile Include="device\device_info.cpp" />
+    <ClCompile Include="device\device_pool.cpp" />
+    <ClCompile Include="http\http_object.cpp" />
+    <ClCompile Include="http\http_request.cpp" />
+    <ClCompile Include="http\http_server.cpp" />
+    <ClCompile Include="http\http_websocket.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="service\service.cpp" />
+    <ClCompile Include="service\service_info.cpp" />
+    <ClCompile Include="service\service_pool.cpp" />
+    <ClCompile Include="tcp_channel.cpp" />
+    <ClCompile Include="tcp_server.cpp" />
+    <ClCompile Include="uart_channel.cpp" />
+    <ClCompile Include="uart_server.cpp" />
+    <ClCompile Include="udp_server.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="zigbee_driver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base\base.vcxproj">
+      <Project>{838ba03f-cf78-4a0d-abc9-8a0b103e8711}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">
+      <Project>{ce6f9b98-25c2-47b1-8e13-cbccd80866df}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mongoose\mongoose.vcxproj">
+      <Project>{84fa6df3-15f8-4ca2-925e-16b42bf8b943}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

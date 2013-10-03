@@ -1,0 +1,6 @@
+{
+"id": "c",
+"device": "whisen",
+"nickname": "거실 에어컨",
+"protocol": "zigbee"
+}

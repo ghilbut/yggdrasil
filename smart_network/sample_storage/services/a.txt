@@ -1,0 +1,6 @@
+{
+"id": "a",
+"device": "dios",
+"nickname": "부엌 냉장고",
+"protocol": "zigbee"
+}

@@ -1,0 +1,6 @@
+{
+"id": "b",
+"device": "tromm",
+"nickname": "대형 세탁기",
+"protocol": "zigbee"
+}
