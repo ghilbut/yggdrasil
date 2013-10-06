@@ -35,19 +35,19 @@ void TcpChannel::handle_read_header(const boost::system::error_code& error) {
             , boost::bind(&TcpChannel::handle_read_type, shared_from_this(), boost::asio::placeholders::error));
     } else {
         // TODO(jh81.kim) : disconnected ?
-        printf("[Tcp] handle_read_header error\n");
+        printf("[Tcp][handle_read_header] error: %s\n", error.message().c_str());
         FireOnDisconnected();
     }
 }
 
 void TcpChannel::handle_read_type(const boost::system::error_code& error) {
-    if (!error && read_msg_.decode_header()) {
+    if (!error) {
         boost::asio::async_read(socket_
             , boost::asio::buffer(read_msg_.body(), read_msg_.body_length())
             , boost::bind(&TcpChannel::handle_read_body, shared_from_this(), boost::asio::placeholders::error));
     } else {
         // TODO(jh81.kim) : disconnected ?
-        printf("[Tcp] handle_read_type error\n");
+        printf("[Tcp][handle_read_type] error: %s\n", error.message().c_str());
         FireOnDisconnected();
     }
 }
@@ -90,7 +90,7 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
             , boost::bind(&TcpChannel::handle_read_header, shared_from_this(), boost::asio::placeholders::error));
     } else {
         // TODO(jh81.kim) : disconnected ?
-        printf("[Tcp] handle_read_header error\n");
+        printf("[Tcp][handle_read_body] error\n");
         FireOnDisconnected();
     }
 }
@@ -105,7 +105,7 @@ void TcpChannel::handle_write(const boost::system::error_code& error) {
         }
     } else {
         // TODO(jh81.kim) : disconnected ?
-        printf("[Tcp] handle_read_header error\n");
+        printf("[Tcp][handle_write] error\n");
         FireOnDisconnected();
     }
 }

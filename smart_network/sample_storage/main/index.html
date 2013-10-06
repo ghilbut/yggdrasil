@@ -188,12 +188,16 @@ s.onmessage = function (event) {
 	document.getElementById('socket_result').textContent = 'onmessage: ' + event.data + ' ['+sec+' sec]';
 	
 	var json = JSON.parse(event.data);
-	if (json.event === "onconnected") {
+	if (json.event === "ServiceAdded") {
 		document.getElementById(json.id).disabled = false;
 		return;
 	}
-	if (json.event === "ondisconnected") {
+	if (json.event === "ServiceRemoved") {
 		document.getElementById(json.id).disabled = true;
+		return;
+	}
+	if (json.event === "Disconnected") {
+		alert('Smart HUB disconnected');
 		return;
 	}
 };

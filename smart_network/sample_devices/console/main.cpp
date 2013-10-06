@@ -23,7 +23,8 @@ int main(int argc, char* argv[])
         boost::asio::io_service io_service;
 
         boost::asio::ip::tcp::resolver resolver(io_service);
-        boost::asio::ip::tcp::resolver::query query("127.0.0.1", "8080");
+        boost::asio::ip::tcp::resolver::query query("127.0.0.1", "8070");
+        //boost::asio::ip::tcp::resolver::query query("192.168.1.2", "8070");
         boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
 
         Device device(io_service, iterator);

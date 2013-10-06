@@ -6,15 +6,39 @@
 
 Device::Device(boost::asio::io_service& io_service
                , boost::asio::ip::tcp::resolver::iterator endpoint_iterator)
-    : io_service_(io_service)
+    : receiver(io_service) // TEST(jh81.kim):
+    , io_service_(io_service)
     , socket_(io_service)
-    , interval_(boost::posix_time::seconds(10))
+    , interval_(boost::posix_time::seconds(23))
     , timer_(io_service_, interval_) {
+    
+    /*
     boost::asio::async_connect(socket_
                                , endpoint_iterator
-                               , boost::bind(&Device::handle_connect
-                               , this
-                               , boost::asio::placeholders::error));
+                               , boost::bind(&Device::handle_connect, this, boost::asio::placeholders::error));
+    */
+    
+   
+
+
+
+    //const char* path = "E:\\workbench\\project\\yggdrasil\\smart_network\\sample_storage\\services\\a.txt";
+    const char* path = "C:\\work\\project\\yggdrasil\\smart_network\\sample_storage\\services\\a.txt";
+    FILE* f = fopen(path, "r");
+    if (!f) {
+        printf("couldn't read below file.\n%s\n", path);
+    }
+
+    char buf[1024];
+    const size_t size = fread(buf, 1, 1024, f);
+    fclose(f);
+
+    Json::Value root(Json::objectValue);
+    Json::Reader reader;
+    reader.parse(buf, root);
+    id_ = root["id"].asString();
+
+
 
     timer_.expires_from_now(interval_);
     timer_.async_wait(boost::bind(&Device::FireEvent, this));
@@ -35,7 +59,7 @@ void Device::handle_connect(const boost::system::error_code& error) {
 
 
 
-        //const char* path = "E:\\workbench\\project\\smart_plugin\\sample_ui\\services\\a.txt";
+        //const char* path = "E:\\workbench\\project\\yggdrasil\\smart_network\\sample_storage\\services\\a.txt";
         const char* path = "C:\\work\\project\\yggdrasil\\smart_network\\sample_storage\\services\\a.txt";
         FILE* f = fopen(path, "r");
         if (!f) {
@@ -53,6 +77,8 @@ void Device::handle_connect(const boost::system::error_code& error) {
         chat.encode_header();
         write(chat);
 
+        
+
 
 
 
@@ -60,6 +86,9 @@ void Device::handle_connect(const boost::system::error_code& error) {
         boost::asio::async_read(socket_
                                 , boost::asio::buffer(read_msg_.data(), chat_message::header_length)
                                 , boost::bind(&Device::handle_read_header, this, boost::asio::placeholders::error));
+    } else {
+        // TODO(jh81.kim) : disconnected ?
+        printf("[handle_connect] error: %s\n", error.message().c_str());
     }
 }
 
@@ -145,10 +174,28 @@ void Device::FireEvent(void) {
     chat_message msg;
     msg.type(chat_message::kEvent);
     msg.body_length(size);
-    memcpy(msg.body(), text, msg.body_length());
+    memcpy(msg.body(), text,size);
     msg.encode_header();
     write(msg);
 
     timer_.expires_at(timer_.expires_at() + interval_);
     timer_.async_wait(boost::bind(&Device::FireEvent, this));
+}
+
+
+void Device::OnUDP(const std::string& id, const std::string& address) {
+
+    boost::asio::ip::tcp::resolver resolver(io_service_);
+    boost::asio::ip::tcp::resolver::query query(address, "8070");
+    boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
+
+    if (id_ == id && address_ != address) {
+        address_ = address;
+
+        boost::asio::async_connect(socket_
+            , iterator
+            , boost::bind(&Device::handle_connect, this, boost::asio::placeholders::error));
+
+        printf("[test] %s\n", socket_.remote_endpoint().address().to_string().c_str());
+    }
 }

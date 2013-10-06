@@ -14,6 +14,7 @@
 class HttpServer;
 class DevicePool;
 class ServicePool;
+class ServiceFinder;
 
 class CtrlPoint : public HttpObject {
 public:
@@ -50,6 +51,7 @@ private:
     HttpServer& httpd_;
     DevicePool& devices_;
     ServicePool& services_;
+    ServiceFinder* finder_;
 
     std::set<std::string> connecting_list_;
 };

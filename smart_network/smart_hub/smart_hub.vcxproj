@@ -90,6 +90,7 @@
     <ClInclude Include="http\http_server.h" />
     <ClInclude Include="http\http_websocket.h" />
     <ClInclude Include="service\service.h" />
+    <ClInclude Include="service\service_finder.h" />
     <ClInclude Include="service\service_info.h" />
     <ClInclude Include="service\service_pool.h" />
     <ClInclude Include="tcp_channel.h" />
@@ -110,6 +111,7 @@
     <ClCompile Include="http\http_websocket.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="service\service.cpp" />
+    <ClCompile Include="service\service_finder.cpp" />
     <ClCompile Include="service\service_info.cpp" />
     <ClCompile Include="service\service_pool.cpp" />
     <ClCompile Include="tcp_channel.cpp" />
@@ -117,8 +119,8 @@
     <ClCompile Include="uart_channel.cpp" />
     <ClCompile Include="uart_server.cpp" />
     <ClCompile Include="udp_server.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="zigbee_driver.cpp" />
   </ItemGroup>

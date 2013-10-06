@@ -16,7 +16,7 @@ int main(int argc, const char** argv)
 	//}
 
     //const char* basepath = argv[1];
-    //const char* basepath = "E:\\workbench\\project\\smart_network\\sample_storage";
+    //const char* basepath = "E:\\workbench\\project\\yggdrasil\\smart_network\\sample_storage";
     const char* basepath = "C:\\work\\project\\yggdrasil\\smart_network\\sample_storage";
     boost::filesystem::path root(basepath);
 

@@ -13,8 +13,8 @@
     <ClCompile Include="..\..\third_party\jsoncpp-0.5.0\src\lib_json\json_writer.cpp">
       <Filter>third_party\jsoncpp</Filter>
     </ClCompile>
-    <ClCompile Include="device.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="device.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="third_party">
