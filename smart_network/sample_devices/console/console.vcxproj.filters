@@ -15,6 +15,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="device.cpp" />
+    <ClCompile Include="connection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="third_party">
@@ -56,5 +57,6 @@
       <Filter>third_party\jsoncpp</Filter>
     </ClInclude>
     <ClInclude Include="device.h" />
+    <ClInclude Include="connection.h" />
   </ItemGroup>
 </Project>

@@ -84,6 +84,7 @@
     <ClCompile Include="..\..\third_party\jsoncpp-0.5.0\src\lib_json\json_reader.cpp" />
     <ClCompile Include="..\..\third_party\jsoncpp-0.5.0\src\lib_json\json_value.cpp" />
     <ClCompile Include="..\..\third_party\jsoncpp-0.5.0\src\lib_json\json_writer.cpp" />
+    <ClCompile Include="connection.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -97,6 +98,7 @@
     <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\reader.h" />
     <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\value.h" />
     <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\writer.h" />
+    <ClInclude Include="connection.h" />
     <ClInclude Include="device.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

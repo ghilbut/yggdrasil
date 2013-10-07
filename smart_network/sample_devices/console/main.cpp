@@ -39,10 +39,10 @@ int main(int argc, char* argv[])
             msg.body_length(strlen(line));
             memcpy(msg.body(), line, msg.body_length());
             msg.encode_header();
-            device.write(msg);
+            //device.write(msg);
         }
 
-        device.close();
+        //device.close();
         t.join();
     }
     catch (std::exception& e)
