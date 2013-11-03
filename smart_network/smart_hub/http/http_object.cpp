@@ -27,7 +27,10 @@ int HttpObject::OnBeginRequest(mg_connection* conn) {
     const char* method = ri->request_method;
 
     // basic static files
-    if (strcmp(uri, "/") == 0 || strcmp(uri, "/favicon.ico") == 0) {
+    if (strcmp(uri, "/") == 0 
+        || strcmp(uri, "/favicon.ico") == 0 
+        || strcmp(uri, "/active.png") == 0 
+        || strcmp(uri, "/disabled.png") == 0) {
         return 0;
     }
 
