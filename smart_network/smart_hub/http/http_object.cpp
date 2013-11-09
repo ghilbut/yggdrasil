@@ -121,10 +121,12 @@ int HttpObject::OnWebsocketConnect(const struct mg_connection* conn) {
 }
 
 void HttpObject::OnWebsocketReady(struct mg_connection* conn) {
-    InsertWebsocket(websockets_, conn, mutex_);
+    ::InsertWebsocket(websockets_, conn, mutex_);
 }
 
 int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* data, size_t data_len) {
+    BOOST_ASSERT(websockets_.find(conn) != websockets_.end());
+
     const char opcode = static_cast<char>(bits & 0x0f);
 
     if (opcode == WEBSOCKET_OPCODE_CONTINUATION) {
@@ -144,7 +146,7 @@ int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* dat
     }
 
     if (opcode == WEBSOCKET_OPCODE_CONNECTION_CLOSE) {
-        RemoveWebsocket(websockets_, conn, mutex_);
+        ::RemoveWebsocket(websockets_, conn, mutex_);
         return 0;
     }
 
@@ -180,7 +182,7 @@ void HttpObject::PingWebSockets(void) {
         struct mg_connection* conn = *itr;
         const int written_bytes = mg_websocket_write(conn, WEBSOCKET_OPCODE_PING, 0, 0);
         if (written_bytes == 0) {
-            RemoveWebsocket(websockets_, conn, mutex_);
+            ::RemoveWebsocket(websockets_, conn, mutex_);
         }
     }
 }
@@ -190,10 +192,12 @@ void HttpObject::FireEvent(const std::string& json) {
     std::set<struct mg_connection*>::iterator itr = websockets_.begin();
     std::set<struct mg_connection*>::iterator end = websockets_.end();
     for (; itr != end; ++itr) {
+        const char* data = &json[0];
+        const size_t data_len = json.length();
         struct mg_connection* conn = *itr;
-        const int written_bytes = mg_websocket_write(conn, WEBSOCKET_OPCODE_TEXT, &json[0], json.length());
-        if (written_bytes == 0) {
-            RemoveWebsocket(websockets_, conn, mutex_);
+        const int written_bytes = mg_websocket_write(conn, WEBSOCKET_OPCODE_TEXT, data, data_len);
+        if (written_bytes < data_len) {
+            ::RemoveWebsocket(websockets_, conn, mutex_);
         }
     }
 }
