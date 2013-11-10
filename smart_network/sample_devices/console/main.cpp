@@ -9,9 +9,12 @@
 //
 
 #include "device.h"
+#include "codebase/utility.h"
 #include "codebase/chat_message.h"
-#include "codebase/device/device_pool.h"
+#include <boost/shared_ptr.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
+#include <set>
 #include <iostream>
 #include <cstdlib>
 
@@ -26,12 +29,20 @@ int main(int argc, char* argv[])
     try {
         boost::asio::io_service io_service;
 
-        boost::asio::ip::tcp::resolver resolver(io_service);
-        boost::asio::ip::tcp::resolver::query query("127.0.0.1", "8070");
-        //boost::asio::ip::tcp::resolver::query query("192.168.1.2", "8070");
-        boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
+        typedef boost::shared_ptr<Device> DevicePtr;
+        std::set<DevicePtr> device_list;
 
-        Device device(io_service, iterator);
+        const char* basepath = argv[1];
+        boost::filesystem::path root(basepath);
+        boost::filesystem::directory_iterator itr((root / "services").string());
+        boost::filesystem::directory_iterator end;
+        for (; itr != end; ++itr) {
+            const std::string filepath = (itr->path()).string();\
+
+            std::string description;
+            ::ReadText(filepath.c_str(), description);
+            device_list.insert(new Device(io_service, description));
+        }
 
         boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
 
@@ -46,7 +57,7 @@ int main(int argc, char* argv[])
             //device.write(msg);
         }
 
-        //device.close();
+        device_list.clear();
         t.join();
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";

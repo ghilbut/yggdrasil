@@ -1,4 +1,5 @@
 #include "device_info.h"
+#include "utility.h"
 #include <json/reader.h>
 #include <boost/filesystem.hpp>
 #include <cstdio>
@@ -6,31 +7,23 @@
 
 const DeviceInfo* DeviceInfo::Create(const std::string& basepath) {
 
-    std::string uipath = (boost::filesystem::path(basepath) / "ui").string();
+    const std::string uipath = (boost::filesystem::path(basepath) / "ui").string();
     if (!boost::filesystem::is_directory(uipath)) {
-        return NULL;
+        return 0;
     }
 
-    std::string filepath = (boost::filesystem::path(basepath) / "info.txt").string();
-
-    FILE* f = fopen(filepath.c_str(), "r");
-    if (f == NULL) {
-        return NULL;
-    }
+    const std::string filepath = (boost::filesystem::path(basepath) / "info.txt").string();
 
     std::string json;
-    char buffer[1024];
-    size_t read_bytes = 0;
-    do {
-        read_bytes = fread(buffer, 1, 1024, f);
-        json.append(buffer, read_bytes);
-    } while (read_bytes == 1024);
-    fclose(f);
+    if (!::ReadText(filepath.c_str(), json)) {
+        // TODO(jh81.kim): error message
+        return 0;
+    }
 
     Json::Value root;
-    Json::Reader reader;
-    if (!reader.parse(json, root, false)) {
-        return NULL;
+    if (!::ReadJson(json, root)) {
+        // TODO(jh81.kim): error message
+        return 0;
     }
 
     const std::string& id = root["id"].asString();

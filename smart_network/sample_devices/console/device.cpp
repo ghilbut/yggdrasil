@@ -1,39 +1,27 @@
 #include "device.h"
 
-#include <json/json.h>
+#include "codebase/utility.h"
 #include <boost/bind.hpp>
 
 
-Device::Device(boost::asio::io_service& io_service
-               , boost::asio::ip::tcp::resolver::iterator endpoint_iterator)
+Device::Device(boost::asio::io_service& io_service, const std::string& description)
     : receiver(io_service) // TEST(jh81.kim):
     , io_service_(io_service)
     , interval_(boost::posix_time::seconds(23))
-    , timer_(io_service, interval_) {
-    
+    , timer_(io_service, interval_)
+    , description_(description) {
 
+    Json::Value root;
+    ::ReadJson(description, root);
 
-    //const char* path = "E:\\workbench\\project\\yggdrasil\\smart_network\\sample_storage\\services\\a.txt";
-    const char* path = "C:\\work\\project\\yggdrasil\\smart_network\\sample_storage\\services\\a.txt";
-    FILE* f = fopen(path, "r");
-    if (!f) {
-        printf("couldn't read below file.\n%s\n", path);
-    }
-    char buf[1024];
-    const size_t size = fread(buf, 1, 1024, f);
-    fclose(f);
-
-    description_ = std::string(buf, buf + size);
-
-    Json::Value root(Json::objectValue);
-    Json::Reader reader;
-    reader.parse(buf, root);
     id_ = root["id"].asString();
-
-
 
     timer_.expires_from_now(interval_);
     timer_.async_wait(boost::bind(&Device::FireEvent, this));
+}
+
+Device::~Device(void) {
+    // nothing
 }
 
 void Device::FireEvent(void) {

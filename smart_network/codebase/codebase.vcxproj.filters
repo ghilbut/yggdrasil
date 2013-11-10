@@ -11,6 +11,7 @@
     <ClInclude Include="device\device_pool.h">
       <Filter>device</Filter>
     </ClInclude>
+    <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />
@@ -20,6 +21,7 @@
     <ClCompile Include="device\device_pool.cpp">
       <Filter>device</Filter>
     </ClCompile>
+    <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="device">

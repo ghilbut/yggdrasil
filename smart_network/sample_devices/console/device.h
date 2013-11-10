@@ -3,6 +3,7 @@
 
 #include "connection.h"
 #include "codebase/chat_message.h"
+#include <json/json.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -68,8 +69,8 @@ typedef std::deque<chat_message> chat_message_queue;
 class Device : public receiver
 {
 public:
-    Device(boost::asio::io_service& io_service
-           , boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
+    Device(boost::asio::io_service& io_service, const std::string& description);
+    ~Device(void);
 
     void FireEvent(void);
 
@@ -81,15 +82,13 @@ public:
 
 private:
     boost::asio::io_service& io_service_;
-    
-
     boost::posix_time::time_duration interval_;
     mutable boost::asio::deadline_timer timer_;
 
-    std::string id_;
-
     std::map<std::string, Connection*> connections_;
     std::string description_;
+
+    std::string id_;
 };
 
 #endif  // DEVICE_H_
