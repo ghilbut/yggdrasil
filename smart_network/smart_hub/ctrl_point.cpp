@@ -20,11 +20,11 @@ CtrlPoint::CtrlPoint(const std::string& document_root
     , devices_(devices)
     , services_(services)
     , finder_(0) {
-    
+    // nothing
 }
 
 CtrlPoint::~CtrlPoint(void) {
-    
+    // nothing
 }
 
 bool CtrlPoint::Start(void) {

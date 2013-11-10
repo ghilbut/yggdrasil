@@ -192,11 +192,9 @@ void HttpObject::FireEvent(const std::string& json) {
     std::set<struct mg_connection*>::iterator itr = websockets_.begin();
     std::set<struct mg_connection*>::iterator end = websockets_.end();
     for (; itr != end; ++itr) {
-        const char* data = &json[0];
-        const size_t data_len = json.length();
         struct mg_connection* conn = *itr;
-        const int written_bytes = mg_websocket_write(conn, WEBSOCKET_OPCODE_TEXT, data, data_len);
-        if (written_bytes < data_len) {
+        const int written_bytes = mg_websocket_write(conn, WEBSOCKET_OPCODE_TEXT, &json[0], json.length());
+        if (written_bytes < 0) {
             ::RemoveWebsocket(websockets_, conn, mutex_);
         }
     }

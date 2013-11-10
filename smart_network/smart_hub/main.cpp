@@ -1,23 +1,22 @@
-#include <stdio.h>
+#include "ctrl_point.h"
+#include "http/http_server.h"
+#include "service/service_pool.h"
+#include "codebase/device/device_pool.h"
+#include <json/reader.h>
+#include <boost/filesystem.hpp>
 #include <string>
 #include <iostream>
-#include <boost/filesystem.hpp>
-#include <json/reader.h>
-#include "http/http_server.h"
-#include "device/device_pool.h"
-#include "service/service_pool.h"
-#include "ctrl_point.h"
+#include <cstdio>
 
 
 int main(int argc, const char** argv)
 {
-	//if (argc < 2) {
-	//	return -1;
-	//}
+    if (argc < 2) {
+        printf("Usage: %s <storage>\n", argv[0]);
+        return -1;
+    }
 
-    //const char* basepath = argv[1];
-    //const char* basepath = "E:\\workbench\\project\\yggdrasil\\smart_network\\sample_storage";
-    const char* basepath = "C:\\work\\project\\yggdrasil\\smart_network\\sample_storage";
+    const char* basepath = argv[1];
     boost::filesystem::path root(basepath);
 
     const std::string common = (root / "common").string();

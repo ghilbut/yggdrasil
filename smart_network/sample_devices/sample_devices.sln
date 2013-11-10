@@ -1,7 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sample_devices", "console\console.vcxproj", "{253268A7-D707-44F2-BAC2-8D11E978664C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "console", "console\console.vcxproj", "{253268A7-D707-44F2-BAC2-8D11E978664C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711} = {838BA03F-CF78-4A0D-ABC9-8A0B103E8711}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "codebase", "..\codebase\codebase.vcxproj", "{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "..\jsoncpp\jsoncpp.vcxproj", "{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third_party", "third_party", "{76A3EA0B-890C-4D99-AA1F-7B166E3BC510}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,8 +22,19 @@ Global
 		{253268A7-D707-44F2-BAC2-8D11E978664C}.Debug|Win32.Build.0 = Debug|Win32
 		{253268A7-D707-44F2-BAC2-8D11E978664C}.Release|Win32.ActiveCfg = Release|Win32
 		{253268A7-D707-44F2-BAC2-8D11E978664C}.Release|Win32.Build.0 = Release|Win32
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}.Debug|Win32.ActiveCfg = Debug|Win32
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}.Debug|Win32.Build.0 = Debug|Win32
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}.Release|Win32.ActiveCfg = Release|Win32
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}.Release|Win32.Build.0 = Release|Win32
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Debug|Win32.Build.0 = Debug|Win32
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Release|Win32.ActiveCfg = Release|Win32
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF} = {76A3EA0B-890C-4D99-AA1F-7B166E3BC510}
 	EndGlobalSection
 EndGlobal

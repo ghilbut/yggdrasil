@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="chat_message.h" />
+    <ClInclude Include="device\device_info.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="device\device_pool.h">
+      <Filter>device</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="chat_message.cpp" />
+    <ClCompile Include="device\device_info.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="device\device_pool.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="device">
+      <UniqueIdentifier>{b79050de-27f6-4fe4-b1cc-7ea54280d529}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -82,8 +82,6 @@
   <ItemGroup>
     <ClInclude Include="channel.h" />
     <ClInclude Include="ctrl_point.h" />
-    <ClInclude Include="device\device_info.h" />
-    <ClInclude Include="device\device_pool.h" />
     <ClInclude Include="http\http_fwd.h" />
     <ClInclude Include="http\http_object.h" />
     <ClInclude Include="http\http_request.h" />
@@ -103,8 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctrl_point.cpp" />
-    <ClCompile Include="device\device_info.cpp" />
-    <ClCompile Include="device\device_pool.cpp" />
     <ClCompile Include="http\http_object.cpp" />
     <ClCompile Include="http\http_request.cpp" />
     <ClCompile Include="http\http_server.cpp" />
@@ -125,7 +121,7 @@
     <ClCompile Include="zigbee_driver.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\base\base.vcxproj">
+    <ProjectReference Include="..\codebase\codebase.vcxproj">
       <Project>{838ba03f-cf78-4a0d-abc9-8a0b103e8711}</Project>
     </ProjectReference>
     <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">

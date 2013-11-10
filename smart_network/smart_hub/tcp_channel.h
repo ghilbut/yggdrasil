@@ -3,7 +3,7 @@
 
 #include "channel.h"
 
-#include "base/chat_message.h"
+#include "codebase/chat_message.h"
 #include "asio_fwd.h"
 #include <boost/asio.hpp>
 #include <boost/enable_shared_from_this.hpp>

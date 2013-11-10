@@ -9,17 +9,21 @@
 //
 
 #include "device.h"
-#include "base/chat_message.h"
-#include <boost/thread/thread.hpp>
+#include "codebase/chat_message.h"
+#include "codebase/device/device_pool.h"
+#include <boost/thread.hpp>
 #include <iostream>
 #include <cstdlib>
 
 
-
 int main(int argc, char* argv[])
 {
-    try
-    {
+    if (argc < 2) {
+        printf("Usage: %s <storage path>\n", argv[0]);
+        return -1;
+    }
+
+    try {
         boost::asio::io_service io_service;
 
         boost::asio::ip::tcp::resolver resolver(io_service);
@@ -44,9 +48,7 @@ int main(int argc, char* argv[])
 
         //device.close();
         t.join();
-    }
-    catch (std::exception& e)
-    {
+    } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";
     }
 

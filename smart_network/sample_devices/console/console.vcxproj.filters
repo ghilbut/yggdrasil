@@ -1,61 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\..\base\chat_message.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\jsoncpp-0.5.0\src\lib_json\json_reader.cpp">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\jsoncpp-0.5.0\src\lib_json\json_value.cpp">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\jsoncpp-0.5.0\src\lib_json\json_writer.cpp">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="connection.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="third_party">
-      <UniqueIdentifier>{e4077062-7312-4ac0-9127-1f66c39398ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\jsoncpp">
-      <UniqueIdentifier>{1cfdc6ba-c8e5-4007-8ac5-f60432249ac8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="base">
-      <UniqueIdentifier>{f0ad9c0d-3b2e-40a8-808b-34057c9c6789}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\base\chat_message.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\writer.h">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\autolink.h">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\config.h">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\features.h">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\forwards.h">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\json.h">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\reader.h">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\jsoncpp-0.5.0\include\json\value.h">
-      <Filter>third_party\jsoncpp</Filter>
-    </ClInclude>
     <ClInclude Include="device.h" />
     <ClInclude Include="connection.h" />
   </ItemGroup>

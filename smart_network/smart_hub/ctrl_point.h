@@ -1,14 +1,14 @@
 #ifndef CTRL_POINT_H_
 #define CTRL_POINT_H_
 
-#include <map>
-#include <set>
-#include <boost/asio.hpp>
-#include <boost/thread.hpp>
 #include "channel.h"
 #include "http/http_object.h"
-#include "device/device_pool.h"
 #include "service/service_pool.h"
+#include "codebase/device/device_pool.h"
+#include <boost/asio.hpp>
+#include <boost/thread.hpp>
+#include <map>
+#include <set>
 
 
 class HttpServer;

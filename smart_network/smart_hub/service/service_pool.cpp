@@ -1,8 +1,8 @@
  #include "service_pool.h"
-#include "http/http_server.h"
-#include "device/device_pool.h"
-#include "service_info.h"
 #include "service.h"
+#include "service_info.h"
+#include "http/http_server.h"
+#include "codebase/device/device_pool.h"
 #include <boost/filesystem.hpp>
 
 

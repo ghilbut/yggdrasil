@@ -6,7 +6,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "smart_hub", "smart_hub.vcxp
 		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711} = {838BA03F-CF78-4A0D-ABC9-8A0B103E8711}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "..\base\base.vcxproj", "{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "codebase", "..\codebase\codebase.vcxproj", "{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF} = {CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}
 	EndProjectSection

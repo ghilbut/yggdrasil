@@ -1,7 +1,7 @@
 #include "service.h"
 
 #include "service_info.h"
-#include "device/device_info.h"
+#include "codebase/device/device_info.h"
 #include <boost/filesystem.hpp>
 
 

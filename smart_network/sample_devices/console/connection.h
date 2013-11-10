@@ -1,7 +1,7 @@
 #ifndef CONNECTION_H_
 #define CONNECTION_H_
 
-#include <base/chat_message.h>
+#include "codebase/chat_message.h"
 #include <boost/function.hpp>
 #include <boost/asio.hpp>
 #include <queue>

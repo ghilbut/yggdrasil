@@ -24,12 +24,6 @@
     <ClInclude Include="http\http_fwd.h">
       <Filter>http</Filter>
     </ClInclude>
-    <ClInclude Include="device\device_pool.h">
-      <Filter>device</Filter>
-    </ClInclude>
-    <ClInclude Include="device\device_info.h">
-      <Filter>device</Filter>
-    </ClInclude>
     <ClInclude Include="service\service_pool.h">
       <Filter>service</Filter>
     </ClInclude>
@@ -65,12 +59,6 @@
     <ClCompile Include="http\http_object.cpp">
       <Filter>http</Filter>
     </ClCompile>
-    <ClCompile Include="device\device_info.cpp">
-      <Filter>device</Filter>
-    </ClCompile>
-    <ClCompile Include="device\device_pool.cpp">
-      <Filter>device</Filter>
-    </ClCompile>
     <ClCompile Include="service\service.cpp">
       <Filter>service</Filter>
     </ClCompile>
@@ -87,9 +75,6 @@
   <ItemGroup>
     <Filter Include="http">
       <UniqueIdentifier>{c321860f-cf5e-469f-be9d-4a48b6a97708}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="device">
-      <UniqueIdentifier>{fcf20f7b-dc92-4a21-9416-d938ca4cef3a}</UniqueIdentifier>
     </Filter>
     <Filter Include="service">
       <UniqueIdentifier>{b2d16d58-d9eb-4ed3-b05e-c5aed8869125}</UniqueIdentifier>

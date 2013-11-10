@@ -17,6 +17,7 @@ HttpWebsocket::HttpWebsocket(HttpMap& https)
 HttpWebsocket::~HttpWebsocket(void) {
     io_service_.stop();
     timer_.cancel();
+    thread_.join();
 }
 
 void HttpWebsocket::thread_ping(void) {
