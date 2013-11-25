@@ -70,7 +70,7 @@ class Device : public receiver
 {
 public:
     Device(boost::asio::io_service& io_service, const std::string& description);
-    ~Device(void);
+    virtual ~Device(void);
 
     void FireEvent(void);
 

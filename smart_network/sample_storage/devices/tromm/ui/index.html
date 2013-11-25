@@ -16,9 +16,30 @@
 
 <style type="text/css">
 body {
-	width: 80%;
-	height: 80%;
+	width: 800px;
+	height: 400px;
 	background-color: floralwhite ;
+}
+td {
+	width: 250px;
+	height: 30px;
+}
+td:first-child {
+	text-align: right;
+}
+td:nth-child(2) {
+	width: 350px;
+	text-align: center;
+}
+td:last-child {
+	text-align: left;
+}
+button {
+	width: 100px;
+	height: 40px;
+	font-size: 1.2em;
+	font-weight: bold;
+	color: gray;
 }
 </style>
 
@@ -27,25 +48,221 @@ body {
 
 <body>
 
-<h3>LG Tromm</h3>
-<button id="on">On</button><br/>
-<button id="off">Off</button><br/>
+<h2>LG Tromm FR4960MT2TZ</h2>
+
+<br>
+<br>
+<br>
+
+<table>
+<tr>
+
+<td><a id="mode7">표준세탁</a></td>
+
+<td rowspan="11">
+<div class="demo">
+    <input class="knob" data-width="250" data-cursor=true data-fgColor="#66CC66" data-thickness=.4 value="1" data-angleOffset=-125
+data-angleArc=250 data-displayInput=false>
+</div>
+</td>
+
+<td><a id="mode8">기능성의류</a></td>
+
+</tr>
+
+<tr>
+<td><a id="mode6">찌든때</a></td>
+<td><a id="mode9">이불살균털기</a></td>
+</tr>
+
+<tr>
+<td><a id="mode5">아기옷</a></td>
+<td><a id="mode10">컬러케어</a></td>
+</tr>
+
+<tr>
+<td><a id="mode4">알뜰삶음</a></td>
+<td><a id="mode11">찬물세탁</a></td>
+</tr>
+
+<tr>
+<td><a id="mode3">스피드워시</a></td>
+<td><a id="mode12">란제리/울</a></td>
+</tr>
+
+<tr>
+<td><a id="mode2">알러지케어</a></td>
+<td><a id="mode13">이불</a></td>
+</tr>
+
+<tr>
+<td><a id="mode1">스팀클리닝</a></td>
+<td><a id="mode14">행굼+탈수</a></td>
+</tr>
+
+<tr>
+	<td></td>
+	<td></td>
+</tr>
+
+<tr>
+<td rowspan="2"><button id="power">POWER</button></td>
+<td rowspan="2"><button id="start" disabled="disabled">RUN</button></td>
+</tr>
+<tr>
+</tr>
+
+</table>
+
+
 
 
 
 
 
 <!-- body scripts -->
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="/static/jquery.knob.js"></script>
 <script type="text/javascript">
 
-document.getElementById("on").onclick = function () {
-	alert(this.id);
+var powerOn = false;
+var running = false;
+
+document.getElementById("power").style.color = 'gray';
+document.getElementById("start").style.color = 'gray';
+
+document.getElementById("power").onclick = function () {
+	if (this.style.color === 'gray') {
+		this.style.color = 'red';
+		document.getElementById("start").disabled = null;
+		document.getElementById("start").style.color = 'black';
+		powerOn = true;
+	} else {
+		this.style.color = 'gray';
+		document.getElementById("start").disabled = 'disabled';
+		document.getElementById("start").style.color = 'gray';
+		powerOn = false;
+		running = false;
+
+		for (var i = 1; i < 15; ++i) {
+			document.getElementById('mode'+i).style.color = 'black';
+			document.getElementById('mode'+i).style.fontWeight = null;
+			document.getElementById('mode'+i).parentNode.style.backgroundColor = null;
+		}
+
+		$(".knob").val(1).trigger("change");
+	}
 }
 
-document.getElementById("off").onclick = function () {
-	alert(this.id);	
+document.getElementById("start").onclick = function () {
+	if (this.style.color === 'orange') {
+		this.style.color = 'black';
+		running = false;
+	} else {
+		this.style.color = 'orange';
+		running = true;
+	}
 }
+
+
+
+
+
+
+var mode = 1;
+
+function onchange (value) {
+	if (!powerOn) {
+		this.cv = 1;
+		return;
+	}
+
+	if (running) {
+		this.cv = mode;
+		return;
+	}
+
+	if (value === 0) {
+		value = this.cv = 1;
+	}
+
+	if (value === 15) {
+		value = this.cv = 14;
+	}
+
+	for (var i = 1; i < 15; ++i) {
+		document.getElementById('mode'+i).style.color = 'black';
+		document.getElementById('mode'+i).style.fontWeight = null;
+		document.getElementById('mode'+i).parentNode.style.backgroundColor = null;
+	}
+	document.getElementById('mode'+value).style.color = 'red';
+	document.getElementById('mode'+value).style.fontWeight = 'bold';
+	document.getElementById('mode'+value).parentNode.style.backgroundColor = 'yellow';
+
+	console.log("change : " + value);
+}
+
+$(".knob").knob({
+	min: 0,
+	max: 15,
+	stopper: true,
+    //change : function (value) {
+    //    console.log("change : " + value);
+    //},
+    change: onchange,
+    release : function (value) {
+        //console.log(this.$.attr('value'));
+        //console.log("release : " + value);
+        mode = value;
+    },
+    cancel : function () {
+        console.log("cancel : ", this);
+    },
+    draw : function () {
+
+        // "tron" case
+        if(this.$.data('skin') == 'tron') {
+
+            var a = this.angle(this.cv)  // Angle
+                , sa = this.startAngle          // Previous start angle
+                , sat = this.startAngle         // Start angle
+                , ea                            // Previous end angle
+                , eat = sat + a                 // End angle
+                , r = 1;
+
+            this.g.lineWidth = this.lineWidth;
+
+            this.o.cursor
+                && (sat = eat - 0.3)
+                && (eat = eat + 0.3);
+
+            if (this.o.displayPrevious) {
+                ea = this.startAngle + this.angle(this.v);
+                this.o.cursor
+                    && (sa = ea - 0.3)
+                    && (ea = ea + 0.3);
+                this.g.beginPath();
+                this.g.strokeStyle = this.pColor;
+                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
+                this.g.stroke();
+            }
+
+            this.g.beginPath();
+            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
+            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
+            this.g.stroke();
+
+            this.g.lineWidth = 2;
+            this.g.beginPath();
+            this.g.strokeStyle = this.o.fgColor;
+            this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+            this.g.stroke();
+
+            return false;
+        }
+    }
+});
+
 
 </script>
 

@@ -1,6 +1,19 @@
 var urlList = {};
 var currentUI = false;
 
+var UILog = (function () {
+
+	var node = document.getElementById('debug_log_text');
+
+	function log(text) {
+		node.textContent = text;
+	}
+
+	return {
+		log: log
+	};
+})();
+
 function closeRemoteUI() {
 	if (currentUI) {
 		currentUI = false;
@@ -37,9 +50,11 @@ function getDeviceListResult() {
 		slert('[ERROR][' + this.status + '] ' + 'getDeviceListResult');
 	}
 
-	console.log(typeof(this.response), this.response);
+	var json = this.response;
+	if (typeof(this.response) === 'string') {
+		json = JSON.parse(this.responseText);
+	}
 	
-	var json = JSON.parse(this.responseText);
 	for (var i = 0; i < json.length; ++i) {
 		var item = json[i];
 		var button = document.createElement('button');
@@ -64,7 +79,7 @@ window.onload = function () {
 	xhr.responseType = 'json';
 	xhr.onreadystatechange = getDeviceListResult;
 	xhr.open('GET', '/do/get/device/list', true);
-	xhr.send();	
+	xhr.send();
 };
 
 

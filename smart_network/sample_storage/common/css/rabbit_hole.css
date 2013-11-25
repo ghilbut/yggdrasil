@@ -30,6 +30,12 @@ body {
 	float: right;
 	list-style: none;
 }
+#device_list li, 
+#device_list li > button {
+	margin: 5px;
+	width: 150px;
+	height: 54px;
+}
 
 #remote_control {
 	position: absolute;
@@ -40,40 +46,20 @@ body {
 	background-color: #ccc;
 	text-align: center;
 	vertical-align: middle;
-	opacity: 0.5;
+	/*opacity: 0.5;*/
 	display: none;
 }
-
-
-
-
-#device_list2 {
-	float: right;
-	list-style: none;
-}
-#device_list2 li > div {
-	padding: 1px 2px;
+#remote_control button {
+	left: 0px;
+	top: 0px;
 	width: 100%;
-	height: 34px;
-	border: 1px solid orange;
-	background-color: white;
+	height: 50px;
 }
-#device_list2 img {
-	width: 32px;
-	height: 32px;
-	float: left;
-}
-#device_list2 a {
-	float: left;
-	vertical-align: middle;
-}
-#device_list2 button {
-	height: 32px;
-	float: right;
-}
-#device_list2 button:first-child {
-	width: 32px;
-}
-#device_list2 button:last-child {
-	width: 64px;
+#remote_control iframe {
+	position: absolute;
+	left: 0px;
+	top: 50px;
+	width: 95%;
+	height: 90%;
+	text-align: center;
 }

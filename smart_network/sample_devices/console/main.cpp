@@ -37,9 +37,8 @@ int main(int argc, char* argv[])
         boost::filesystem::directory_iterator itr((root / "services").string());
         boost::filesystem::directory_iterator end;
         for (; itr != end; ++itr) {
-            const std::string filepath = (itr->path()).string();\
-
             std::string description;
+            const std::string filepath = (itr->path()).string();
             ::ReadText(filepath.c_str(), description);
             device_list.insert(new Device(io_service, description));
         }
