@@ -22,7 +22,7 @@ public:
     explicit TcpChannel(boost::asio::io_service& io_service);
     
     void Start(void);
-    void Deliver(const chat_message& msg);
+    virtual void Deliver(const chat_message& msg);
 
     Tcp::socket& socket();
 

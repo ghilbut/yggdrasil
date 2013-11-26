@@ -76,6 +76,10 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
             // TODO(jh81.kim): invalid action.
             printf("[Tcp] invalid data\n");
         }
+
+        std::string str(read_msg_.body(), read_msg_.body() + read_msg_.body_length());
+        printf("[Tcp] XXXXXX %s \n", str.c_str());
+
         memset(read_msg_.body(), 0, chat_message::max_body_length);
 
 

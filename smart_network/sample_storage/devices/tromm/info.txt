@@ -1,5 +1,13 @@
 {
   "id":"tromm",
   "name":"Tromm",
-  "model":"FR4960MT2TZ"
+  "model":"FR4960MT2TZ",
+
+  "querys": {
+  	"get/status": {
+  		"isPowerOn": { "type": "boolean", "default": false },
+  		"isRunning": { "type": "boolean", "default": false },
+  		"mode": { "type": "number", "default": 1 }
+  	}
+  }
 }

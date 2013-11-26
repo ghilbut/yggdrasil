@@ -34,6 +34,9 @@ public:
         fire_disconnected_ = handle;
     }
 
+    virtual void Deliver(const chat_message& msg) = 0;
+
+
 protected:
     void FireOnConnected(const std::string& json, Channel::Ptr channel) {
         if (fire_connected_) {

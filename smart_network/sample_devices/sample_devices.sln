@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "..\jsoncpp\jsonc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third_party", "third_party", "{76A3EA0B-890C-4D99-AA1F-7B166E3BC510}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tromm", "tromm\tromm.vcxproj", "{85EAB543-E2CD-49F9-B84E-F6A2D8534454}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -30,6 +32,10 @@ Global
 		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Debug|Win32.Build.0 = Debug|Win32
 		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Release|Win32.ActiveCfg = Release|Win32
 		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Release|Win32.Build.0 = Release|Win32
+		{85EAB543-E2CD-49F9-B84E-F6A2D8534454}.Debug|Win32.ActiveCfg = Debug|Win32
+		{85EAB543-E2CD-49F9-B84E-F6A2D8534454}.Debug|Win32.Build.0 = Debug|Win32
+		{85EAB543-E2CD-49F9-B84E-F6A2D8534454}.Release|Win32.ActiveCfg = Release|Win32
+		{85EAB543-E2CD-49F9-B84E-F6A2D8534454}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

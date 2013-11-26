@@ -1,13 +1,16 @@
 #include "connection.h"
 
+#include "message.h"
 #include <boost/bind.hpp>
 
 
 Connection::Connection(boost::asio::io_service& io_service
-                       , const std::string& description) 
+                       , const std::string& description
+                       , DeviceDelegator& delegator) 
     : io_service_(io_service)
     , socket_(io_service)
-    , description_(description) {
+    , description_(description)
+    , delegator_(delegator) {
 }
 
 Connection::~Connection(void) {
@@ -56,6 +59,8 @@ void Connection::handle_connect(const boost::system::error_code& error) {
         return;
     }
 
+
+
     const size_t size = description_.length();
 
     chat_message chat;
@@ -64,6 +69,8 @@ void Connection::handle_connect(const boost::system::error_code& error) {
     strncpy(chat.body(), description_.c_str(), size);
     chat.encode_header();
     Write(chat);
+
+
 
     boost::asio::async_read(socket_
         , boost::asio::buffer(read_msg_.data(), chat_message::header_length)
@@ -83,8 +90,12 @@ void Connection::handle_read_header(const boost::system::error_code& error) {
     }
 
     boost::asio::async_read(socket_
+        , boost::asio::buffer(read_msg_.data() + chat_message::header_length, chat_message::type_length)
+        , boost::bind(&Connection::handle_read_type, this, boost::asio::placeholders::error));
+
+    /*boost::asio::async_read(socket_
         , boost::asio::buffer(read_msg_.body() + chat_message::header_length, chat_message::type_length)
-        , boost::bind(&Connection::handle_read_body, this, boost::asio::placeholders::error));
+        , boost::bind(&Connection::handle_read_body, this, boost::asio::placeholders::error));*/
 }
 
 void Connection::handle_read_type(const boost::system::error_code& error) {
@@ -117,6 +128,24 @@ void Connection::handle_read_body(const boost::system::error_code& error) {
     const chat_message::Type type = read_msg_.type();
     if (type == chat_message::kRequest) {
         printf("[Connection] [Request] %s\n", json.c_str());
+
+        Request::Ptr req(Request::FromJson(json));
+        if (req.get() != 0) {
+            Response res(*req);
+            delegator_.OnRequest(*req, res);
+
+            std::string res_json;
+            res.ToJson(res_json);
+
+            chat_message msg;
+            const size_t size = res_json.length();
+            msg.body_length(size);
+            strcpy(msg.body(), res_json.c_str());
+            msg.encode_header();
+            msg.type(chat_message::kResponse);
+            Write(msg);
+        }
+
     } else {
         // nothing: invalid type
     }

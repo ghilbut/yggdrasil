@@ -30,6 +30,10 @@ td:first-child {
 td:nth-child(2) {
 	width: 350px;
 	text-align: center;
+	vertical-align: top;
+}
+tr:first-child > td:nth-child(2) {
+	padding-top: 40px;
 }
 td:last-child {
 	text-align: left;
@@ -60,10 +64,31 @@ button {
 <td><a id="mode7">표준세탁</a></td>
 
 <td rowspan="11">
-<div class="demo">
+<!--<div class="demo">
     <input class="knob" data-width="250" data-cursor=true data-fgColor="#66CC66" data-thickness=.4 value="1" data-angleOffset=-125
 data-angleArc=250 data-displayInput=false>
+</div>-->
+
+<div class="demo" style="width:350px;">
+    <div style="position:relative;">
+        <div style="position:absolute;left:40px;top:10px">
+            <input class="knob" id="outline1" data-min="0" data-max="1" data-bgColor="#333" data-fgColor="red" data-displayInput=false data-width="270" data-height="270" data-thickness=".02" data-angleOffset=-125
+data-angleArc=140 value="1" readonly>
+        </div>
+        <div style="position:absolute;left:40px;top:10px">
+            <input class="knob" id="outline2" data-min="0" data-max="1" data-bgColor="#333" data-fgColor="black" data-displayInput=false data-width="270" data-height="270" data-thickness=".02" data-angleOffset=-335
+data-angleArc=100 value="1" readonly>
+        </div>
+        <div style="position:absolute;left:50px;top:20px">
+            <input class="knob" id="cursor" data-min="0" data-max="15" data-bgColor="#333" data-displayInput=false data-width="250" data-height="250" data-thickness=".45" data-angleOffset=-125
+data-angleArc=250 data-cursor=true value="1">
+        </div>
+        <div style="position:absolute;left:115px;top:85px">
+            <input class="knob" id="time" data-min="0" data-max="60" data-bgColor="#333" data-fgColor="rgb(127, 255, 0)" data-displayInput=false data-width="120" data-height="120" data-thickness=".3" readonly>
+        </div>
+    </div>
 </div>
+
 </td>
 
 <td><a id="mode8">기능성의류</a></td>
@@ -150,7 +175,7 @@ document.getElementById("power").onclick = function () {
 			document.getElementById('mode'+i).parentNode.style.backgroundColor = null;
 		}
 
-		$(".knob").val(1).trigger("change");
+		$("#cursor").val(1).trigger("change");
 	}
 }
 
@@ -202,7 +227,11 @@ function onchange (value) {
 	console.log("change : " + value);
 }
 
-$(".knob").knob({
+$("#outline1").knob();
+$("#outline2").knob();
+$("#time").knob();
+
+$("#cursor").knob({
 	min: 0,
 	max: 15,
 	stopper: true,
@@ -220,48 +249,24 @@ $(".knob").knob({
     },
     draw : function () {
 
-        // "tron" case
-        if(this.$.data('skin') == 'tron') {
-
-            var a = this.angle(this.cv)  // Angle
-                , sa = this.startAngle          // Previous start angle
-                , sat = this.startAngle         // Start angle
-                , ea                            // Previous end angle
-                , eat = sat + a                 // End angle
-                , r = 1;
-
-            this.g.lineWidth = this.lineWidth;
-
-            this.o.cursor
-                && (sat = eat - 0.3)
-                && (eat = eat + 0.3);
-
-            if (this.o.displayPrevious) {
-                ea = this.startAngle + this.angle(this.v);
-                this.o.cursor
-                    && (sa = ea - 0.3)
-                    && (ea = ea + 0.3);
-                this.g.beginPath();
-                this.g.strokeStyle = this.pColor;
-                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
-                this.g.stroke();
-            }
-
-            this.g.beginPath();
-            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
-            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
-            this.g.stroke();
-
-            this.g.lineWidth = 2;
-            this.g.beginPath();
-            this.g.strokeStyle = this.o.fgColor;
-            this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
-            this.g.stroke();
-
-            return false;
-        }
     }
 });
+
+
+
+
+(function () {
+
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+			console.log(xhr.responseType, xhr.response);
+		}
+	}
+	xhr.open("POST", "/do/get/status");
+	xhr.send();
+
+})();
 
 
 </script>

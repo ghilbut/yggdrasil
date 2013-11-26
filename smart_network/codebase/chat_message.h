@@ -24,7 +24,6 @@ public:
     typedef enum {
         kConnect,
         kDisconnect,
-        kCommand,
         kRequest,
         kResponse,
         kEvent,
