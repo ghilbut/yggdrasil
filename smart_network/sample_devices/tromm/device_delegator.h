@@ -12,6 +12,7 @@ class DeviceDelegator {
 public:
     virtual void OnConnected(Event& event) = 0;
     virtual void OnRequest(const Request& req, Response& res) = 0;
+    virtual void OnNotify(const std::string& text) = 0;
     virtual void OnError(void) = 0;
     virtual void OnDisconnected(void) = 0;
 

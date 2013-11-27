@@ -70,6 +70,12 @@ void CtrlPoint::thread_main(void) {
     t.UnbindHandleConnect();
 }
 
+bool CtrlPoint::DoExecute(mg_connection* conn
+                          , const char* method
+                          , const char* uri) {
+    return false;
+}
+
 bool CtrlPoint::DoRequest(mg_connection* conn
                           , const char* method
                           , const char* query) {
@@ -120,9 +126,7 @@ bool CtrlPoint::DoRequest(mg_connection* conn
     return false;
 }
 
-bool CtrlPoint::DoExecute(mg_connection* conn
-                          , const char* method
-                          , const char* uri) {
+bool CtrlPoint::DoNotify(const std::string& text) {
     return false;
 }
 

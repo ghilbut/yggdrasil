@@ -152,51 +152,69 @@ data-angleArc=250 data-cursor=true value="1">
 
 var powerOn = false;
 var running = false;
+var mode = 1;
+
+function refreshUI() {
+	if (powerOn) {
+		document.getElementById("power").style.color = 'red';
+		document.getElementById("start").disabled = null;
+		document.getElementById("start").style.color = 'black';
+	} else {
+		document.getElementById("power").style.color = 'gray';
+		document.getElementById("start").disabled = 'disabled';
+		document.getElementById("start").style.color = 'gray';
+	}	
+
+	if (running) {
+		document.getElementById("start").style.color = 'orange';
+	} else {
+		document.getElementById("start").style.color = 'black';
+	}
+
+	for (var i = 1; i < 15; ++i) {
+		document.getElementById('mode'+i).style.color = 'black';
+		document.getElementById('mode'+i).style.fontWeight = null;
+		document.getElementById('mode'+i).parentNode.style.backgroundColor = null;
+	}
+	console.log('tromm::refreshUI', mode);
+	if (powerOn) {
+		document.getElementById('mode'+mode).style.color = 'red';
+		document.getElementById('mode'+mode).style.fontWeight = 'bold';
+		document.getElementById('mode'+mode).parentNode.style.backgroundColor = 'yellow';
+	}
+}
 
 document.getElementById("power").style.color = 'gray';
 document.getElementById("start").style.color = 'gray';
 
 document.getElementById("power").onclick = function () {
-	if (this.style.color === 'gray') {
-		this.style.color = 'red';
-		document.getElementById("start").disabled = null;
-		document.getElementById("start").style.color = 'black';
-		powerOn = true;
-	} else {
-		this.style.color = 'gray';
-		document.getElementById("start").disabled = 'disabled';
-		document.getElementById("start").style.color = 'gray';
-		powerOn = false;
-		running = false;
-
-		for (var i = 1; i < 15; ++i) {
-			document.getElementById('mode'+i).style.color = 'black';
-			document.getElementById('mode'+i).style.fontWeight = null;
-			document.getElementById('mode'+i).parentNode.style.backgroundColor = null;
-		}
-
-		$("#cursor").val(1).trigger("change");
-	}
+	powerOn = !powerOn;
+	running = false;
+	mode = 1;
+	refreshUI();
+	DoNotify();
 }
 
 document.getElementById("start").onclick = function () {
-	if (this.style.color === 'orange') {
-		this.style.color = 'black';
-		running = false;
+	if (powerOn) {
+		running = !running;
 	} else {
-		this.style.color = 'orange';
-		running = true;
+		running = false;
 	}
+	refreshUI();
+	DoNotify();
 }
 
 
 
 
 
-
-var mode = 1;
-
 function onchange (value) {
+
+	if (isNaN(value)) {
+		return;
+	}
+
 	if (!powerOn) {
 		this.cv = 1;
 		return;
@@ -215,16 +233,10 @@ function onchange (value) {
 		value = this.cv = 14;
 	}
 
-	for (var i = 1; i < 15; ++i) {
-		document.getElementById('mode'+i).style.color = 'black';
-		document.getElementById('mode'+i).style.fontWeight = null;
-		document.getElementById('mode'+i).parentNode.style.backgroundColor = null;
-	}
-	document.getElementById('mode'+value).style.color = 'red';
-	document.getElementById('mode'+value).style.fontWeight = 'bold';
-	document.getElementById('mode'+value).parentNode.style.backgroundColor = 'yellow';
+	console.log("change: " + value);
 
-	console.log("change : " + value);
+	mode = value;
+	refreshUI();
 }
 
 $("#outline1").knob();
@@ -240,9 +252,8 @@ $("#cursor").knob({
     //},
     change: onchange,
     release : function (value) {
-        //console.log(this.$.attr('value'));
-        //console.log("release : " + value);
         mode = value;
+        DoNotify();
     },
     cancel : function () {
         console.log("cancel : ", this);
@@ -255,19 +266,98 @@ $("#cursor").knob({
 
 
 
+
+var ws = false;
+
+function open(host) {
+	var conn = new WebSocket('ws://' + host);
+	conn.onopen = ws_onopen;
+	conn.onmessage = ws_onmessage;
+	conn.onclose = ws_onclose;
+	conn.onerror = ws_onerror;
+	return conn;
+}
+
+function notify(json) {
+	var type = typeof(json);
+
+	if (!ws || ws.readyState === ws.CLOSING || ws.readyState === ws.CLOSED) {
+		console.log('tromm::notify websocket is invalid');
+		// TODO(jh81.kim): throw exception
+		return;
+	}
+
+	if (type !== 'string') {
+		if (type !== 'object' && json.constructor !== Object) {
+			console.log('tromm::notify format is invalid.');
+			// TODO(jh81.kim): throw exception
+			return;	
+		}
+		json = JSON.stringify(json);
+	}
+
+	ws.send(json);
+}
+
+function close() {
+	ws.close();
+}
+
+function ws_onopen(event) {
+	console.log('tromm::ws_onopen');
+	// nothing
+}
+function ws_onmessage(event) {
+
+	console.log('ws_onmessage', event);
+
+	var params = JSON.parse(event.data).params;
+	console.log(params);
+
+	powerOn = params.isPowerOn;
+	running = params.isRunning;
+	mode = params.mode;
+	$("#cursor").val(mode).trigger("change");
+	refreshUI();
+}
+function ws_onclose(event) {
+	console.log('tromm::ws_onclose');
+	setTimeout(function () {
+		ws = open(window.location.host);
+	}, 500);
+}
+function ws_onerror(event) {
+	// nothing
+}
+
+
+
+
+function DoNotify() {
+	console.log('tromm::DoNotify', { name: 'statusChanged', params: { isPowerOn: powerOn, isRunning: running, mode: mode } });
+	notify({ name: 'statusChanged', params: { isPowerOn: powerOn, isRunning: running, mode: mode } });
+}
+
+
+
 (function () {
 
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function () {
-		if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-			console.log(xhr.responseType, xhr.response);
+		if (this.readyState === this.DONE && this.status === 200) {
+			console.log(this);
+			var params = JSON.parse(this.responseText).params;
+			powerOn = params.isPowerOn;
+			running = params.isRunning;
+			mode = params.mode;
+			refreshUI();
 		}
-	}
+	};
 	xhr.open("POST", "/do/get/status");
 	xhr.send();
 
+	ws = open(window.location.host);
 })();
-
 
 </script>
 

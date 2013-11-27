@@ -26,6 +26,7 @@ public:
         kDisconnect,
         kRequest,
         kResponse,
+        kNotify,
         kEvent,
     } Type;
 

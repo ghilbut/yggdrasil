@@ -145,7 +145,8 @@ void Connection::handle_read_body(const boost::system::error_code& error) {
             msg.type(chat_message::kResponse);
             Write(msg);
         }
-
+    } else if (type == chat_message::kNotify) {
+        delegator_.OnNotify(json);
     } else {
         // nothing: invalid type
     }

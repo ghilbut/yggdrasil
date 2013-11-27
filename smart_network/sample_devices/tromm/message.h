@@ -31,6 +31,7 @@ public:
     bool SetParam(const std::string& key, bool value);
     bool SetParam(const std::string& key, int value);
     bool GetParam(const std::string& key, std::string& value) const;
+    bool GetParam(const std::string& key, int& value) const;
     bool RemoveParam(const std::string& key);
 
 

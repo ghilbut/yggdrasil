@@ -4,11 +4,13 @@
 #include "channel.h"
 #include "http/http_object.h"
 #include <boost/function.hpp>
+#include <boost/thread.hpp>
 #include <string>
 
 
 class DeviceInfo;
 class ServiceInfo;
+class HttpRequest;
 
 class Service : public HttpObject {
 public:
@@ -27,12 +29,13 @@ public:
     void UnbindChannel(void);
 
     // HttpObject
-    virtual bool Service::DoRequest(mg_connection* conn
-                                    , const char* method
-                                    , const char* uri);
     virtual bool Service::DoExecute(mg_connection* conn
                                     , const char* method
                                     , const char* uri);
+    virtual bool DoRequest(mg_connection* conn
+                                    , const char* method
+                                    , const char* uri);
+    virtual bool DoNotify(const std::string& text);
 
     // channel binding
     void OnResponse(const std::string& json);
@@ -48,6 +51,11 @@ private:
     Channel::Ptr channel_;
 
     HandleDisconnected fire_disconnected_;
+
+
+
+    typedef std::map<std::string, HttpRequest*> RequestMap;
+    RequestMap requests_;
 };
 
 

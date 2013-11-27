@@ -7,7 +7,7 @@
 class Tromm : public Device {
 public:
     typedef enum {
-        kMode01, kMode02, kMode03, kMode04, kMode05, 
+        kMode01 = 1, kMode02, kMode03, kMode04, kMode05, 
         kMode06, kMode07, kMode08, kMode09, kMode10, 
         kMode11, kMode12, kMode13, kMode14
     } Mode;
@@ -18,6 +18,7 @@ public:
 
     virtual void OnConnected(Event& event);
     virtual void OnRequest(const Request& req, Response& res);
+    virtual void OnNotify(const std::string& text);
     virtual void OnError(void);
     virtual void OnDisconnected(void);
 

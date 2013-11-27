@@ -70,21 +70,24 @@ public:
     // receiver
     virtual void OnUDP(const std::string& id, const std::string& address);
 
-    void FireEvent(void);
+    void FireEvent(const std::string& json);
     void OnClose(const std::string& address);
 
 
     typedef boost::function<void (Event&)> EventConnectedCallback;
     typedef boost::function<void (const Request&, Response&)> EventRequestCallback;
+    typedef boost::function<void (const std::string&)> EventNotifyCallback;
     typedef boost::function<void ()> EventErrorCallback;
     typedef boost::function<void ()> EventDisconnectedCallback;
     void BindEventConnected(EventConnectedCallback cb);
     void BindEventRequest(EventRequestCallback cb);
+    void BindEventNotify(EventNotifyCallback cb);
     void BindEventError(EventErrorCallback cb);
     void BindEventDisconnected(EventDisconnectedCallback cb);
 
     virtual void OnConnected(Event& event);
     virtual void OnRequest(const Request& req, Response& res);
+    virtual void OnNotify(const std::string& text);
     virtual void OnError(void);
     virtual void OnDisconnected(void);
 
@@ -101,10 +104,11 @@ private:
     std::string id_;
 
 
-    EventConnectedCallback fire_connected;
-    EventRequestCallback fire_request;
-    EventErrorCallback fire_error;
-    EventDisconnectedCallback fire_disconnected;
+    EventConnectedCallback fire_connected_;
+    EventRequestCallback fire_request_;
+    EventNotifyCallback fire_notify_;
+    EventErrorCallback fire_error_;
+    EventDisconnectedCallback fire_disconnected_;
 };
 
 #endif  // DEVICE_IMPL_H_

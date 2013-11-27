@@ -39,12 +39,13 @@ public:
     uint32_t port(void) const;
 
 private:
+    virtual bool DoExecute(mg_connection* conn
+                           , const char* method
+                           , const char* query) = 0;
     virtual bool DoRequest(mg_connection* conn
                            , const char* method
                            , const char* query) = 0;
-    virtual bool DoExecute(mg_connection* conn
-                           , const char* method
-                           , const char* uri) = 0;
+    virtual bool DoNotify(const std::string& text) = 0;
 
 
 private:

@@ -71,6 +71,18 @@ bool Message::GetParam(const std::string& key, std::string& value) const {
     return true;
 }
 
+bool Message::GetParam(const std::string& key, int& value) const {
+    if (!params_.isMember(key)) {
+        return false;
+    }
+    const Json::Value& param = params_[key];
+    if (!param.isInt()) {
+        return false;
+    }
+    value = params_[key].asInt();
+    return true;
+}
+
 bool Message::RemoveParam(const std::string& key) {
     if (!params_.isMember(key)) {
         return false;

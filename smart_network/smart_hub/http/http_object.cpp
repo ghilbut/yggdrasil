@@ -136,7 +136,8 @@ int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* dat
 
     if (opcode == WEBSOCKET_OPCODE_TEXT) {
         std::string text(data, data + data_len);
-        mg_websocket_write(conn, WEBSOCKET_OPCODE_TEXT, &text[0], text.length());
+        //mg_websocket_write(conn, WEBSOCKET_OPCODE_TEXT, &text[0], text.length());
+        DoNotify(text);
         return 1;
     }
 

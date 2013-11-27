@@ -1,7 +1,6 @@
 #ifndef HTTP_SERVER_H_
 #define HTTP_SERVER_H_
 
-#include "http_request.h"
 #include "http_websocket.h"
 #include <boost/function.hpp>
 #include <map>
@@ -26,7 +25,6 @@ private:
     HttpMap http_map_;
     const std::string common_;
 
-    HttpRequest request_;
     HttpWebsocket websocket_;
 };
 

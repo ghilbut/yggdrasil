@@ -1,7 +1,9 @@
 #include "service.h"
 
 #include "service_info.h"
+#include "http/http_request.h"
 #include "codebase/device/device_info.h"
+//#include <mongoose/mongoose.h>
 #include <json/json.h>
 #include <boost/filesystem.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -41,42 +43,79 @@ void Service::UnbindChannel(void) {
     channel_.reset();
 }
 
-bool Service::DoRequest(mg_connection* conn
-                        , const char* method
-                        , const char* uri) {
-
-    Json::Value params(Json::objectValue);
-    Json::Value root(Json::objectValue);
-    root["id"] = to_string(boost::uuids::random_generator()());
-    root["query"] = uri;
-    root["params"] = params;
-
-    Json::FastWriter writer;
-    const std::string json = writer.write(root);
-
-    chat_message msg;
-    const size_t size = json.length();
-    msg.body_length(size);
-    strncpy(msg.body(), json.c_str(), size);
-    msg.encode_header();
-    msg.type(chat_message::kRequest);
-    channel_->Deliver(msg);
-
-    return false;
-}
-
 bool Service::DoExecute(mg_connection* conn
                         , const char* method
                         , const char* uri) {
     return false;
 }
 
+bool Service::DoRequest(mg_connection* conn
+                        , const char* method
+                        , const char* uri) {
+
+    boost::uuids::random_generator gen;
+    const std::string id = to_string(gen());
+
+    HttpRequest request(*channel_, conn);
+    requests_[id] = &request;
+    if (!request.DoRequest(id.c_str(), method, uri)) {
+        requests_.erase(id);
+    }
+
+    // TODO(jh81.kim): it seems, return value is not necessary.
+    return false;
+}
+
+bool Service::DoNotify(const std::string& text) {
+
+    if (channel_.get() != 0) {
+        chat_message msg;
+        msg.type(chat_message::kNotify);
+        const size_t size = text.length();
+        msg.body_length(size);
+        strcpy(msg.body(), text.c_str());
+        msg.encode_header();
+        channel_->Deliver(msg);
+    }
+
+    // TODO(jh81.kim): it seems, return value is not necessary.
+    return false;
+}
+
 void Service::OnResponse(const std::string& json) {
     printf("[Service][Response] %s\n", json.c_str());
+
+    Json::Reader reader;
+    Json::Value root(Json::objectValue);
+    if (!reader.parse(json, root, false)) {
+        printf("[ERROR][Service::OnResponse] protocol is not json format string.\n");
+        return;
+    }
+
+    if (!root.isObject()) {
+        printf("[ERROR][Service::OnResponse] json root is not object.\n");
+        return;
+    }
+
+    if (!root.isMember("id")) {
+        printf("[ERROR][Service::OnResponse] request/response ID is not exists.\n");
+        return;
+    }
+
+    Json::Value& value = root["id"];
+    if (!value.isString()) {
+        printf("[ERROR][Service::OnResponse] request/response ID is not string value.");
+        return;
+    }
+
+    const std::string& id = root["id"].asString();
+    requests_[id]->DoResponse(json);
 }
 
 void Service::OnEvent(const std::string& json) {
     printf("[Service][Event] %s\n", json.c_str());
+
+    FireEvent(json);
 }
 
 void Service::OnDisconnected(void) {

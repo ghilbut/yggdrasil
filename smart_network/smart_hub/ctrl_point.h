@@ -32,12 +32,14 @@ public:
 private:
     void thread_main(void);
 
-    virtual bool DoRequest(mg_connection* conn
-                           , const char* method
-                           , const char* query);
     virtual bool DoExecute(mg_connection* conn
                            , const char* method
                            , const char* uri);
+    virtual bool DoRequest(mg_connection* conn
+                           , const char* method
+                           , const char* query);
+    virtual bool DoNotify(const std::string& text);
+    
 
     // channel binding
     void OnConnected(const std::string& json, Channel::Ptr channel);
