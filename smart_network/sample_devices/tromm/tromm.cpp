@@ -13,11 +13,11 @@ Tromm::Tromm(boost::asio::io_service& io_service, const std::string& description
 }
 
 Tromm::~Tromm(void) {
-
+    // nothing
 }
 
 void Tromm::OnConnected(Event& event) {
-
+    // nothing
 }
 
 void Tromm::OnRequest(const Request& req, Response& res) {
@@ -54,6 +54,13 @@ void Tromm::OnNotify(const std::string& text) {
             if (m.isInt()) {
                 mode_ = static_cast<Mode>(m.asInt());
             }
+
+            printf("\n================================\n");
+            printf(  "==       status changed       ==\n\n");
+            printf(  "    power  : %s\n", is_power_on_ ? "on"      : "off");
+            printf(  "    status : %s\n", is_running_  ? "started" : "stoped");
+            printf(  "    mode   : %d\n", mode_);
+            printf("\n================================\n\n");
         }
     }
     FireEvent(text);

@@ -4,6 +4,7 @@
 #include <json/json.h>
 #include <boost/shared_ptr.hpp>
 #include <string>
+#include <vector>
 
 
 class Request;
@@ -91,6 +92,52 @@ public:
 
 private:
     const std::string name_;
+};
+
+
+
+
+
+
+
+class Message2 {
+public:
+    typedef enum {
+        kRequest,
+        kResponse,
+        kNotify,
+        kEvent
+    } Type;
+
+protected:
+    Message2(Type type);
+    virtual ~Message2(void);
+
+public:
+    virtual const std::vector<char>& Serialize(void);
+    virtual bool Unserialize(void);
+
+private:
+#pragma pack(push,1)
+    typedef struct {
+        char type;
+        char size[11];
+    } Header;
+#pragma pack(pop)
+
+    static const size_t kHeaderSize;
+
+    std::vector<char> data_;
+    Header* header_;
+};
+
+
+class Request2 : public Message2 {
+public:
+    Request2(void);
+    ~Request2(void);
+
+private:
 };
 
 #endif  // MESSAGE_H_

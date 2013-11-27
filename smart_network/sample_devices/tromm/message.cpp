@@ -226,3 +226,51 @@ bool Event::ToJson(std::string& json) const {
 
     return ::WriteJson(root, json, false);
 }
+
+
+
+
+
+
+
+
+
+
+const size_t Message2::kHeaderSize = sizeof(Message2::Header);
+
+Message2::Message2(Type type)
+    : data_(kHeaderSize) {
+    header_ = reinterpret_cast<Header*>(&data_[0]);
+    header_->type = static_cast<char>(type);
+}
+
+Message2::~Message2(void) {
+    // nothing
+};
+
+Request2::Request2(void)
+    : Message2(Message2::kRequest) {
+    // nothing
+}
+
+Request2::~Request2(void) {
+    // nothing
+}
+
+
+const std::vector<char>& Message2::Serialize(void) {
+    sprintf(header_->size, "%u", data_.size() - kHeaderSize);
+    return data_;
+}
+
+bool Message2::Unserialize(void) {
+    size_t size;
+    if (sscanf(header_->size, "%u", &size) < 1) {
+        return false;
+    }
+    if (size > 0) {
+        data_.insert(data_.end(), size, '\0');
+        header_ = reinterpret_cast<Header*>(&data_[0]);
+    }
+    return true;
+}
