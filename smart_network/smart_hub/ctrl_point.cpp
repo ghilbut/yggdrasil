@@ -1,11 +1,11 @@
 #include "ctrl_point.h"
 
-#include "service/service_finder.h"
 //#include "uart_server.h"
 #include "tcp_server.h"
 #include "http/http_server.h"
 #include "service/service.h"
 #include "service/service_info.h"
+#include "codebase/ssdp.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
 #include <boost/filesystem.hpp>
@@ -19,7 +19,7 @@ CtrlPoint::CtrlPoint(const std::string& document_root
     , httpd_(httpd)
     , devices_(devices)
     , services_(services)
-    , finder_(0) {
+    , ssdp_sender_(0) {
     // nothing
 }
 
@@ -47,14 +47,15 @@ void CtrlPoint::thread_main(void) {
     t.BindHandleConnect(boost::bind(&CtrlPoint::OnConnected, this, _1, _2));
     //UartServer z(io_service_, "port");
 
-    ServiceFinder sf(io_service_, 8071);
+    //SsdpSender ss(io_service_, 8071);
+    SsdpSender ss(io_service_);
     ServicePool::Iterator itr = services_.Begin();
     ServicePool::Iterator end = services_.End();
     for (; itr != end; ++itr) {
         const std::string& id = itr->first;
-        sf.RegistTarget(id.c_str());
+        ss.RegistTarget(id.c_str());
     }
-    finder_ = &sf;
+    ssdp_sender_ = &ss;
 
     services_.Start();
     io_service_.run();
@@ -66,7 +67,7 @@ void CtrlPoint::thread_main(void) {
     const std::string json = writer.write(root);
     FireEvent(json);
 
-    finder_ = 0;
+    ssdp_sender_ = 0;
     t.UnbindHandleConnect();
 }
 
@@ -150,7 +151,7 @@ void CtrlPoint::OnConnected(const std::string& json, Channel::Ptr channel) {
     s->BindChannel(channel);
 
     connecting_list_.insert(id);
-    finder_->UnregistTarget(id.c_str());
+    ssdp_sender_->UnregistTarget(id.c_str());
 
     {
         Json::Value root(Json::objectValue);
@@ -165,7 +166,7 @@ void CtrlPoint::OnConnected(const std::string& json, Channel::Ptr channel) {
 
 void CtrlPoint::OnDisonnected(const char* id) {
 
-    finder_->RegistTarget(id);
+    ssdp_sender_->RegistTarget(id);
     connecting_list_.erase(id);
 
     Service* s = services_[id];

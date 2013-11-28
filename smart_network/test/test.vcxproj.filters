@@ -3,5 +3,6 @@
   <ItemGroup>
     <ClCompile Include="test.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\codebase\ssdp_test.cpp" />
   </ItemGroup>
 </Project>

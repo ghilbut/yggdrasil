@@ -2,6 +2,30 @@
 #define SSDP_H_
 // jh81.kim: SSDP(Simple Service Discovery Protocol) naming form UPnP.
 #include "boost_asio_fwd.h"
+#include <boost/thread.hpp>
+#include <set>
+
+
+class SsdpSender {
+public:
+    SsdpSender(IOService& io_service);
+    ~SsdpSender(void);
+
+    void RegistTarget(const char* target);
+    void UnregistTarget(const char* target);
+
+private:
+    void handle_send(void);
+
+private: 
+    boost::mutex mutex_;
+    std::set<std::string> targets_;
+
+    UDP::socket socket_;
+    boost::posix_time::time_duration interval_;
+    mutable boost::asio::deadline_timer timer_;
+};
+
 
 
 class SsdpListener
