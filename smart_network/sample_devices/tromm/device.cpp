@@ -1,5 +1,6 @@
 #include "device.h"
 #include "device_impl.h"
+#include <boost/bind.hpp>
 
 
 Device::Device(boost::asio::io_service& io_service, const std::string& description)

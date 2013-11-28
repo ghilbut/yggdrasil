@@ -3,7 +3,7 @@
 
 
 Device::Impl::Impl(boost::asio::io_service& io_service, const std::string& description)
-    : receiver(io_service) // TEST(jh81.kim):
+    : SsdpListener(io_service) // TEST(jh81.kim):
     , io_service_(io_service)
     , interval_(boost::posix_time::seconds(23))
     , timer_(io_service, interval_)
@@ -22,9 +22,10 @@ Device::Impl::~Impl(void) {
     // nothing
 }
 
-void Device::Impl::OnUDP(const std::string& id, const std::string& address) {
+void Device::Impl::OnSsdp(const std::string& ssdp, const std::string& address) {
 
-    if (id_ != id) {
+    // jh81.kim(28No2013): current step, ssdp is just service id.
+    if (id_ != ssdp) {
         return;
     }
 

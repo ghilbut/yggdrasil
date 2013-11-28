@@ -12,6 +12,7 @@
       <Filter>device</Filter>
     </ClInclude>
     <ClInclude Include="utility.h" />
+    <ClInclude Include="ssdp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />
@@ -22,6 +23,7 @@
       <Filter>device</Filter>
     </ClCompile>
     <ClCompile Include="utility.cpp" />
+    <ClCompile Include="ssdp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="device">

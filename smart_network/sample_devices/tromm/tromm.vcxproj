@@ -88,20 +88,20 @@
     <ClCompile Include="tromm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\codebase\codebase.vcxproj">
-      <Project>{838ba03f-cf78-4a0d-abc9-8a0b103e8711}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\jsoncpp\jsoncpp.vcxproj">
-      <Project>{ce6f9b98-25c2-47b1-8e13-cbccd80866df}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="connection.h" />
     <ClInclude Include="device.h" />
     <ClInclude Include="device_delegator.h" />
     <ClInclude Include="device_impl.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="tromm.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\codebase\codebase.vcxproj">
+      <Project>{838ba03f-cf78-4a0d-abc9-8a0b103e8711}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\jsoncpp\jsoncpp.vcxproj">
+      <Project>{ce6f9b98-25c2-47b1-8e13-cbccd80866df}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

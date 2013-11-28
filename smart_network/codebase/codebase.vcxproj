@@ -79,12 +79,14 @@
     <ClInclude Include="chat_message.h" />
     <ClInclude Include="device\device_info.h" />
     <ClInclude Include="device\device_pool.h" />
+    <ClInclude Include="ssdp.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />
     <ClCompile Include="device\device_info.cpp" />
     <ClCompile Include="device\device_pool.cpp" />
+    <ClCompile Include="ssdp.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
