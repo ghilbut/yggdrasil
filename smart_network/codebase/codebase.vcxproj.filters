@@ -13,6 +13,7 @@
     </ClInclude>
     <ClInclude Include="utility.h" />
     <ClInclude Include="ssdp.h" />
+    <ClInclude Include="boost_lib_fwd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />

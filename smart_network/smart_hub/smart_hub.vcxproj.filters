@@ -33,7 +33,6 @@
     <ClInclude Include="service\service_info.h">
       <Filter>service</Filter>
     </ClInclude>
-    <ClInclude Include="asio_fwd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctrl_point.cpp" />

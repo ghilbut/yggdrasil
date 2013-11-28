@@ -91,7 +91,6 @@
     <ClInclude Include="service\service_info.h" />
     <ClInclude Include="service\service_pool.h" />
     <ClInclude Include="tcp_channel.h" />
-    <ClInclude Include="asio_fwd.h" />
     <ClInclude Include="tcp_server.h" />
     <ClInclude Include="uart_channel.h" />
     <ClInclude Include="uart_server.h" />

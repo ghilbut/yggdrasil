@@ -1,6 +1,4 @@
 #include "ssdp.h"
-#include <boost/bind.hpp>
-
 
 
 SsdpSender::SsdpSender(IOService& io_service)

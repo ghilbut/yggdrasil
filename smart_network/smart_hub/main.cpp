@@ -2,8 +2,8 @@
 #include "http/http_server.h"
 #include "service/service_pool.h"
 #include "codebase/device/device_pool.h"
+#include "codebase/boost_lib_fwd.h"
 #include <json/reader.h>
-#include <boost/filesystem.hpp>
 #include <string>
 #include <iostream>
 #include <cstdio>

@@ -1,17 +1,14 @@
 #include "tcp_server.h"
-
-#include "asio_fwd.h"
-#include <algorithm>
-#include <boost/scoped_ptr.hpp>
-#include <boost/bind.hpp>
 #include "tcp_channel.h"
+#include "codebase/boost_lib_fwd.h"
+#include <algorithm>
 
 
 TcpServer::TcpServer(boost::asio::io_service& io_service, unsigned short port) 
         : io_service_(io_service)
-        , acceptor_(io_service, Tcp::endpoint(Tcp::v4(), port)) {
-        //, acceptor_(io_service, Tcp::endpoint(boost::asio::ip::address::from_string("192.168.1.2"), port)) {
-        //, acceptor_(io_service, Tcp::endpoint(boost::asio::ip::address::from_string("192.168.0.4"), port)) {
+        , acceptor_(io_service, TCP::endpoint(TCP::v4(), port)) {
+        //, acceptor_(io_service, TCP::endpoint(boost::asio::ip::address::from_string("192.168.1.2"), port)) {
+        //, acceptor_(io_service, TCP::endpoint(boost::asio::ip::address::from_string("192.168.0.4"), port)) {
     acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
     DoListen();
 }

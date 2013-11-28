@@ -1,5 +1,4 @@
 #include "ctrl_point.h"
-
 //#include "uart_server.h"
 #include "tcp_server.h"
 #include "http/http_server.h"
@@ -8,7 +7,6 @@
 #include "codebase/ssdp.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
-#include <boost/filesystem.hpp>
 
 
 CtrlPoint::CtrlPoint(const std::string& document_root

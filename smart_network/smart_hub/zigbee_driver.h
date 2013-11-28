@@ -1,7 +1,8 @@
 #ifndef ZIGBEE_DRIVER_H_
 #define ZIGBEE_DRIVER_H_
 
-#include <boost/asio.hpp>
+#include "codebase/boost_lib_fwd.h"
+
 
 class ZigbeeDriver {
 public:

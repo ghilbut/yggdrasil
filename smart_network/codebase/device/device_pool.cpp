@@ -1,11 +1,12 @@
 #include "device_pool.h"
 #include "device_info.h"
+#include "boost_lib_fwd.h"
 
 
-DevicePool::DevicePool(const std::string& rootpath)
-    : rootpath_(rootpath) {
+DevicePool::DevicePool(const std::string& rootpath) {
 
-    boost::filesystem::directory_iterator itr(rootpath_);
+    boost::filesystem::path root(rootpath);
+    boost::filesystem::directory_iterator itr(root);
     boost::filesystem::directory_iterator end;
     for (; itr != end; ++itr) {
         const boost::filesystem::path& path = itr->path();

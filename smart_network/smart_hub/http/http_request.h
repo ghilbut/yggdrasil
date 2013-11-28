@@ -2,7 +2,7 @@
 #define HTTP_REQUEST_H_
 
 #include "channel.h"
-#include <boost/thread.hpp>
+#include "codebase/boost_lib_fwd.h"
 #include <string>
 
 

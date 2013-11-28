@@ -1,6 +1,6 @@
 #include "tcp_channel.h"
+#include "codebase/boost_lib_fwd.h"
 #include <json/json.h>
-#include <boost/bind.hpp>
 
 
 TcpChannel::TcpChannel(boost::asio::io_service& io_service)
@@ -23,7 +23,7 @@ void TcpChannel::Deliver(const chat_message& msg) {
     }
 }
 
-Tcp::socket& TcpChannel::socket() {
+TCP::socket& TcpChannel::socket() {
     return socket_;
 }
 

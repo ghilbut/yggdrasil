@@ -5,8 +5,7 @@
 #include "http/http_object.h"
 #include "service/service_pool.h"
 #include "codebase/device/device_pool.h"
-#include <boost/asio.hpp>
-#include <boost/thread.hpp>
+#include "codebase/boost_lib_fwd.h"
 #include <map>
 #include <set>
 

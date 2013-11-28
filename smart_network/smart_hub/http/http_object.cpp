@@ -1,10 +1,9 @@
 #include "http_object.h"
 
 #include "http_fwd.h"
+#include "codebase/boost_lib_fwd.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
-#include <boost/assert.hpp>
-#include <boost/filesystem.hpp>
 
 
 HttpObject::HttpObject(const std::string& document_root, uint32_t port) 

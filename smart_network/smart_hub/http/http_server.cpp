@@ -1,13 +1,7 @@
 #include "http_server.h"
-
 #include "http_fwd.h"
 #include "http_object.h"
 #include <mongoose/mongoose.h>
-#include <boost/asio.hpp>
-#include <boost/assert.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/thread.hpp>
 #include <set>
 #include <map>
 

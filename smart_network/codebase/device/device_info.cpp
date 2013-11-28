@@ -1,7 +1,7 @@
 #include "device_info.h"
 #include "utility.h"
+#include "boost_lib_fwd.h"
 #include <json/reader.h>
-#include <boost/filesystem.hpp>
 #include <cstdio>
 
 

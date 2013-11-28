@@ -2,7 +2,7 @@
 #define HTTP_SERVER_H_
 
 #include "http_websocket.h"
-#include <boost/function.hpp>
+#include "codebase/boost_lib_fwd.h"
 #include <map>
 #include <string>
 #include <stdint.h>

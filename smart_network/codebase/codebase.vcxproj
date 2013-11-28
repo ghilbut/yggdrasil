@@ -76,6 +76,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="boost_lib_fwd.h" />
     <ClInclude Include="chat_message.h" />
     <ClInclude Include="device\device_info.h" />
     <ClInclude Include="device\device_pool.h" />

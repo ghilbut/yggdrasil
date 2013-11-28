@@ -1,5 +1,5 @@
 #include <gmock/gmock.h>
-#include "codebase/boost_asio_fwd.h"
+#include "codebase/boost_lib_fwd.h"
 #include "codebase/ssdp.h"
 #include <boost/thread.hpp>
 #include <boost/interprocess/sync/interprocess_semaphore.hpp>

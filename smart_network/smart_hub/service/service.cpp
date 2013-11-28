@@ -3,11 +3,7 @@
 #include "service_info.h"
 #include "http/http_request.h"
 #include "codebase/device/device_info.h"
-//#include <mongoose/mongoose.h>
 #include <json/json.h>
-#include <boost/filesystem.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <boost/uuid/random_generator.hpp>
 
 
 Service::Service(const DeviceInfo*& device

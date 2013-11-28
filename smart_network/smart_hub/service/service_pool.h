@@ -1,7 +1,7 @@
 #ifndef SERVICE_POOL_H_
 #define SERVICE_POOL_H_
 
-#include <boost/shared_ptr.hpp>
+#include "codebase/boost_lib_fwd.h"
 #include <map>
 #include <stdint.h>
 

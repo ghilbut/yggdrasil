@@ -3,7 +3,6 @@
 #include "service_info.h"
 #include "http/http_server.h"
 #include "codebase/device/device_pool.h"
-#include <boost/filesystem.hpp>
 
 
 ServicePool::ServicePool(HttpServer& httpd

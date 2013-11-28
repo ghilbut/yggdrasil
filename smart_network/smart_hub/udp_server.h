@@ -1,8 +1,8 @@
 #ifndef TCP_SERVER_H_
 #define TCP_SERVER_H_
 
-#include <boost/asio.hpp>
 #include "udp_channel.h"
+#include "codebase/boost_lib_fwd.h"
 
 
 class UdpServer {

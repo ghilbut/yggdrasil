@@ -3,8 +3,7 @@
 
 #include "channel.h"
 #include "http/http_object.h"
-#include <boost/function.hpp>
-#include <boost/thread.hpp>
+#include "codebase/boost_lib_fwd.h"
 #include <string>
 
 

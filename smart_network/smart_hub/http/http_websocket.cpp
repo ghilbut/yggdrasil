@@ -2,7 +2,6 @@
 
 #include "http_object.h"
 #include <mongoose/mongoose.h>
-#include <boost/assert.hpp>
 #include <set>
 
 

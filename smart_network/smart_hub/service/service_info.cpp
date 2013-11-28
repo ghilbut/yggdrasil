@@ -1,6 +1,6 @@
 #include "service_info.h"
+#include "codebase/boost_lib_fwd.h"
 #include <json/reader.h>
-#include <boost/filesystem.hpp>
 #include <cstdio>
 
 

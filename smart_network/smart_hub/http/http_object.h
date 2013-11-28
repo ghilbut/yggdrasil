@@ -1,7 +1,7 @@
 #ifndef HTTP_OBJECT_H_
 #define HTTP_OBJECT_H_
 
-#include <boost/thread.hpp>
+#include "codebase/boost_lib_fwd.h"
 #include <set>
 #include <string>
 #include <stdint.h>

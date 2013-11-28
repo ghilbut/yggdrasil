@@ -2,11 +2,8 @@
 #define TCP_CHANNEL_H_
 
 #include "channel.h"
-
+#include "codebase/boost_lib_fwd.h"
 #include "codebase/chat_message.h"
-#include "asio_fwd.h"
-#include <boost/asio.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <deque>
 
 
@@ -24,7 +21,7 @@ public:
     void Start(void);
     virtual void Deliver(const chat_message& msg);
 
-    Tcp::socket& socket();
+    TCP::socket& socket();
 
 
     
@@ -38,7 +35,7 @@ private:
 
 
 private:
-    Tcp::socket socket_;
+    TCP::socket socket_;
     chat_message read_msg_;
     chat_message_queue write_msgs_;
 };

@@ -1,5 +1,5 @@
 #include "utility.h"
-#include <boost/assert.hpp>
+#include "boost_lib_fwd.h"
 #include <cstdio>
 
 bool ReadText(const char* filepath, std::string& text) {

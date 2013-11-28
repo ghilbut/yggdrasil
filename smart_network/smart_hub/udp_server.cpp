@@ -1,7 +1,5 @@
 #include "udp_server.h"
 #include <algorithm>
-#include <boost/scoped_ptr.hpp>
-#include <boost/bind.hpp>
 
 
 UdpServer::UdpServer(boost::asio::io_service& io_service, unsigned short port) 

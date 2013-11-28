@@ -1,9 +1,7 @@
 #ifndef HTTP_WEBSOCKET_H_
 #define HTTP_WEBSOCKET_H_
 
-#include <boost/asio.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/thread.hpp>
+#include "codebase/boost_lib_fwd.h"
 #include <set>
 #include <string>
 #include <stdint.h>

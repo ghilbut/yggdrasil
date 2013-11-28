@@ -1,8 +1,7 @@
 #ifndef SSDP_H_
 #define SSDP_H_
 // jh81.kim: SSDP(Simple Service Discovery Protocol) naming form UPnP.
-#include "boost_asio_fwd.h"
-#include <boost/thread.hpp>
+#include "boost_lib_fwd.h"
 #include <set>
 
 

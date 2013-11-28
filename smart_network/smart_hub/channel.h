@@ -2,8 +2,7 @@
 #define CHANNEL_H_
 
 #include "codebase/chat_message.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
+#include "codebase/boost_lib_fwd.h"
 
 
 class Channel {
