@@ -1,10 +1,13 @@
 #ifndef HTTP_OBJECT_H_
 #define HTTP_OBJECT_H_
 
+#include "http/http_websocket_manager.h"
 #include "codebase/boost_lib_fwd.h"
 #include <set>
 #include <string>
 #include <stdint.h>
+
+using namespace Http;
 
 
 struct mg_context;
@@ -53,8 +56,7 @@ private:
     const std::string document_;
     const uint32_t port_;
 
-    mutable boost::mutex mutex_;
-    std::set<struct mg_connection*> websockets_;
+    WebsocketManager websockets_;
 
     RequestHandler common_handler_;
 };

@@ -102,29 +102,16 @@ void HttpObject::OnEndRequest(const struct mg_connection* conn, int reply_status
     // nothing
 }
 
-static void InsertWebsocket(std::set<struct mg_connection*>& sockets, mg_connection* conn, boost::mutex& mutex) {
-    boost::mutex::scoped_lock lock(mutex);
-    BOOST_ASSERT(sockets.find(conn) == sockets.end());
-    sockets.insert(conn);
-}
-
-static void RemoveWebsocket(std::set<struct mg_connection*>& sockets, mg_connection* conn, boost::mutex& mutex) {
-    boost::mutex::scoped_lock lock(mutex);
-    BOOST_ASSERT(sockets.find(conn) != sockets.end());
-    sockets.erase(conn);
-}
-
 int HttpObject::OnWebsocketConnect(const struct mg_connection* conn) {
     // nothing
     return 0;
 }
 
 void HttpObject::OnWebsocketReady(struct mg_connection* conn) {
-    ::InsertWebsocket(websockets_, conn, mutex_);
+    websockets_.Register(conn);
 }
 
 int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* data, size_t data_len) {
-    BOOST_ASSERT(websockets_.find(conn) != websockets_.end());
 
     const char opcode = static_cast<char>(bits & 0x0f);
 
@@ -146,7 +133,7 @@ int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* dat
     }
 
     if (opcode == WEBSOCKET_OPCODE_CONNECTION_CLOSE) {
-        ::RemoveWebsocket(websockets_, conn, mutex_);
+        websockets_.Unregister(conn);
         return 0;
     }
 
@@ -175,29 +162,11 @@ void HttpObject::UnbindCommonHandler(void) {
 }
 
 void HttpObject::PingWebSockets(void) {
-    boost::mutex::scoped_lock lock(mutex_);
-    std::set<struct mg_connection*>::iterator itr = websockets_.begin();
-    std::set<struct mg_connection*>::iterator end = websockets_.end();
-    for (; itr != end; ++itr) {
-        struct mg_connection* conn = *itr;
-        const int written_bytes = mg_websocket_write(conn, WEBSOCKET_OPCODE_PING, 0, 0);
-        if (written_bytes == 0) {
-            ::RemoveWebsocket(websockets_, conn, mutex_);
-        }
-    }
+    websockets_.Ping();
 }
 
 void HttpObject::FireEvent(const std::string& json) {
-    boost::mutex::scoped_lock lock(mutex_);
-    std::set<struct mg_connection*>::iterator itr = websockets_.begin();
-    std::set<struct mg_connection*>::iterator end = websockets_.end();
-    for (; itr != end; ++itr) {
-        struct mg_connection* conn = *itr;
-        const int written_bytes = mg_websocket_write(conn, WEBSOCKET_OPCODE_TEXT, &json[0], json.length());
-        if (written_bytes < 0) {
-            ::RemoveWebsocket(websockets_, conn, mutex_);
-        }
-    }
+    websockets_.FireEvent(json);
 }
 
 struct mg_context* HttpObject::context(void) const {

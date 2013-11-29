@@ -33,6 +33,9 @@
     <ClInclude Include="service\service_info.h">
       <Filter>service</Filter>
     </ClInclude>
+    <ClInclude Include="http\http_websocket_manager.h">
+      <Filter>http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctrl_point.cpp" />
@@ -63,6 +66,9 @@
     </ClCompile>
     <ClCompile Include="service\service_pool.cpp">
       <Filter>service</Filter>
+    </ClCompile>
+    <ClCompile Include="http\http_websocket_manager.cpp">
+      <Filter>http</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
