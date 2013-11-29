@@ -3,7 +3,7 @@
 
 SsdpSender::SsdpSender(IOService& io_service)
     : socket_(io_service, UDP::endpoint(UDP::v4(), 0))
-    , interval_(boost::posix_time::seconds(5))
+    , interval_(boost::posix_time::seconds(kSendIntervalSec))
     , timer_(io_service, interval_) {
 
         socket_.set_option(boost::asio::socket_base::broadcast(true));

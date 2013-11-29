@@ -7,6 +7,9 @@
 
 class SsdpSender {
 public:
+    enum { kSendIntervalSec = 5 };
+
+public:
     SsdpSender(IOService& io_service);
     ~SsdpSender(void);
 

@@ -84,7 +84,8 @@ TEST_F(SsdpTest, search_and_not_found_single_target) {
 
     sender_.RegistTarget(target);
 
-    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(11);
+    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_FALSE(done.timed_wait(until));
 }
 
@@ -100,7 +101,8 @@ TEST_F(SsdpTest, search_and_found_single_target_1) {
 
     sender_.RegistTarget(target);
 
-    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(11);
+    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_FALSE(done.timed_wait(until));
 }
 
@@ -117,7 +119,8 @@ TEST_F(SsdpTest, DISABLED_search_and_found_single_target_2) {
 
     sender_.RegistTarget(target);
 
-    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(11);
+    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_TRUE(done.timed_wait(until));
 }
 
@@ -137,7 +140,8 @@ TEST_F(SsdpTest, search_and_not_found_multi_target) {
     sender_.RegistTarget(target2);
     sender_.RegistTarget(target3);
 
-    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(11);
+    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_FALSE(done1.timed_wait(until));
     EXPECT_FALSE(done2.timed_wait(until));
     EXPECT_FALSE(done3.timed_wait(until));
@@ -159,7 +163,8 @@ TEST_F(SsdpTest, search_and_found_multi_target) {
     sender_.RegistTarget(target2);
     sender_.RegistTarget(target3);
 
-    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(11);
+    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_TRUE(done1.timed_wait(until));
     EXPECT_TRUE(done2.timed_wait(until));
     EXPECT_TRUE(done3.timed_wait(until));

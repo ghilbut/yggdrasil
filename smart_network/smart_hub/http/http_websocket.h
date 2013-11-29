@@ -14,6 +14,9 @@ typedef std::map<const struct mg_context*, HttpObject*> HttpMap;
 
 class HttpWebsocket {
 public:
+    enum { kPingIntervalSec = 30 };
+
+public:
     explicit HttpWebsocket(HttpMap& https);
     ~HttpWebsocket(void);
 

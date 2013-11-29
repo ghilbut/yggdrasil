@@ -6,7 +6,7 @@
 
 
 HttpWebsocket::HttpWebsocket(HttpMap& https) 
-    : interval_(boost::posix_time::seconds(30))
+    : interval_(boost::posix_time::seconds(kPingIntervalSec))
     , timer_(io_service_, interval_)
     , thread_(boost::bind(&HttpWebsocket::thread_ping, this))
     , https_(https) {
