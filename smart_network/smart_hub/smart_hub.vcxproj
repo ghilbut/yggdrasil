@@ -88,6 +88,7 @@
     <ClInclude Include="http\http_server.h" />
     <ClInclude Include="http\http_websocket.h" />
     <ClInclude Include="http\http_websocket_manager.h" />
+    <ClInclude Include="http\http_websocket_ping_scheduler.h" />
     <ClInclude Include="service\service.h" />
     <ClInclude Include="service\service_info.h" />
     <ClInclude Include="service\service_pool.h" />
@@ -105,6 +106,7 @@
     <ClCompile Include="http\http_server.cpp" />
     <ClCompile Include="http\http_websocket.cpp" />
     <ClCompile Include="http\http_websocket_manager.cpp" />
+    <ClCompile Include="http\http_websocket_ping_scheduler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="service\service.cpp" />
     <ClCompile Include="service\service_info.cpp" />

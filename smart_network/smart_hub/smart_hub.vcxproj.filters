@@ -36,6 +36,9 @@
     <ClInclude Include="http\http_websocket_manager.h">
       <Filter>http</Filter>
     </ClInclude>
+    <ClInclude Include="http\http_websocket_ping_scheduler.h">
+      <Filter>http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctrl_point.cpp" />
@@ -68,6 +71,9 @@
       <Filter>service</Filter>
     </ClCompile>
     <ClCompile Include="http\http_websocket_manager.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="http\http_websocket_ping_scheduler.cpp">
       <Filter>http</Filter>
     </ClCompile>
   </ItemGroup>

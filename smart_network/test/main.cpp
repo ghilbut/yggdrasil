@@ -6,10 +6,12 @@
 // GTEST_API_ int _tmain(int argc, TCHAR** argv) {
 GTEST_API_ int main(int argc, char** argv) {
 
-  testing::InitGoogleMock(&argc, argv);
+    testing::InitGoogleMock(&argc, argv);
+    const int retVal = RUN_ALL_TESTS();
 
-  const int retVal = RUN_ALL_TESTS();
-  printf("\nPress any key to complete.");
-  getch();
-  return retVal;
+    if (argc == 2 && strcmp(argv[1], "hold_after_test_completed") == 0) {
+        printf("\nPress any key to complete.");
+        getch();
+    }
+    return retVal;
 }
