@@ -4,12 +4,12 @@
 #include "http/http_ui_object.h"
 
 
-class DeviceInfo;
+class DeviceDesc;
 class ServiceInfo;
 
 class ServiceProxy :public Http::UIObject {
 public:
-    ServiceProxy(const DeviceInfo& device_desc, ServiceInfo& service_desc, uint32_t port);
+    ServiceProxy(const DeviceDesc& device_desc, ServiceInfo& service_desc, uint32_t port);
     ~ServiceProxy(void) {}
 
     const ServiceInfo& desc(void) const;
@@ -26,7 +26,7 @@ protected:
 
 
 private:
-    const DeviceInfo& device_desc_;
+    const DeviceDesc& device_desc_;
     ServiceInfo& service_desc_;
 };
 

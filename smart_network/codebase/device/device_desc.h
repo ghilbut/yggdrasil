@@ -1,26 +1,26 @@
-#ifndef DEVICE_INFO_H_
-#define DEVICE_INFO_H_
+#ifndef DEVICE_DESCRIPTION_H_
+#define DEVICE_DESCRIPTION_H_
 
 #include <string>
 
 
-class DeviceInfo {
+class DeviceDesc {
 public:
-    static const DeviceInfo* Create(const std::string& basepath);
-    static void Delete(const DeviceInfo* info);
+    static const DeviceDesc* Create(const std::string& basepath);
+    static void Delete(const DeviceDesc* info);
 
-    const char* uipath(void) const;
+    const char* uiroot(void) const;
     const char* id(void) const;
     const char* name(void) const;
     const char* model(void) const;
 
 
 private:
-    DeviceInfo(const std::string& uipath
+    DeviceDesc(const std::string& uiroot
                , const std::string& id
                , const std::string& name
                , const std::string& model);
-    ~DeviceInfo(void);
+    ~DeviceDesc(void);
 
 
 private:
@@ -31,4 +31,4 @@ private:
 };
 
 
-#endif  // DEVICE_INFO_H_
+#endif  // DEVICE_DESCRIPTION_H_

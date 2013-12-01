@@ -2,15 +2,15 @@
 
 #include "service_info.h"
 #include "http/http_request.h"
-#include "codebase/device/device_info.h"
+#include "codebase/device/device_desc.h"
 #include <json/json.h>
 
 
-Service::Service(const DeviceInfo*& device
+Service::Service(const DeviceDesc*& device
                  , ServiceInfo*& service
                  , uint32_t port
                  , Channel::Ptr channel)
-    : Http::Object(device->uipath(), port)
+    : Http::Object(device->uiroot(), port)
     , device_(device)
     , service_(service)
     , channel_(channel) {

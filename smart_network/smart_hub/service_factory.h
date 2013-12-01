@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 
-class DevicePool;
+class DeviceManager;
 class ServiceProxy;
 
 class ServiceFactory {
@@ -19,7 +19,7 @@ public:
 
 
 public:
-    ServiceFactory(const DevicePool& device_fac, const std::string& description_root);
+    ServiceFactory(const DeviceManager& device_fac, const std::string& description_root);
     ~ServiceFactory(void);
 
     ServiceProxy* GetOrCreate(const std::string& id);
@@ -31,7 +31,7 @@ public:
 
 
 private:
-    const DevicePool& device_fac_;
+    const DeviceManager& device_manager_;
     const std::string& description_root_;
     ServiceList service_list_;
     uint32_t next_port_;

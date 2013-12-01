@@ -1,14 +1,14 @@
-#include "device_info.h"
+#include "device_desc.h"
 #include "utility.h"
 #include "boost_lib_fwd.h"
 #include <json/reader.h>
 #include <cstdio>
 
 
-const DeviceInfo* DeviceInfo::Create(const std::string& basepath) {
+const DeviceDesc* DeviceDesc::Create(const std::string& basepath) {
 
-    const std::string uipath = (boost::filesystem::path(basepath) / "ui").string();
-    if (!boost::filesystem::is_directory(uipath)) {
+    const std::string uiroot = (boost::filesystem::path(basepath) / "ui").string();
+    if (!boost::filesystem::is_directory(uiroot)) {
         return 0;
     }
 
@@ -32,41 +32,41 @@ const DeviceInfo* DeviceInfo::Create(const std::string& basepath) {
 
     // TODO(ghilbut): check validation of data
 
-    const DeviceInfo* info = new DeviceInfo(uipath, id, name, model);
+    const DeviceDesc* info = new DeviceDesc(uiroot, id, name, model);
     return info;
 }
 
-void DeviceInfo::Delete(const DeviceInfo* info) {
+void DeviceDesc::Delete(const DeviceDesc* info) {
     delete info;
 }
 
-const char* DeviceInfo::uipath(void) const {
+const char* DeviceDesc::uiroot(void) const {
     return uipath_.c_str();
 }
 
-const char* DeviceInfo::id(void) const {
+const char* DeviceDesc::id(void) const {
     return id_.c_str();
 }
 
-const char* DeviceInfo::name(void) const {
+const char* DeviceDesc::name(void) const {
     return name_.c_str();
 }
 
-const char* DeviceInfo::model(void) const {
+const char* DeviceDesc::model(void) const {
     return model_.c_str();
 }
 
-DeviceInfo::DeviceInfo(const std::string& uipath
+DeviceDesc::DeviceDesc(const std::string& uiroot
                        , const std::string& id
                        , const std::string& name
                        , const std::string& model)
-    : uipath_(uipath)
+    : uipath_(uiroot)
     , id_(id)
     , name_(name)
     , model_(model) {
 
 }
 
-DeviceInfo::~DeviceInfo(void) {
+DeviceDesc::~DeviceDesc(void) {
 
 }

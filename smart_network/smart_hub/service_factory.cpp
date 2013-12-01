@@ -1,12 +1,12 @@
 #include "service_factory.h"
 #include "service_proxy.h"
 #include "service/service_info.h"
-#include "codebase/device/device_pool.h"
+#include "codebase/device/device_manager.h"
 #include "codebase/boost_lib_fwd.h"
 
 
-ServiceFactory::ServiceFactory(const DevicePool& device_fac, const std::string& description_root)
-    : device_fac_(device_fac)
+ServiceFactory::ServiceFactory(const DeviceManager& device_fac, const std::string& description_root)
+    : device_manager_(device_fac)
     , description_root_(description_root)
     , next_port_(kPortBegin) {
 
@@ -21,7 +21,7 @@ ServiceFactory::ServiceFactory(const DevicePool& device_fac, const std::string& 
             continue;
         }
 
-        const DeviceInfo* device_desc = device_fac_[service_desc->device()];
+        const DeviceDesc* device_desc = device_manager_[service_desc->device()];
         if (device_desc == NULL) {
             // TODO(ghilbut): error handling.
             ServiceInfo::Delete(service_desc);
@@ -61,7 +61,7 @@ ServiceProxy* ServiceFactory::GetOrCreate(const std::string& id) {
         return 0;
     }
 
-    const DeviceInfo* device_desc = device_fac_[service_desc->device()];
+    const DeviceDesc* device_desc = device_manager_[service_desc->device()];
     if (device_desc == 0) {
         ServiceInfo::Delete(service_desc);
         printf("[ERROR] no device(%s) description exists.\n", id.c_str());

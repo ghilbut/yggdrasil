@@ -7,7 +7,7 @@
 #include <string>
 
 
-class DeviceInfo;
+class DeviceDesc;
 class ServiceInfo;
 class HttpRequest;
 
@@ -17,7 +17,7 @@ public:
         
 
 public:
-    Service(const DeviceInfo*& device
+    Service(const DeviceDesc*& device
             , ServiceInfo*& service
             , uint32_t port
             , Channel::Ptr channel);
@@ -45,7 +45,7 @@ public:
 
 
 private:
-    const DeviceInfo* device_;
+    const DeviceDesc* device_;
     ServiceInfo* service_;
     Channel::Ptr channel_;
 

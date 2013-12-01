@@ -6,7 +6,7 @@
 #include "main_ui_service.h"
 #include "main_ui_handler.h"
 #include "http/http_websocket_ping_scheduler.h"
-#include "codebase/device/device_pool.h"
+#include "codebase/device/device_manager.h"
 #include "codebase/boost_lib_fwd.h"
 #include <map>
 #include <set>
@@ -45,7 +45,7 @@ private:
     Http::WebsocketPingScheduler ws_ping_scheduler_;
     const std::string common_root_;
 
-    DevicePool device_desc_factory_;
+    DeviceManager device_manager_;
     ServiceFactory service_factory_;
 
     MainUIService main_ui_service_;

@@ -78,15 +78,15 @@
   <ItemGroup>
     <ClInclude Include="boost_lib_fwd.h" />
     <ClInclude Include="chat_message.h" />
-    <ClInclude Include="device\device_info.h" />
-    <ClInclude Include="device\device_pool.h" />
+    <ClInclude Include="device\device_desc.h" />
+    <ClInclude Include="device\device_manager.h" />
     <ClInclude Include="ssdp.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />
-    <ClCompile Include="device\device_info.cpp" />
-    <ClCompile Include="device\device_pool.cpp" />
+    <ClCompile Include="device\device_desc.cpp" />
+    <ClCompile Include="device\device_manager.cpp" />
     <ClCompile Include="ssdp.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>

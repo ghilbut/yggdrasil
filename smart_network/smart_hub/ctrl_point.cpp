@@ -16,8 +16,8 @@ CtrlPoint::CtrlPoint(const std::string& storage_root)
     , ws_ping_scheduler_(io_service_)
     , common_root_((boost::filesystem::path(storage_root) / "common").string())
     
-    , device_desc_factory_((boost::filesystem::path(storage_root) / "devices").string())
-    , service_factory_(device_desc_factory_, (boost::filesystem::path(storage_root) / "services").string()) 
+    , device_manager_((boost::filesystem::path(storage_root) / "devices").string())
+    , service_factory_(device_manager_, (boost::filesystem::path(storage_root) / "services").string()) 
     , main_ui_service_((boost::filesystem::path(storage_root) / "main").string(), 80) {
     // nothing
 }
