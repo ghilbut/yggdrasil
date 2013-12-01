@@ -8,35 +8,24 @@
 
 Service::Service(const DeviceDesc*& device
                  , ServiceDesc*& service
-                 , uint32_t port
-                 , Channel::Ptr channel)
+                 , uint32_t port)
     : Http::Object(device->uiroot(), port)
     , device_(device)
-    , service_(service)
-    , channel_(channel) {
+    , service_(service) {
 }
 
 Service::~Service(void) {
     ServiceDesc::Delete(service_);
 }
 
-void Service::BindHandleDisconnected(HandleDisconnected handle) {
-    fire_disconnected_ = handle;
-}
-
-void Service::BindChannel(Channel::Ptr& channel) {
+void Service::BindChannel(Channel* channel) {
     channel_ = channel;
-    channel_->BindHandleResponse(boost::bind(&Service::OnResponse, this, _1));
-    channel_->BindHandleEvent(boost::bind(&Service::OnEvent, this, _1));
-    channel_->BindHandleDisconnected(boost::bind(&Service::OnDisconnected, this));
+    channel->BindDelegate(this);
 }
 
 void Service::UnbindChannel(void) {
-    channel_->BindHandleConnected(0);
-    channel_->BindHandleResponse(0);
-    channel_->BindHandleEvent(0);
-    channel_->BindHandleDisconnected(0);
-    channel_.reset();
+    channel->UnbindDelegate(this);
+    //channel_.reset();
 }
 
 bool Service::DoExecute(mg_connection* conn

@@ -2,74 +2,58 @@
 #define CHANNEL_H_
 
 #include "codebase/chat_message.h"
+#include "channel_delegate.h"
 #include "codebase/boost_lib_fwd.h"
 
 
+class ChannelDelegate;
+
 class Channel {
 public:
-    typedef boost::shared_ptr<Channel> Ptr;
-    typedef boost::function<void (const std::string&, Channel::Ptr channel)> HandleConnected;
-    typedef boost::function<void (const std::string&)> HandleResponse;
-    typedef boost::function<void (const std::string&)> HandleEvent;
-    typedef boost::function<void ()>                   HandleDisconnected;
-
     //virtual bool Start(void) = 0;
     //virtual void Stop(void) = 0;
     //virtual void DoCommand() const = 0;
 
-    void BindHandleConnected(HandleConnected handle) {
-        fire_connected_ = handle;
-    }
-
-    void BindHandleResponse(HandleResponse handle) {
-        fire_response_ = handle;
-    }
-
-    void BindHandleEvent(HandleEvent handle) {
-        fire_event_ = handle;
-    }
-
-    void BindHandleDisconnected(HandleDisconnected handle) {
-        fire_disconnected_ = handle;
-    }
-
     virtual void Deliver(const chat_message& msg) = 0;
 
+    void BindDelegate(ChannelDelegate* delegate) {
+        BOOST_ASSERT(delegate != 0);
+        delegate_ = delegate;
+    }
 
-protected:
-    void FireOnConnected(const std::string& json, Channel::Ptr channel) {
-        if (fire_connected_) {
-            fire_connected_(json, channel);
-        }
+    void UnbindDelegate(void) {
+        BOOST_ASSERT(delegate_ != 0);
+        delegate_ = 0;
+    }
+
+    void FireOnConnected(const std::string& json) {
+        BOOST_ASSERT(delegate_ != 0);
+        delegate_->OnConnected(json, this);
     }
 
     void FireOnResponse(const std::string& json) {
-        if (fire_response_) {
-            fire_response_(json);
-        }
+        BOOST_ASSERT(delegate_ != 0);
+        delegate_->OnResponse(json);
     }
 
     void FireOnEvent(const std::string& json) {
-        if (fire_event_) {
-            fire_event_(json);
-        }
+        BOOST_ASSERT(delegate_ != 0);
+        delegate_->OnEvent(json);
     }
 
     void FireOnDisconnected(void) {
-        if (fire_disconnected_) {
-            fire_disconnected_();
-        }
+        BOOST_ASSERT(delegate_ != 0);
+        delegate_->OnDisconnected();
     }
 
 
 protected:
-    ~Channel(void) {}
+    Channel(void) : delegate_(0) {}
+    // virtual ~Channel(void) {}
 
-private:
-    HandleConnected    fire_connected_;
-    HandleResponse     fire_response_;
-    HandleEvent        fire_event_;
-    HandleDisconnected fire_disconnected_;
+
+protected:
+    ChannelDelegate* delegate_;
 };
 
 

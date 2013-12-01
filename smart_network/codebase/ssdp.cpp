@@ -16,12 +16,12 @@ SsdpSender::~SsdpSender(void) {
     // nothing
 }
 
-void SsdpSender::RegistTarget(const char* target) {
+void SsdpSender::RegistTarget(const std::string& target) {
     boost::mutex::scoped_lock lock(mutex_);
     targets_.insert(target);
 }
 
-void SsdpSender::UnregistTarget(const char* target) {
+void SsdpSender::UnregistTarget(const std::string& target) {
     boost::mutex::scoped_lock lock(mutex_);
     targets_.erase(target);
 }

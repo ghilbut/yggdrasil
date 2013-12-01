@@ -24,9 +24,6 @@ public:
     TCP::socket& socket();
 
 
-    
-
-
 private:
     void handle_read_header(const boost::system::error_code& error);
     void handle_read_type(const boost::system::error_code& error);

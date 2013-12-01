@@ -1,7 +1,7 @@
 #ifndef CTRL_POINT_H_
 #define CTRL_POINT_H_
 
-#include "channel.h"
+#include "channel_delegate.h"
 #include "service_factory.h"
 #include "main_ui_service.h"
 #include "main_ui_handler.h"
@@ -14,12 +14,18 @@
 
 class SsdpSender;
 
-class CtrlPoint : public MainUIHandler {
+class CtrlPoint : public MainUIHandler
+                  , public ChannelDelegate {
 public:
     CtrlPoint(const std::string& storage_root);
     ~CtrlPoint(void);
 
-    // HttpServer
+    // ChannelDelegate
+    virtual void OnConnected(const std::string& json, Channel* channel);
+    virtual void OnResponse(const std::string& json);
+    virtual void OnEvent(const std::string& text);
+    virtual void OnDisconnected(void);
+
     bool Start(void);
     void Stop(void);
 
@@ -27,14 +33,11 @@ public:
 private:
     void thread_main(void);
 
-    // channel binding
-    void OnConnected(const std::string& json, Channel::Ptr channel);
-    void OnDisonnected(const char* id);
-
-    // MainUIDelegator
+    // MainUIDelegate
     virtual void handle_get_device_list(std::string& json);
 
-    bool HandleCommonPath(const char* uri, std::string& filepath);
+    bool handle_get_common_path(const char* uri, std::string& filepath);
+    void handle_disconnected(const std::string& id);
 
 
 private:
@@ -42,7 +45,7 @@ private:
     boost::thread thread_;
 
     SsdpSender* ssdp_sender_;
-    Http::WebsocketPingScheduler ws_ping_scheduler_;
+    // Http::WebsocketPingScheduler ws_ping_scheduler_;
     const std::string common_root_;
 
     DeviceManager device_manager_;

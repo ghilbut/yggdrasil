@@ -147,6 +147,7 @@ data-angleArc=250 data-cursor=true value="1">
 
 <!-- body scripts -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="/common/js/rabbit_hole.js"></script>
 <script type="text/javascript" src="/static/jquery.knob.js"></script>
 <script type="text/javascript">
 
@@ -204,8 +205,6 @@ document.getElementById("start").onclick = function () {
 	refreshUI();
 	DoNotify();
 }
-
-
 
 
 
@@ -267,51 +266,28 @@ $("#cursor").knob({
 
 
 
-var ws = false;
 
-function open(host) {
-	var conn = new WebSocket('ws://' + host);
-	conn.onopen = ws_onopen;
-	conn.onmessage = ws_onmessage;
-	conn.onclose = ws_onclose;
-	conn.onerror = ws_onerror;
-	return conn;
-}
+(function () {
 
-function notify(json) {
-	var type = typeof(json);
-
-	if (!ws || ws.readyState === ws.CLOSING || ws.readyState === ws.CLOSED) {
-		console.log('tromm::notify websocket is invalid');
-		// TODO(jh81.kim): throw exception
-		return;
+	function getStatus(data) {
+		var params = JSON.parse(data).params;
+		powerOn = params.isPowerOn;
+		running = params.isRunning;
+		mode = params.mode;
+		refreshUI();
 	}
 
-	if (type !== 'string') {
-		if (type !== 'object' && json.constructor !== Object) {
-			console.log('tromm::notify format is invalid.');
-			// TODO(jh81.kim): throw exception
-			return;	
-		}
-		json = JSON.stringify(json);
-	}
+	rabbitHole.request('get/status', '', getSatus, false);
+})();
 
-	ws.send(json);
+
+
+function DoNotify() {
+	rabbitHole.notify({ name: 'statusChanged', params: { isPowerOn: powerOn, isRunning: running, mode: mode } });
 }
 
-function close() {
-	ws.close();
-}
-
-function ws_onopen(event) {
-	console.log('tromm::ws_onopen');
-	// nothing
-}
-function ws_onmessage(event) {
-
-	console.log('ws_onmessage', event);
-
-	var params = JSON.parse(event.data).params;
+rabbitHole.onevent = function (data) {
+	var params = JSON.parse(data).params;
 	console.log(params);
 
 	powerOn = params.isPowerOn;
@@ -320,44 +296,6 @@ function ws_onmessage(event) {
 	$("#cursor").val(mode).trigger("change");
 	refreshUI();
 }
-function ws_onclose(event) {
-	console.log('tromm::ws_onclose');
-	setTimeout(function () {
-		ws = open(window.location.host);
-	}, 500);
-}
-function ws_onerror(event) {
-	// nothing
-}
-
-
-
-
-function DoNotify() {
-	console.log('tromm::DoNotify', { name: 'statusChanged', params: { isPowerOn: powerOn, isRunning: running, mode: mode } });
-	notify({ name: 'statusChanged', params: { isPowerOn: powerOn, isRunning: running, mode: mode } });
-}
-
-
-
-(function () {
-
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function () {
-		if (this.readyState === this.DONE && this.status === 200) {
-			console.log(this);
-			var params = JSON.parse(this.responseText).params;
-			powerOn = params.isPowerOn;
-			running = params.isRunning;
-			mode = params.mode;
-			refreshUI();
-		}
-	};
-	xhr.open("POST", "/do/get/status");
-	xhr.send();
-
-	ws = open(window.location.host);
-})();
 
 </script>
 

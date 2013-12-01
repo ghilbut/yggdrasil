@@ -18,6 +18,8 @@ Connection::~Connection(void) {
 
 void Connection::Connect(const std::string& address, uint32_t port) {
 
+    address_ = address;
+
     char sport[10];
     const int size = sprintf(sport, "%u", port);
     if (size < 0) {
@@ -190,6 +192,7 @@ void Connection::do_close(void) {
     socket_.close();
 
     if (close_callback_) {
-        close_callback_(socket_.remote_endpoint().address().to_string());
+        close_callback_(address_);
+        //close_callback_(socket_.remote_endpoint().address().to_string());
     }
 }

@@ -5,10 +5,6 @@
     <ClInclude Include="ctrl_point.h" />
     <ClInclude Include="tcp_channel.h" />
     <ClInclude Include="tcp_server.h" />
-    <ClInclude Include="uart_channel.h" />
-    <ClInclude Include="uart_server.h" />
-    <ClInclude Include="zigbee_driver.h" />
-    <ClInclude Include="udp_server.h" />
     <ClInclude Include="http\http_request.h">
       <Filter>http</Filter>
     </ClInclude>
@@ -35,7 +31,7 @@
     </ClInclude>
     <ClInclude Include="service_proxy.h" />
     <ClInclude Include="service_factory.h" />
-    <ClInclude Include="channel_delegator.h" />
+    <ClInclude Include="channel_delegate.h" />
     <ClInclude Include="main_ui_service.h" />
     <ClInclude Include="main_ui_handler.h" />
   </ItemGroup>
@@ -44,10 +40,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tcp_channel.cpp" />
     <ClCompile Include="tcp_server.cpp" />
-    <ClCompile Include="uart_channel.cpp" />
-    <ClCompile Include="uart_server.cpp" />
-    <ClCompile Include="zigbee_driver.cpp" />
-    <ClCompile Include="udp_server.cpp" />
     <ClCompile Include="http\http_request.cpp">
       <Filter>http</Filter>
     </ClCompile>

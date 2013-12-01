@@ -88,8 +88,12 @@ int Object::OnWebsocketData(struct mg_connection* conn, int bits, char* data, si
     }
 
     if (opcode == WEBSOCKET_OPCODE_TEXT) {
-        std::string text(data, data + data_len);
-        OnWebsocketText(text);
+        if (data_len > 0) {
+            std::string text(data, data + data_len);
+            if (text != "rabbit_hole_ping") {
+                OnWebsocketText(text);
+            }
+        }
         return 1;
     }
 
@@ -104,7 +108,7 @@ int Object::OnWebsocketData(struct mg_connection* conn, int bits, char* data, si
     }
 
     if (opcode == WEBSOCKET_OPCODE_PING) {
-        return mg_websocket_write(conn, WEBSOCKET_OPCODE_PONG, 0, 0);
+        return mg_websocket_write(conn, WEBSOCKET_OPCODE_PONG, data, data_len);
     }
 
     if (opcode == WEBSOCKET_OPCODE_PONG) {

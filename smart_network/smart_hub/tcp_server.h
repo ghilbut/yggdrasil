@@ -5,24 +5,23 @@
 #include <string>
 
 
+class ConnectionDelegate;
+
 class TcpServer {
 public:
-    explicit TcpServer(boost::asio::io_service& io_service, unsigned short port = 8091);
+    TcpServer(IOService& io_service, ChannelDelegate* delegate, unsigned short port = 8091);
     ~TcpServer(void);
-
-    void BindHandleConnect(Channel::HandleConnected handle);
-    void UnbindHandleConnect(void);
 
 
 private:
     void DoListen(void);
-    void handle_accept(TcpChannel::Ptr channel, const boost::system::error_code& error);
+    void handle_accept(TcpChannel* channel, const boost::system::error_code& error);
+
 
 private:
-    boost::asio::io_service& io_service_;
-    boost::asio::ip::tcp::acceptor acceptor_;
-
-    Channel::HandleConnected fire_connected_;
+    IOService& io_service_;
+    TCP::acceptor acceptor_;
+    ChannelDelegate* delegate_;
 };
 
 

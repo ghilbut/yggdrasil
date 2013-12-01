@@ -1,12 +1,11 @@
 #include "tcp_server.h"
-#include "tcp_channel.h"
-#include "codebase/boost_lib_fwd.h"
 #include <algorithm>
 
 
-TcpServer::TcpServer(boost::asio::io_service& io_service, unsigned short port) 
+TcpServer::TcpServer(IOService& io_service, ChannelDelegate* delegate, unsigned short port) 
         : io_service_(io_service)
-        , acceptor_(io_service, TCP::endpoint(TCP::v4(), port)) {
+        , acceptor_(io_service, TCP::endpoint(TCP::v4(), port)) 
+        , delegate_(delegate) {
         //, acceptor_(io_service, TCP::endpoint(boost::asio::ip::address::from_string("192.168.1.2"), port)) {
         //, acceptor_(io_service, TCP::endpoint(boost::asio::ip::address::from_string("192.168.0.4"), port)) {
     acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
@@ -14,27 +13,22 @@ TcpServer::TcpServer(boost::asio::io_service& io_service, unsigned short port)
 }
 
 TcpServer::~TcpServer(void) {
+    // nothing
 }
 
+
+
 void TcpServer::DoListen(void) {
-    TcpChannel::Ptr channel(new TcpChannel(io_service_));
+    TcpChannel* channel = new TcpChannel(io_service_);
+    channel->BindDelegate(delegate_);
 
     acceptor_.async_accept(channel->socket()
                            , boost::bind(&TcpServer::handle_accept, this, channel, boost::asio::placeholders::error));
 }
 
-void TcpServer::handle_accept(TcpChannel::Ptr channel, const boost::system::error_code& error) {
+void TcpServer::handle_accept(TcpChannel* channel, const boost::system::error_code& error) {
     if (!error) {
-        channel->BindHandleConnected(fire_connected_);
         channel->Start();
     }
     DoListen();
-}
-
-void TcpServer::BindHandleConnect(Channel::HandleConnected handle) {
-    fire_connected_ = handle;
-}
-
-void TcpServer::UnbindHandleConnect(void) {
-    fire_connected_ = 0;
 }

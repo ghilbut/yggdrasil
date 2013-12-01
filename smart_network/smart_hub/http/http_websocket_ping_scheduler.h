@@ -11,7 +11,7 @@ class Object;
 
 class WebsocketPingScheduler {
 public:
-    enum { kPingIntervalSec = 30 };
+    enum { kPingIntervalSec = 10 };
 
 public:
     explicit WebsocketPingScheduler(IOService& io_service);

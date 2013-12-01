@@ -75,7 +75,6 @@ ServiceProxy* ServiceFactory::GetOrCreate(const std::string& id) {
         return 0;
     }
 
-    // TODO(ghilbut): initialize service proxy
     return service;
 }
 
@@ -85,6 +84,22 @@ void ServiceFactory::Remove(const std::string& id) {
     if (itr != service_list_.end()) {
         delete itr->second;
         service_list_.erase(itr);
+    }
+}
+
+void ServiceFactory::StartAll(void) {
+    ServiceList::iterator itr = service_list_.begin();
+    ServiceList::iterator end = service_list_.end();
+    for (; itr != end; ++itr) {
+        (itr->second)->Start();
+    }
+}
+
+void ServiceFactory::StopAll(void) {
+    ServiceList::iterator itr = service_list_.begin();
+    ServiceList::iterator end = service_list_.end();
+    for (; itr != end; ++itr) {
+        (itr->second)->Stop();
     }
 }
 

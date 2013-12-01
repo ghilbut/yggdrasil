@@ -36,6 +36,7 @@ void Device::Impl::OnSsdp(const std::string& ssdp, const std::string& address) {
 
     Connection* conn = new Connection(io_service_, description_, *this);
     connections_[address] = conn;
+    conn->BindCloseCallback(boost::bind(&Device::Impl::OnClose, this, _1));
     conn->Connect(address, 8070);
 }
 

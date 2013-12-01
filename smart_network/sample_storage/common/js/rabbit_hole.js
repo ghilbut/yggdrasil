@@ -1,175 +1,114 @@
-var urlList = {};
-var currentUI = false;
-
-var UILog = (function () {
-
-	var node = document.getElementById('debug_log_text');
-
-	function log(text) {
-		node.textContent = text;
-	}
-
-	return {
-		log: log
+var rabbitHole = (function () {
+	var rh_ = {
+		request: request,
+		notify: notify,
+		onevent: false
 	};
-})();
 
-function closeRemoteUI() {
-	if (currentUI) {
-		currentUI = false;
-		var root = document.getElementById('remote_ui');
-		if (root.firstChild) {
-			root.removeChild(root.firstChild);
-		}
-	}
-}
+	var ws = false;
 
-function openRemoteUI(id) {
-	closeRemoteUI();
+	function Request(query, data, onresponse, onerror) {
+		var xhr = new XMLHttpRequest()
+			, data = data
+			, onresponse = (typeof(onresponse) === 'function' ? onresponse : false)
+			, onerror = (typeof(onerror) === 'function' ? onerror : false);
+		xhr.onreadystatechange = resultCallback;
+		xhr.open('POST', '/do/' + query, false);
+		xhr.send(data);
 
-	var root = document.getElementById('remote_ui');
-	var iframe = document.createElement('iframe');
-	iframe.src = urlList[id];
-	root.appendChild(iframe);
-	currentUI = id;
+		function resultCallback() {
+			if (this.readyState !== this.DONE) {
+				return;
+			}
 
-	document.getElementById('remote_control').style.display = 'block';
-}
-
-var deiveItemTag = ''
-+'<div class="device">'
-+'<img alt="-">'
-+'</div>';
-
-function getDeviceListResult() {
-	if (this.readyState !== this.DONE) {
-		return;
-	}
-
-	if (this.status !== 200) {
-		slert('[ERROR][' + this.status + '] ' + 'getDeviceListResult');
-	}
-
-	var json = this.response;
-	if (typeof(this.response) === 'string') {
-		json = JSON.parse(this.responseText);
-	}
-	
-	for (var i = 0; i < json.length; ++i) {
-		var item = json[i];
-		var button = document.createElement('button');
-		button.id = item.id;
-		// location.host
-		// location.hostname
-		urlList[item.id] = location.origin + ':' + item.port;
-		button.onclick = function () {
-			openRemoteUI(this.id);
-		};
-		button.textContent = '[' + item.id + '] ' + item.nickname + ' (' + item.device + ')';
-		button.disabled = item.disabled;
-
-		var li = document.createElement('li');
-		li.appendChild(button);
-		document.getElementById('device_list').appendChild(li);
-	}
-}
-
-window.onload = function () {
-	var xhr = new XMLHttpRequest();
-	xhr.responseType = 'json';
-	xhr.onreadystatechange = getDeviceListResult;
-	xhr.open('GET', '/do/get/device/list', true);
-	xhr.send();
-};
-
-
-
-document.getElementById('device_insert').onclick = function () {
-	var txt = document.getElementById('device_id').value;
-	if (txt.length > 0) {
-		var xhr = new XMLHttpRequest();
-		xhr.open('GET', '/do/device/insert', false);
-		xhr.send('id="' + txt + '"');
-		if (xhr.readyState === xhr.DONE) {
-			if (xhr.status === 200) {
-
+			if (this.status === 200) {
+				if (onresponse) {
+					onresponse(this.response)
+				}
 			} else {
-
+				// TODO(ghilbut): it is not designed which how to notify error, yet.
+				if (onerror) {
+					onerror();
+				}
 			}
 		}
 	}
-};
 
-document.getElementById('device_remove').onclick = function () {
-	var txt = document.getElementById('device_id').value;
-	if (txt.length > 0) {
-		var xhr = new XMLHttpRequest();
-		xhr.open('POST', '/do/device/remove', false);
-		xhr.send('id="' + txt + '"');
-		if (xhr.readyState === xhr.DONE) {
-			if (xhr.status === 200) {
+	function request(query, data, onresponse, onerror) {
+		// TODO(ghilbut):
+		// redesign get parameters of query
+		// key:value object is standard
 
-			} else {
-				
-			}
+		var req = false;
+
+		if (typeof(query) !== 'string') {
+			console.log('[ERROR] query should be string type.', query);
+			return false;
 		}
-	}	
-};
 
-document.getElementById('remote_ui_close').onclick = function () {
-	document.getElementById('remote_control').style.display = 'none';
+		if (typeof(data) !== 'string') {
+			if (data.constructor !== Object) {
+				console.log('[ERROR]', 'invalid data type', data);
+				return false;
+			}
+			data = JSON.stringify(data);
+		}
 
-	var remote_ui = document.getElementById('remote_ui');
-	var iframe = document.querySelector('iframe');
-	remote_ui.removeChild(iframe);
-};
+		req = new Request(query, data, onresponse, onerror);
+		return true;
+	}
 
+	function notify(data) {
+		if (typeof(data) !== 'string') {
+			if (data.constructor !== Object) {
+				console.log('[ERROR]', 'invalid data type', data);
+				return false;
+			}
+			data = JSON.stringify(data);
+		}
+		if (ws && ws.readyState === ws.OPEN) {
+			ws.send(data);
+			return true;
+		}
+		return false;
+	}
 
+	var ws_onopen = function (event) { 
+		console.log('ws_onopen', event);
+	};
+	var ws_onmessage = function (event) { 
+		console.log('ws_onmessage', event);
+		var cb = rh_.onevent;
+		if (cb && typeof(cb) === 'function') {
+			cb(event.data);
+		}
+	};
+	var ws_onclose = function (event) { 
+		console.log('ws_onclose', event);
+		setTimeout(function () {
+			ws = ws_open(window.location.host);		
+		}, 1000);
+	};
+	var ws_onerror = function (event) { 
+		console.log('ws_onerror', event);
+	};
 
-var begin = new Date();
-var ws = new WebSocket('ws://' + window.location.host);
-ws.onopen = function (event) { 
-	console.log('onopen', event);
+	function ws_open(host) {
+		var conn = new WebSocket('ws://' + host);
+		conn.onopen = ws_onopen;
+		conn.onmessage = ws_onmessage;
+		conn.onclose = ws_onclose;
+		conn.onerror = ws_onerror;
+		return conn;
+	}
 
-	
-	
-	return;
+	ws = ws_open(window.location.host);
+
 	setInterval(function () {
-		//ws.send('Hello, world!');
-		var end = new Date();
-		var sec = (end-begin) / 1000.0;
-		console.log('timeout', '['+sec+' sec]');
-	}, 30000);
-};
-ws.onmessage = function (event) { 
-	var end = new Date();
-	var sec = (end-begin) / 1000.0;
-	console.log('onmessage', '['+sec+' sec]', event);
-	document.getElementById('socket_result').textContent = 'onmessage: ' + event.data + ' ['+sec+' sec]';
-	
-	var json = JSON.parse(event.data);
-	if (json.event === "ServiceAdded") {
-		document.getElementById(json.id).disabled = false;
-		return;
-	}
-	if (json.event === "ServiceRemoved") {
-		document.getElementById(json.id).disabled = true;
-		return;
-	}
-	if (json.event === "Disconnected") {
-		alert('Smart HUB disconnected');
-		return;
-	}
-};
-ws.onclose = function (event) { 
-	console.log('onclose', event);
-	var end = new Date();
-	console.log((end-begin) / 1000.0 + ' sec');
-};
-ws.onerror = function (event) { 
-	console.log('onerror', event);
-};
+		if (ws && ws.readyState === ws.OPEN) {
+			ws.send('');
+		}
+	}, 3000);
 
-document.getElementById('socket_send').onclick = function () {
-	ws.send(document.getElementById('socket_text').value);
-}
+	return rh_;
+})();

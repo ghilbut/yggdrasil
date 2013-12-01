@@ -19,12 +19,10 @@ public:
 public:
     Service(const DeviceDesc*& device
             , ServiceDesc*& service
-            , uint32_t port
-            , Channel::Ptr channel);
+            , uint32_t port);
     ~Service(void);
 
-    void BindHandleDisconnected(HandleDisconnected handle);
-    void BindChannel(Channel::Ptr& channel);
+    void BindChannel(Channel* channel);
     void UnbindChannel(void);
 
     // HttpObject
@@ -47,9 +45,7 @@ public:
 private:
     const DeviceDesc* device_;
     ServiceDesc* service_;
-    Channel::Ptr channel_;
-
-    HandleDisconnected fire_disconnected_;
+    Channel* channel_;
 
 
 

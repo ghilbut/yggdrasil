@@ -10,7 +10,8 @@ TcpChannel::TcpChannel(boost::asio::io_service& io_service)
 void TcpChannel::Start(void) {
     boost::asio::async_read(socket_
         , boost::asio::buffer(read_msg_.data(), chat_message::header_length)
-        , boost::bind(&TcpChannel::handle_read_header, shared_from_this(), boost::asio::placeholders::error));
+        // , boost::bind(&TcpChannel::handle_read_header, shared_from_this(), boost::asio::placeholders::error));
+        , boost::bind(&TcpChannel::handle_read_header, this, boost::asio::placeholders::error));
 }
 
 void TcpChannel::Deliver(const chat_message& msg) {
@@ -19,7 +20,8 @@ void TcpChannel::Deliver(const chat_message& msg) {
     if (!write_in_progress) {
         boost::asio::async_write(socket_
             , boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length())
-            , boost::bind(&TcpChannel::handle_write, shared_from_this(), boost::asio::placeholders::error));
+            //, boost::bind(&TcpChannel::handle_write, shared_from_this(), boost::asio::placeholders::error));
+            , boost::bind(&TcpChannel::handle_write, this, boost::asio::placeholders::error));
     }
 }
 
@@ -32,7 +34,8 @@ void TcpChannel::handle_read_header(const boost::system::error_code& error) {
     if (!error && read_msg_.decode_header()) {
         boost::asio::async_read(socket_
             , boost::asio::buffer(read_msg_.data() + chat_message::header_length, chat_message::type_length)
-            , boost::bind(&TcpChannel::handle_read_type, shared_from_this(), boost::asio::placeholders::error));
+            // , boost::bind(&TcpChannel::handle_read_type, shared_from_this(), boost::asio::placeholders::error));
+            , boost::bind(&TcpChannel::handle_read_type, this, boost::asio::placeholders::error));
     } else {
         // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_header] error: %s\n", error.message().c_str());
@@ -44,7 +47,8 @@ void TcpChannel::handle_read_type(const boost::system::error_code& error) {
     if (!error) {
         boost::asio::async_read(socket_
             , boost::asio::buffer(read_msg_.body(), read_msg_.body_length())
-            , boost::bind(&TcpChannel::handle_read_body, shared_from_this(), boost::asio::placeholders::error));
+            // , boost::bind(&TcpChannel::handle_read_body, shared_from_this(), boost::asio::placeholders::error));
+            , boost::bind(&TcpChannel::handle_read_body, this, boost::asio::placeholders::error));
     } else {
         // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_type] error: %s\n", error.message().c_str());
@@ -65,7 +69,8 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
         std::string json(read_msg_.body(), read_msg_.body_length());
         const chat_message::Type type = read_msg_.type();
         if (type == chat_message::kConnect) {
-            FireOnConnected(json, shared_from_this());
+            //FireOnConnected(json, shared_from_this());
+            FireOnConnected(json);
         } else if (type == chat_message::kResponse) {
             FireOnResponse(json);
         } else if (type == chat_message::kEvent) {
@@ -91,7 +96,8 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
 
         boost::asio::async_read(socket_
             , boost::asio::buffer(read_msg_.data(), chat_message::header_length)
-            , boost::bind(&TcpChannel::handle_read_header, shared_from_this(), boost::asio::placeholders::error));
+            // , boost::bind(&TcpChannel::handle_read_header, shared_from_this(), boost::asio::placeholders::error));
+            , boost::bind(&TcpChannel::handle_read_header, this, boost::asio::placeholders::error));
     } else {
         // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_body] error\n");
@@ -105,7 +111,8 @@ void TcpChannel::handle_write(const boost::system::error_code& error) {
         if (!write_msgs_.empty()) {
             boost::asio::async_write(socket_
                 , boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length())
-                , boost::bind(&TcpChannel::handle_write, shared_from_this(), boost::asio::placeholders::error));
+                // , boost::bind(&TcpChannel::handle_write, shared_from_this(), boost::asio::placeholders::error));
+                , boost::bind(&TcpChannel::handle_write, this, boost::asio::placeholders::error));
         }
     } else {
         // TODO(ghilbut) : disconnected ?

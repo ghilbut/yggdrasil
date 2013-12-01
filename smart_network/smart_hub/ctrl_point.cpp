@@ -13,7 +13,7 @@
 
 CtrlPoint::CtrlPoint(const std::string& storage_root)
     : ssdp_sender_(0)
-    , ws_ping_scheduler_(io_service_)
+    // , ws_ping_scheduler_(io_service_)
     , common_root_((boost::filesystem::path(storage_root) / "common").string())
     
     , device_manager_((boost::filesystem::path(storage_root) / "devices").string())
@@ -23,82 +23,12 @@ CtrlPoint::CtrlPoint(const std::string& storage_root)
 }
 
 CtrlPoint::~CtrlPoint(void) {
-    // nothing
-}
-
-bool CtrlPoint::Start(void) {
-
-    thread_.swap(boost::thread(boost::bind(&CtrlPoint::thread_main, this)));
-    thread_.detach();
-    return true;
-}
-
-void CtrlPoint::Stop(void) {
-    io_service_.stop();
-}
-
-void CtrlPoint::thread_main(void) {
-    
-    TcpServer t(io_service_, 8070);
-    t.BindHandleConnect(boost::bind(&CtrlPoint::OnConnected, this, _1, _2));
-    //UartServer z(io_service_, "port");
-
-    SsdpSender ss(io_service_);
-    ServiceFactory::Iterator itr = service_factory_.Begin();
-    ServiceFactory::Iterator end = service_factory_.End();
-    for (; itr != end; ++itr) {
-        const std::string& id = itr->first;
-        ss.RegistTarget(id.c_str());
+    if (!io_service_.stopped()) {
+        Stop();
     }
-    ssdp_sender_ = &ss;
-
-    
-    
-
-    //service_factory_.Start();
-
-
-    ws_ping_scheduler_.Register(&main_ui_service_);
-    main_ui_service_.BindUIHandler(this);
-    main_ui_service_.BindCommonPathHandler(boost::bind(&CtrlPoint::HandleCommonPath, this, _1, _2));
-
-
-
-
-    ws_ping_scheduler_.Start();
-    main_ui_service_.Start();
-
-    io_service_.run();
-
-    main_ui_service_.Stop();
-    ws_ping_scheduler_.Stop();
-
-
-
-    main_ui_service_.UnbindCommonPathHandler();
-    main_ui_service_.UnbindUIHandler();
-    ws_ping_scheduler_.Unregister(&main_ui_service_);
-
-
-
-    //service_factory_.Stop();
-
-    
-    
-
-    Json::Value root(Json::objectValue);
-    root["event"] = "Disconnected";
-    Json::FastWriter writer;
-    const std::string json = writer.write(root);
-    //FireEvent(json);
-
-    ssdp_sender_ = 0;
-    t.UnbindHandleConnect();
 }
 
-
-
-void CtrlPoint::OnConnected(const std::string& json, Channel::Ptr channel) {
+void CtrlPoint::OnConnected(const std::string& json, Channel* channel) {
 
     Json::Value root;
     Json::Reader reader;
@@ -111,13 +41,17 @@ void CtrlPoint::OnConnected(const std::string& json, Channel::Ptr channel) {
         , root["nickname"].asCString()
         , root["protocol"].asCString());
 
-    /*
-    Service* s = service_factory_[id];
+    ServiceProxy* s = service_factory_[id];
     // TODO(ghilbut):
     // I'm worryed about channel's life sycle
-    s->BindHandleDisconnected(boost::bind(&CtrlPoint::OnDisonnected, this, _1));
+    {
+        // TODO(ghilbut):
+        // if service proxy created here bind handlers
+        // or, it is not necessary.
+        // s->BindCommonPathHandler(boost::bind(&CtrlPoint::handle_get_common_path, this, _1, _2));
+        // s->BindDisconnectedHandler(boost::bind(&CtrlPoint::handle_disconnected, this, _1));
+    }
     s->BindChannel(channel);
-    */
 
     connecting_list_.insert(id);
     ssdp_sender_->UnregistTarget(id.c_str());
@@ -129,29 +63,77 @@ void CtrlPoint::OnConnected(const std::string& json, Channel::Ptr channel) {
 
         Json::FastWriter writer;
         const std::string json = writer.write(root);
-        //FireEvent(json);
+        main_ui_service_.FireEvent(json);
     }
 }
 
-void CtrlPoint::OnDisonnected(const char* id) {
+void CtrlPoint::OnResponse(const std::string& json) {
+    BOOST_ASSERT(false);
+}
 
-    ssdp_sender_->RegistTarget(id);
-    connecting_list_.erase(id);
+void CtrlPoint::OnEvent(const std::string& text) {
+    BOOST_ASSERT(false);
+}
 
-    /*
-    Service* s = service_factory_[id];
-    s->UnbindChannel();
-    */
+void CtrlPoint::OnDisconnected(void) {
+    BOOST_ASSERT(false);
+}
 
-    {
-        Json::Value root(Json::objectValue);
-        root["event"] = "ServiceRemoved";
-        root["id"] = id;
+bool CtrlPoint::Start(void) {
+    thread_.swap(boost::thread(boost::bind(&CtrlPoint::thread_main, this)));
+    return true;
+}
 
-        Json::FastWriter writer;
-        const std::string json = writer.write(root);
-        //FireEvent(json);
+void CtrlPoint::Stop(void) {
+    io_service_.stop();
+    thread_.join();
+}
+
+void CtrlPoint::thread_main(void) {
+    
+    TcpServer t(io_service_, this, 8070);
+
+    SsdpSender ss(io_service_);
+    ServiceFactory::Iterator itr = service_factory_.Begin();
+    ServiceFactory::Iterator end = service_factory_.End();
+    for (; itr != end; ++itr) {
+        const std::string& id = itr->first;
+        ServiceProxy* service = itr->second;
+        service->BindCommonPathHandler(boost::bind(&CtrlPoint::handle_get_common_path, this, _1, _2));
+        service->BindDisconnectedHandler(boost::bind(&CtrlPoint::handle_disconnected, this, _1));
+        ss.RegistTarget(id);
     }
+    ssdp_sender_ = &ss;
+
+
+
+    // ws_ping_scheduler_.Register(&main_ui_service_);
+    main_ui_service_.BindUIHandler(this);
+    main_ui_service_.BindCommonPathHandler(boost::bind(&CtrlPoint::handle_get_common_path, this, _1, _2));
+
+    // ws_ping_scheduler_.Start();
+    main_ui_service_.Start();
+    service_factory_.StartAll();
+
+    io_service_.run();
+
+    service_factory_.StopAll();
+    main_ui_service_.Stop();
+    // ws_ping_scheduler_.Stop();
+
+    main_ui_service_.UnbindCommonPathHandler();
+    main_ui_service_.UnbindUIHandler();
+    // ws_ping_scheduler_.Unregister(&main_ui_service_);
+
+
+
+    Json::Value root(Json::objectValue);
+    root["event"] = "Disconnected";
+    Json::FastWriter writer;
+    const std::string json = writer.write(root);
+    main_ui_service_.FireEvent(json);
+
+    ssdp_sender_ = 0;
 }
 
 void CtrlPoint::handle_get_device_list(std::string& json) {
@@ -174,8 +156,21 @@ void CtrlPoint::handle_get_device_list(std::string& json) {
     json = writer.write(root);
 }
 
-bool CtrlPoint::HandleCommonPath(const char* uri, std::string& filepath) {
+bool CtrlPoint::handle_get_common_path(const char* uri, std::string& filepath) {
     const boost::filesystem::path root(common_root_);
     filepath = (root / (uri + kCommonKeySize)).string();
     return boost::filesystem::is_regular_file(filepath);
+}
+
+void CtrlPoint::handle_disconnected(const std::string& id) {
+    ssdp_sender_->RegistTarget(id);
+    connecting_list_.erase(id);
+
+    Json::Value root(Json::objectValue);
+    root["event"] = "ServiceRemoved";
+    root["id"] = id;
+
+    Json::FastWriter writer;
+    const std::string json = writer.write(root);
+    main_ui_service_.FireEvent(json);
 }

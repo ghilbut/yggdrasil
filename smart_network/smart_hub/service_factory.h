@@ -25,6 +25,9 @@ public:
     ServiceProxy* GetOrCreate(const std::string& id);
     void Remove(const std::string& id);
 
+    void StartAll(void);
+    void StopAll(void);
+
     ServiceProxy* operator[] (const std::string& id);
     Iterator Begin(void);
     Iterator End(void);

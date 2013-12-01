@@ -13,8 +13,8 @@ public:
     SsdpSender(IOService& io_service);
     ~SsdpSender(void);
 
-    void RegistTarget(const char* target);
-    void UnregistTarget(const char* target);
+    void RegistTarget(const std::string& target);
+    void UnregistTarget(const std::string& target);
 
 private:
     void handle_send(void);

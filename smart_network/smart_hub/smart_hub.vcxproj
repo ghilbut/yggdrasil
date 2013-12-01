@@ -81,7 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="channel.h" />
-    <ClInclude Include="channel_delegator.h" />
+    <ClInclude Include="channel_delegate.h" />
     <ClInclude Include="ctrl_point.h" />
     <ClInclude Include="http\http_fwd.h" />
     <ClInclude Include="http\http_object.h" />
@@ -97,10 +97,6 @@
     <ClInclude Include="service_proxy.h" />
     <ClInclude Include="tcp_channel.h" />
     <ClInclude Include="tcp_server.h" />
-    <ClInclude Include="uart_channel.h" />
-    <ClInclude Include="uart_server.h" />
-    <ClInclude Include="udp_server.h" />
-    <ClInclude Include="zigbee_driver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctrl_point.cpp" />
@@ -111,19 +107,14 @@
     <ClCompile Include="http\http_websocket_ping_scheduler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_service.cpp" />
-    <ClCompile Include="service\service.cpp" />
+    <ClCompile Include="service\service.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="service\service_desc.cpp" />
     <ClCompile Include="service_factory.cpp" />
     <ClCompile Include="service_proxy.cpp" />
     <ClCompile Include="tcp_channel.cpp" />
     <ClCompile Include="tcp_server.cpp" />
-    <ClCompile Include="uart_channel.cpp" />
-    <ClCompile Include="uart_server.cpp" />
-    <ClCompile Include="udp_server.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="zigbee_driver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\codebase\codebase.vcxproj">

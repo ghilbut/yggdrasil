@@ -45,6 +45,7 @@ private:
     boost::asio::io_service& io_service_;
     boost::asio::ip::tcp::socket socket_;
 
+    std::string address_;
     const std::string& description_;
     chat_message_queue write_msgs_;
     chat_message read_msg_;
