@@ -1,5 +1,5 @@
-#ifndef DEVICE_DESCRIPTION_H_
-#define DEVICE_DESCRIPTION_H_
+#ifndef DEVICE_DESC_H_
+#define DEVICE_DESC_H_
 
 #include <string>
 
@@ -31,4 +31,4 @@ private:
 };
 
 
-#endif  // DEVICE_DESCRIPTION_H_
+#endif  // DEVICE_DESC_H_

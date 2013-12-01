@@ -1,13 +1,13 @@
 #include "service.h"
 
-#include "service_info.h"
+#include "service_desc.h"
 #include "http/http_request.h"
 #include "codebase/device/device_desc.h"
 #include <json/json.h>
 
 
 Service::Service(const DeviceDesc*& device
-                 , ServiceInfo*& service
+                 , ServiceDesc*& service
                  , uint32_t port
                  , Channel::Ptr channel)
     : Http::Object(device->uiroot(), port)
@@ -17,7 +17,7 @@ Service::Service(const DeviceDesc*& device
 }
 
 Service::~Service(void) {
-    ServiceInfo::Delete(service_);
+    ServiceDesc::Delete(service_);
 }
 
 void Service::BindHandleDisconnected(HandleDisconnected handle) {
@@ -122,6 +122,6 @@ void Service::OnDisconnected(void) {
     }
 }
 
-const ServiceInfo& Service::info(void) const {
+const ServiceDesc& Service::info(void) const {
     return *service_;
 }

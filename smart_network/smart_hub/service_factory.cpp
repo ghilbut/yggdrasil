@@ -1,6 +1,6 @@
 #include "service_factory.h"
 #include "service_proxy.h"
-#include "service/service_info.h"
+#include "service/service_desc.h"
 #include "codebase/device/device_manager.h"
 #include "codebase/boost_lib_fwd.h"
 
@@ -15,7 +15,7 @@ ServiceFactory::ServiceFactory(const DeviceManager& device_fac, const std::strin
     for (; itr != end; ++itr) {
         const boost::filesystem::path& path = itr->path();
 
-        ServiceInfo* service_desc = ServiceInfo::Create(path.string());
+        ServiceDesc* service_desc = ServiceDesc::Create(path.string());
         if (service_desc == NULL) {
             // TODO(ghilbut): error handling.
             continue;
@@ -24,14 +24,14 @@ ServiceFactory::ServiceFactory(const DeviceManager& device_fac, const std::strin
         const DeviceDesc* device_desc = device_manager_[service_desc->device()];
         if (device_desc == NULL) {
             // TODO(ghilbut): error handling.
-            ServiceInfo::Delete(service_desc);
+            ServiceDesc::Delete(service_desc);
             continue;
         }
 
         ServiceProxy* service = new ServiceProxy(*device_desc, *service_desc, ++next_port_);
         if (service == NULL) {
             // TODO(ghilbut): error handling.
-            ServiceInfo::Delete(service_desc);
+            ServiceDesc::Delete(service_desc);
             continue;
         }
 
@@ -55,7 +55,7 @@ ServiceProxy* ServiceFactory::GetOrCreate(const std::string& id) {
 
     const std::string filename = id + ".txt";
     const std::string desc_path((boost::filesystem::path(description_root_) / filename).string());
-    ServiceInfo* service_desc = ServiceInfo::Create(desc_path); // TODO(ghilbut): shared_ptr needed.
+    ServiceDesc* service_desc = ServiceDesc::Create(desc_path); // TODO(ghilbut): shared_ptr needed.
     if (service_desc == 0) {
         printf("[ERROR] no service(%s) description exists.\n", id.c_str());
         return 0;
@@ -63,14 +63,14 @@ ServiceProxy* ServiceFactory::GetOrCreate(const std::string& id) {
 
     const DeviceDesc* device_desc = device_manager_[service_desc->device()];
     if (device_desc == 0) {
-        ServiceInfo::Delete(service_desc);
+        ServiceDesc::Delete(service_desc);
         printf("[ERROR] no device(%s) description exists.\n", id.c_str());
         return 0;
     }
 
     ServiceProxy* service = new ServiceProxy(*device_desc, *service_desc, next_port_++);
     if (service == 0) {
-        ServiceInfo::Delete(service_desc);
+        ServiceDesc::Delete(service_desc);
         printf("[ERROR] service(%s) creation failed.\n", id.c_str());
         return 0;
     }

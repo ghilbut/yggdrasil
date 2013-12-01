@@ -92,7 +92,7 @@
     <ClInclude Include="main_ui_service.h" />
     <ClInclude Include="main_ui_handler.h" />
     <ClInclude Include="service\service.h" />
-    <ClInclude Include="service\service_info.h" />
+    <ClInclude Include="service\service_desc.h" />
     <ClInclude Include="service_factory.h" />
     <ClInclude Include="service_proxy.h" />
     <ClInclude Include="tcp_channel.h" />
@@ -112,7 +112,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_service.cpp" />
     <ClCompile Include="service\service.cpp" />
-    <ClCompile Include="service\service_info.cpp" />
+    <ClCompile Include="service\service_desc.cpp" />
     <ClCompile Include="service_factory.cpp" />
     <ClCompile Include="service_proxy.cpp" />
     <ClCompile Include="tcp_channel.cpp" />

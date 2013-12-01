@@ -5,14 +5,14 @@
 
 
 class DeviceDesc;
-class ServiceInfo;
+class ServiceDesc;
 
 class ServiceProxy :public Http::UIObject {
 public:
-    ServiceProxy(const DeviceDesc& device_desc, ServiceInfo& service_desc, uint32_t port);
+    ServiceProxy(const DeviceDesc& device_desc, ServiceDesc& service_desc, uint32_t port);
     ~ServiceProxy(void) {}
 
-    const ServiceInfo& desc(void) const;
+    const ServiceDesc& desc(void) const;
 
 
 protected:
@@ -27,7 +27,7 @@ protected:
 
 private:
     const DeviceDesc& device_desc_;
-    ServiceInfo& service_desc_;
+    ServiceDesc& service_desc_;
 };
 
 #endif  // SERVICE_PROXY_H_

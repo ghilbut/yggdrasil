@@ -21,7 +21,7 @@
     <ClInclude Include="service\service.h">
       <Filter>service</Filter>
     </ClInclude>
-    <ClInclude Include="service\service_info.h">
+    <ClInclude Include="service\service_desc.h">
       <Filter>service</Filter>
     </ClInclude>
     <ClInclude Include="http\http_websocket_manager.h">
@@ -57,7 +57,7 @@
     <ClCompile Include="service\service.cpp">
       <Filter>service</Filter>
     </ClCompile>
-    <ClCompile Include="service\service_info.cpp">
+    <ClCompile Include="service\service_desc.cpp">
       <Filter>service</Filter>
     </ClCompile>
     <ClCompile Include="http\http_websocket_manager.cpp">

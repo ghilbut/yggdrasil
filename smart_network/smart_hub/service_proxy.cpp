@@ -1,16 +1,16 @@
 #include "service_proxy.h"
 #include "codebase/device/device_desc.h"
-#include "service/service_info.h"
+#include "service/service_desc.h"
 
 
-ServiceProxy::ServiceProxy(const DeviceDesc& device_desc, ServiceInfo& service_desc, uint32_t port)
+ServiceProxy::ServiceProxy(const DeviceDesc& device_desc, ServiceDesc& service_desc, uint32_t port)
     : Http::UIObject(device_desc.uiroot(), port) 
     , device_desc_(device_desc)
     , service_desc_(service_desc) {
     // nothing
 }
 
-const ServiceInfo& ServiceProxy::desc(void) const {
+const ServiceDesc& ServiceProxy::desc(void) const {
     return service_desc_;
 }
 

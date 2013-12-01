@@ -1,13 +1,13 @@
-#ifndef SERVICE_INFO_H_
-#define SERVICE_INFO_H_
+#ifndef SERVICE_DESC_H_
+#define SERVICE_DESC_H_
 
 #include <string>
 
 
-class ServiceInfo {
+class ServiceDesc {
 public:
-    static ServiceInfo* Create(const std::string& filepath);
-    static void Delete(ServiceInfo* info);
+    static ServiceDesc* Create(const std::string& filepath);
+    static void Delete(ServiceDesc* info);
 
     const char* id(void) const;
     const char* device(void) const;
@@ -15,11 +15,11 @@ public:
 
 
 private:
-    ServiceInfo(const std::string& infopath
+    ServiceDesc(const std::string& infopath
                 , const std::string& id
                 , const std::string& device
                 , const std::string& nickname);
-    ~ServiceInfo(void);
+    ~ServiceDesc(void);
 
 
 private:
@@ -30,4 +30,4 @@ private:
 };
 
 
-#endif  // SERVICE_INFO_H_
+#endif  // SERVICE_DESC_H_

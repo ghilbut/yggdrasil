@@ -4,7 +4,7 @@
 #include "tcp_server.h"
 #include "service_proxy.h"
 #include "service/service.h"
-#include "service/service_info.h"
+#include "service/service_desc.h"
 #include "codebase/ssdp.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
@@ -161,7 +161,7 @@ void CtrlPoint::handle_get_device_list(std::string& json) {
     ServiceFactory::Iterator end = service_factory_.End();
     for (; itr != end; ++itr) {
         const ServiceProxy* s = itr->second;
-        const ServiceInfo& info = s->desc();
+        const ServiceDesc& info = s->desc();
         Json::Value item(Json::objectValue);
         item["id"] = info.id();
         item["device"] = info.device();

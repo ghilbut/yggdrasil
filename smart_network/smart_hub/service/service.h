@@ -8,7 +8,7 @@
 
 
 class DeviceDesc;
-class ServiceInfo;
+class ServiceDesc;
 class HttpRequest;
 
 class Service : public Http::Object {
@@ -18,7 +18,7 @@ public:
 
 public:
     Service(const DeviceDesc*& device
-            , ServiceInfo*& service
+            , ServiceDesc*& service
             , uint32_t port
             , Channel::Ptr channel);
     ~Service(void);
@@ -41,12 +41,12 @@ public:
     void OnEvent(const std::string& json);
     void OnDisconnected(void);
 
-    const ServiceInfo& info(void) const;
+    const ServiceDesc& info(void) const;
 
 
 private:
     const DeviceDesc* device_;
-    ServiceInfo* service_;
+    ServiceDesc* service_;
     Channel::Ptr channel_;
 
     HandleDisconnected fire_disconnected_;

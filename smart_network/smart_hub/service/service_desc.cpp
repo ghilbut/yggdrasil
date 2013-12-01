@@ -1,10 +1,10 @@
-#include "service_info.h"
+#include "service_desc.h"
 #include "codebase/boost_lib_fwd.h"
 #include <json/reader.h>
 #include <cstdio>
 
 
-ServiceInfo* ServiceInfo::Create(const std::string& filepath) {
+ServiceDesc* ServiceDesc::Create(const std::string& filepath) {
 
     FILE* f = fopen(filepath.c_str(), "r");
     if (f == NULL) {
@@ -32,27 +32,27 @@ ServiceInfo* ServiceInfo::Create(const std::string& filepath) {
 
     // TODO(ghilbut): check validation of data
 
-    ServiceInfo* info = new ServiceInfo(filepath, id, device, nickname);
+    ServiceDesc* info = new ServiceDesc(filepath, id, device, nickname);
     return info;
 }
 
-void ServiceInfo::Delete(ServiceInfo* info) {
+void ServiceDesc::Delete(ServiceDesc* info) {
     delete info;
 }
 
-const char* ServiceInfo::id(void) const {
+const char* ServiceDesc::id(void) const {
     return id_.c_str();
 }
 
-const char* ServiceInfo::device(void) const {
+const char* ServiceDesc::device(void) const {
     return device_.c_str();
 }
 
-const char* ServiceInfo::nickname(void) const {
+const char* ServiceDesc::nickname(void) const {
     return nickname_.c_str();
 }
 
-ServiceInfo::ServiceInfo(const std::string& infopath
+ServiceDesc::ServiceDesc(const std::string& infopath
                        , const std::string& id
                        , const std::string& device
                        , const std::string& nickname)
@@ -63,7 +63,7 @@ ServiceInfo::ServiceInfo(const std::string& infopath
 
 }
 
-ServiceInfo::~ServiceInfo(void) {
+ServiceDesc::~ServiceDesc(void) {
     // open file to read
     FILE* f = fopen(infopath_.c_str(), "r");
     if (f == NULL) {
