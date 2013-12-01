@@ -30,7 +30,7 @@ ServiceInfo* ServiceInfo::Create(const std::string& filepath) {
     const std::string& device = root["device"].asString();
     const std::string& nickname = root["nickname"].asString();
 
-    // TODO(jh81.kim): check validation of data
+    // TODO(ghilbut): check validation of data
 
     ServiceInfo* info = new ServiceInfo(filepath, id, device, nickname);
     return info;
@@ -67,7 +67,7 @@ ServiceInfo::~ServiceInfo(void) {
     // open file to read
     FILE* f = fopen(infopath_.c_str(), "r");
     if (f == NULL) {
-        // TODO(jh81.kim): error logging
+        // TODO(ghilbut): error logging
         return;
     }
 
@@ -91,7 +91,7 @@ ServiceInfo::~ServiceInfo(void) {
     // open file to write
     f = fopen(infopath_.c_str(), "w");
     if (f == NULL) {
-        // TODO(jh81.kim): error logging
+        // TODO(ghilbut): error logging
         return;
     }
 

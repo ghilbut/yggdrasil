@@ -17,9 +17,12 @@ public:
     void Register(struct mg_connection* conn);
     void Unregister(struct mg_connection* conn);
 
-    void FireEvent(const std::string& text);
+    void SendText(const std::string& text);
     void Ping(void);
 
+
+private:
+    void SendData(int opcode, const char* data, size_t data_len);
 
 private:
     std::set<struct mg_connection*> websockets_;

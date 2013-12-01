@@ -9,8 +9,8 @@ static const size_t kCommonKeySize = strlen(kCommonKeyword);
 static const char* kStaticKeyword = "/static/";
 static const size_t kStaticKeySize = strlen(kStaticKeyword);
 // forward command over channel
-static const char* kCommandKeyword = "/do/";
-static const size_t kCommandKeySize = strlen(kCommandKeyword);
+static const char* kRequestKeyword = "/do/";
+static const size_t kRequestKeySize = strlen(kRequestKeyword);
 // execute internal script
 static const char* kScriptKeyword = "/x/";
 static const size_t kScriptKeySize = strlen(kScriptKeyword);

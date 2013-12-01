@@ -9,12 +9,6 @@
     <ClInclude Include="uart_server.h" />
     <ClInclude Include="zigbee_driver.h" />
     <ClInclude Include="udp_server.h" />
-    <ClInclude Include="http\http_server.h">
-      <Filter>http</Filter>
-    </ClInclude>
-    <ClInclude Include="http\http_websocket.h">
-      <Filter>http</Filter>
-    </ClInclude>
     <ClInclude Include="http\http_request.h">
       <Filter>http</Filter>
     </ClInclude>
@@ -23,9 +17,6 @@
     </ClInclude>
     <ClInclude Include="http\http_fwd.h">
       <Filter>http</Filter>
-    </ClInclude>
-    <ClInclude Include="service\service_pool.h">
-      <Filter>service</Filter>
     </ClInclude>
     <ClInclude Include="service\service.h">
       <Filter>service</Filter>
@@ -39,6 +30,14 @@
     <ClInclude Include="http\http_websocket_ping_scheduler.h">
       <Filter>http</Filter>
     </ClInclude>
+    <ClInclude Include="http\http_ui_object.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="service_proxy.h" />
+    <ClInclude Include="service_factory.h" />
+    <ClInclude Include="channel_delegator.h" />
+    <ClInclude Include="main_ui_service.h" />
+    <ClInclude Include="main_ui_handler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctrl_point.cpp" />
@@ -49,12 +48,6 @@
     <ClCompile Include="uart_server.cpp" />
     <ClCompile Include="zigbee_driver.cpp" />
     <ClCompile Include="udp_server.cpp" />
-    <ClCompile Include="http\http_server.cpp">
-      <Filter>http</Filter>
-    </ClCompile>
-    <ClCompile Include="http\http_websocket.cpp">
-      <Filter>http</Filter>
-    </ClCompile>
     <ClCompile Include="http\http_request.cpp">
       <Filter>http</Filter>
     </ClCompile>
@@ -67,15 +60,18 @@
     <ClCompile Include="service\service_info.cpp">
       <Filter>service</Filter>
     </ClCompile>
-    <ClCompile Include="service\service_pool.cpp">
-      <Filter>service</Filter>
-    </ClCompile>
     <ClCompile Include="http\http_websocket_manager.cpp">
       <Filter>http</Filter>
     </ClCompile>
     <ClCompile Include="http\http_websocket_ping_scheduler.cpp">
       <Filter>http</Filter>
     </ClCompile>
+    <ClCompile Include="http\http_ui_object.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="service_proxy.cpp" />
+    <ClCompile Include="service_factory.cpp" />
+    <ClCompile Include="main_ui_service.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="http">

@@ -8,10 +8,10 @@ class DeviceInfo;
 
 class DevicePool {
 public:
-    DevicePool(const std::string& rootpath);
+    DevicePool(const std::string& description_root);
     ~DevicePool(void);
 
-    const DeviceInfo* operator[] (const char* id) const;
+    const DeviceInfo* operator[] (const std::string& id) const;
 
 
 private:

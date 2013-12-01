@@ -17,7 +17,7 @@ bool HttpRequest::DoRequest(const char* id, const char* method, const char* uri)
     boost::mutex::scoped_lock lock(mutex_);
 
     Json::Value params(Json::objectValue);
-    // TODO(jh81.kim):
+    // TODO(ghilbut):
     // get parameters and make JSON object.
 
     if (strcmp(uri, "change/mode") == 0) {
@@ -46,7 +46,7 @@ bool HttpRequest::DoRequest(const char* id, const char* method, const char* uri)
     msg.type(chat_message::kRequest);
     channel_.Deliver(msg);
 
-    // TODO(jh81.kim): apply timeout
+    // TODO(ghilbut): apply timeout
     cond_.wait(lock);
 
     return true;

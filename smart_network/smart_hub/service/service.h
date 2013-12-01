@@ -11,7 +11,7 @@ class DeviceInfo;
 class ServiceInfo;
 class HttpRequest;
 
-class Service : public HttpObject {
+class Service : public Http::Object {
 public:
     typedef boost::function<void (const char*)> HandleDisconnected;
         

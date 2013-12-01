@@ -6,112 +6,79 @@
 #include <json/json.h>
 
 
-HttpObject::HttpObject(const std::string& document_root, uint32_t port) 
-    : httpd_(0)
-    , document_(document_root)
-    , port_(port) {
+int begin_request(mg_connection* conn) {
+    struct mg_request_info* ri = mg_get_request_info(conn);
+    Http::Object* http = static_cast<Http::Object*>(ri->user_data);
+    return http->OnBeginRequest(conn);
 }
 
-HttpObject::~HttpObject(void) {
-	
+void end_request(const struct mg_connection* conn, int reply_status_code) {
+    struct mg_connection* conn2 = const_cast<struct mg_connection*>(conn);
+    struct mg_request_info* ri = mg_get_request_info(conn2);
+    Http::Object* http = static_cast<Http::Object*>(ri->user_data);
+    return http->OnEndRequest(conn, reply_status_code);
 }
 
-int HttpObject::OnBeginRequest(mg_connection* conn) {
-    // Returning non-zero tells mongoose that our function has replied to
-    // the client, and mongoose should not send client any more data.
-
-    const struct mg_request_info *ri = mg_get_request_info(conn);
-
-    const char* uri = ri->uri;
-    const char* method = ri->request_method;
-
-    // basic static files
-    if (strcmp(uri, "/") == 0 
-        || strcmp(uri, "/favicon.ico") == 0 
-        || strcmp(uri, "/active.png") == 0 
-        || strcmp(uri, "/disabled.png") == 0) {
-        return 0;
-    }
-
-    // common static files
-    if (strncmp(uri, kCommonKeyword, kCommonKeySize) == 0) {
-        if (common_handler_) {
-            return common_handler_(conn, method, uri);
-        }
-
-        mg_printf(conn
-                 , "HTTP/1.1 %d Error (%s)\r\n\r\n%s"
-                 , 500 /* This the error code you want to send back*/
-                 , "Invalid Request."
-                 , "Invalid Request.");
-
-        return 1;
-    }
-
-    // local static files
-    if (strncmp(uri, kStaticKeyword, kStaticKeySize) == 0) {
-        return 0;
-    }
-
-    // forward command over channel
-    if (strncmp(uri, kCommandKeyword, kCommandKeySize) == 0) {
-        if (DoRequest(conn, method, uri + kCommandKeySize)) {
-            // TODO(jh81.kim):
-            // how can I response ?
-        } else {
-            // TODO(jh81.kim):
-            // make error response
-        }
-        return 1;
-    }
-
-    // TODO(jsh81.kim): execute internal script
-    // using V8 javascript engine [RESERVED]
-    if (strncmp(uri, kScriptKeyword, kScriptKeySize) == 0) {
-        return DoExecute(conn, method, uri);
-    }
-
-
-
-    char test[260];
-    if (sscanf(ri->uri, "/test/%s\0", test) == 1) {
-
-        static char content[100];
-        memset(content, 0, sizeof(content));
-        int content_length = sprintf(content, "Hello from mongoose! Remote port: %d  >> %s", ri->remote_port, ri->uri);
-
-        // Send HTTP reply to the client
-        mg_printf(conn,
-            "HTTP/1.1 200 OK\r\n"
-            "Content-Type: text/plain\r\n"
-            "Content-Length: %d\r\n"        // Always set Content-Length
-            "\r\n"
-            "%s",
-            content_length, content);
-        return 1;
-    }
-
-    
-
-
-
-    return 1;
+int websocket_connect(const struct mg_connection* conn) {
+    struct mg_connection* conn2 = const_cast<struct mg_connection*>(conn);
+    const struct mg_request_info* info = mg_get_request_info(conn2);
+    Http::Object* http = static_cast<Http::Object*>(info->user_data);
+    return http->OnWebsocketConnect(conn);
 }
 
-void HttpObject::OnEndRequest(const struct mg_connection* conn, int reply_status_code) {
+void websocket_ready(struct mg_connection* conn) {
+    const struct mg_request_info* info = mg_get_request_info(conn);
+    Http::Object* http = static_cast<Http::Object*>(info->user_data);
+    http->OnWebsocketReady(conn);
+}
+
+int  websocket_data(struct mg_connection* conn, int bits, char* data, size_t data_len) {
+    const struct mg_request_info* info = mg_get_request_info(conn);
+    Http::Object* http = static_cast<Http::Object*>(info->user_data);
+    return http->OnWebsocketData(conn, bits, data, data_len);
+}
+
+static const mg_callbacks kHttpCallbacks = {
+    begin_request,     // int begin_request(mg_connection* conn);
+    end_request,       // void end_request(const struct mg_connection *, int reply_status_code);
+    0,                 // int  log_message(const struct mg_connection *, const char *message);
+    0,                 // int  init_ssl(void *ssl_context);
+    websocket_connect, // int  websocket_connect(const struct mg_connection *);
+    websocket_ready,   // void websocket_ready(struct mg_connection *);
+    websocket_data,    // int  websocket_data(struct mg_connection *);
+    0,                 // const char* open_file(const struct mg_connection *, const char *path, size_t *data_len);
+    0,                 // void init_lua(struct mg_connection *, void *lua_context);
+    0                  // void upload(struct mg_connection *, const char *file_name);
+};
+
+
+namespace Http {
+
+Object::Object(const std::string& document_root, uint32_t port)
+    : ctx_(0), document_root_(document_root), port_(port) {
     // nothing
 }
 
-int HttpObject::OnWebsocketConnect(const struct mg_connection* conn) {
+int Object::OnBeginRequest(mg_connection* conn) {
+    // Returning non-zero tells mongoose that our function has replied to
+    // the client, and mongoose should not send client any more data.
+    return OnRequest(conn);
+}
+
+void Object::OnEndRequest(const struct mg_connection* conn, int reply_status_code) {
+    // nothing
+}
+
+int Object::OnWebsocketConnect(const struct mg_connection* conn) {
     // nothing
     return 0;
 }
 
-void HttpObject::OnWebsocketReady(struct mg_connection* conn) {
+void Object::OnWebsocketReady(struct mg_connection* conn) {
     websockets_.Register(conn);
 }
 
-int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* data, size_t data_len) {
+int Object::OnWebsocketData(struct mg_connection* conn, int bits, char* data, size_t data_len) {
 
     const char opcode = static_cast<char>(bits & 0x0f);
 
@@ -122,8 +89,7 @@ int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* dat
 
     if (opcode == WEBSOCKET_OPCODE_TEXT) {
         std::string text(data, data + data_len);
-        //mg_websocket_write(conn, WEBSOCKET_OPCODE_TEXT, &text[0], text.length());
-        DoNotify(text);
+        OnWebsocketText(text);
         return 1;
     }
 
@@ -142,7 +108,7 @@ int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* dat
     }
 
     if (opcode == WEBSOCKET_OPCODE_PONG) {
-        // TODO(jh81.kim):
+        // TODO(ghilbut):
         // should I check the pair 
         // between PING request and this PONG response ?
         return 1;
@@ -151,45 +117,49 @@ int  HttpObject::OnWebsocketData(struct mg_connection* conn, int bits, char* dat
     return 1;
 }
 
+bool Object::Start(void) {
+    BOOST_ASSERT(ctx_ == 0);
+    if (ctx_ != 0) {
+        char text[1024];
+        sprintf(text, "[ERROR][Http::Object] already started.\n"
+                      "       PORT: %u, DOCUMENT ROOT: %s\n", port_, document_root_.c_str());
+        printf(text);
+        return false;
+    }
 
-void HttpObject::BindCommonHandler(RequestHandler handler) {
-    BOOST_ASSERT(handler);
-    common_handler_ = handler;
+    printf("[HTTP][Start] port: %d, root: %s.\n", port_, document_root_.c_str());
+
+    char sport[16];
+    sprintf(sport, "%u", port_);
+    const char *options[] = {
+        "document_root", document_root_.c_str(),
+        "enable_directory_listing", "no",
+        "listening_ports", sport, 
+        NULL};
+    ctx_ = mg_start(&kHttpCallbacks, this, options);
+  
+    printf("[HTTP][Start] mg_start %s.\n", ctx_ ? "succeeded" : "failed");
+    return (ctx_ != 0);
 }
 
-void HttpObject::UnbindCommonHandler(void) {
-    common_handler_ = 0;
+void Object::Stop() {
+    BOOST_ASSERT(ctx_ != 0);
+    if (ctx_) {
+        mg_stop(ctx_);
+        ctx_ = 0;
+    }
 }
 
-void HttpObject::PingWebSockets(void) {
+void Object::SendWebSocketData(const std::string& data) {
+    websockets_.SendText(data);
+}
+
+void Object::PingWebSockets(void) {
     websockets_.Ping();
 }
 
-void HttpObject::FireEvent(const std::string& json) {
-    websockets_.FireEvent(json);
-}
-
-struct mg_context* HttpObject::context(void) const {
-    return httpd_;
-}
-
-void HttpObject::set_context(struct mg_context* ctx) {
-    httpd_ = ctx;
-}
-
-const char* HttpObject::document(void) const {
-    return document_.c_str();
-}
-
-uint32_t HttpObject::port(void) const {
+uint32_t Object::port(void) const {
     return port_;
 }
 
-static int HandleFile(mg_connection* conn
-                      , const char* filepath) {
-        if (boost::filesystem::is_regular_file(filepath)) {
-            mg_send_file(conn, filepath);
-            return 1;
-        }
-        return 0;
-}
+}  // namespace Http

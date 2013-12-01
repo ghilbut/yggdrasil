@@ -113,7 +113,7 @@ TEST_F(SsdpTest, DISABLED_search_and_found_single_target_2) {
     const char target[] = "UUID";
     boost::interprocess::interprocess_semaphore done(0);
 
-    // TODO(jh81.kim): how can I do expression ?
+    // TODO(ghilbut): how can I do expression ?
     //EXPECT_CALL(mock_listener_, OnSsdp(StrEq(target), _)).Times(1);
     //EXPECT_CALL(mock_listener_, OnSsdp(StrEq(target), _)).Times(1).WillOnce(DoAll(DoSsdpCheck(target, &sender_), DoSsdpDone(&done)));
 

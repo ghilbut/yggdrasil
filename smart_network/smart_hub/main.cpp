@@ -1,9 +1,4 @@
 #include "ctrl_point.h"
-#include "http/http_server.h"
-#include "service/service_pool.h"
-#include "codebase/device/device_pool.h"
-#include "codebase/boost_lib_fwd.h"
-#include <json/reader.h>
 #include <string>
 #include <iostream>
 #include <cstdio>
@@ -16,17 +11,8 @@ int main(int argc, const char** argv)
         return -1;
     }
 
-    const char* basepath = argv[1];
-    boost::filesystem::path root(basepath);
-
-    const std::string common = (root / "common").string();
-    HttpServer httpd(common);
-
-    DevicePool devices((root / "devices").string());
-    ServicePool services(httpd, devices, (root / "services").string());
-
-    const std::string home = (root / "main").string();
-    CtrlPoint cp(home, httpd, devices, services);
+    const char* storage_root = argv[1];
+    CtrlPoint cp(storage_root);
     if (!cp.Start()) {
         printf("[MAIN] ctrl-point start failed.\n");
         return -1;

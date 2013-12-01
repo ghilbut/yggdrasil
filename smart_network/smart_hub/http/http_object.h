@@ -13,52 +13,44 @@ using namespace Http;
 struct mg_context;
 struct mg_connection;
 
-class HttpObject {
+
+namespace Http {
+
+class Object : boost::noncopyable {
 protected:
-	HttpObject(const std::string& document_root, uint32_t port);
-	~HttpObject(void);
+    Object(const std::string& document_root, uint32_t port);
+    virtual ~Object(void) {}
+
 
 public:
-    typedef boost::function<int (struct mg_connection*, const char*, const char*)> RequestHandler;
-
-
+    // mongoose
     int  OnBeginRequest(mg_connection* conn);
     void OnEndRequest(const struct mg_connection* conn, int reply_status_code);
     int  OnWebsocketConnect(const struct mg_connection* conn);
     void OnWebsocketReady(struct mg_connection* conn);
     int  OnWebsocketData(struct mg_connection* conn, int bits, char* data, size_t data_len);
 
-    void BindCommonHandler(RequestHandler handler);
-    void UnbindCommonHandler(void);
+    bool Start(void);
+    void Stop(void);
 
+    void SendWebSocketData(const std::string& data);
     void PingWebSockets(void);
 
-    void FireEvent(const std::string& json);
-
-    struct mg_context* context(void) const;
-    void set_context(struct mg_context* ctx);
-
-    const char* document(void) const;
     uint32_t port(void) const;
 
-private:
-    virtual bool DoExecute(mg_connection* conn
-                           , const char* method
-                           , const char* query) = 0;
-    virtual bool DoRequest(mg_connection* conn
-                           , const char* method
-                           , const char* query) = 0;
-    virtual bool DoNotify(const std::string& text) = 0;
+
+protected:
+    virtual int OnRequest(mg_connection* conn) = 0;
+    virtual void OnWebsocketText(const std::string& text) = 0;
 
 
 private:
-    struct mg_context* httpd_;
-    const std::string document_;
-    const uint32_t port_;
-
+    mg_context* ctx_;
     WebsocketManager websockets_;
-
-    RequestHandler common_handler_;
+    const std::string document_root_;
+    const uint32_t port_;
 };
+
+}  // namespace Http
 
 #endif  // HTTP_OBJECT_H_

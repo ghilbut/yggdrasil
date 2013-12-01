@@ -10,7 +10,7 @@ Service::Service(const DeviceInfo*& device
                  , ServiceInfo*& service
                  , uint32_t port
                  , Channel::Ptr channel)
-    : HttpObject(device->uipath(), port)
+    : Http::Object(device->uipath(), port)
     , device_(device)
     , service_(service)
     , channel_(channel) {
@@ -58,7 +58,7 @@ bool Service::DoRequest(mg_connection* conn
         requests_.erase(id);
     }
 
-    // TODO(jh81.kim): it seems, return value is not necessary.
+    // TODO(ghilbut): it seems, return value is not necessary.
     return false;
 }
 
@@ -74,7 +74,7 @@ bool Service::DoNotify(const std::string& text) {
         channel_->Deliver(msg);
     }
 
-    // TODO(jh81.kim): it seems, return value is not necessary.
+    // TODO(ghilbut): it seems, return value is not necessary.
     return false;
 }
 
@@ -111,7 +111,7 @@ void Service::OnResponse(const std::string& json) {
 void Service::OnEvent(const std::string& json) {
     printf("[Service][Event] %s\n", json.c_str());
 
-    FireEvent(json);
+    //FireEvent(json);
 }
 
 void Service::OnDisconnected(void) {

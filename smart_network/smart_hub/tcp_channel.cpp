@@ -34,7 +34,7 @@ void TcpChannel::handle_read_header(const boost::system::error_code& error) {
             , boost::asio::buffer(read_msg_.data() + chat_message::header_length, chat_message::type_length)
             , boost::bind(&TcpChannel::handle_read_type, shared_from_this(), boost::asio::placeholders::error));
     } else {
-        // TODO(jh81.kim) : disconnected ?
+        // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_header] error: %s\n", error.message().c_str());
         FireOnDisconnected();
     }
@@ -46,7 +46,7 @@ void TcpChannel::handle_read_type(const boost::system::error_code& error) {
             , boost::asio::buffer(read_msg_.body(), read_msg_.body_length())
             , boost::bind(&TcpChannel::handle_read_body, shared_from_this(), boost::asio::placeholders::error));
     } else {
-        // TODO(jh81.kim) : disconnected ?
+        // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_type] error: %s\n", error.message().c_str());
         FireOnDisconnected();
     }
@@ -59,7 +59,7 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
 
 
 
-        // TODO(jh81.kim):
+        // TODO(ghilbut):
         // below codes are test.
 
         std::string json(read_msg_.body(), read_msg_.body_length());
@@ -73,7 +73,7 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
         } else if (type == chat_message::kDisconnect) {
             FireOnDisconnected();
         } else {
-            // TODO(jh81.kim): invalid action.
+            // TODO(ghilbut): invalid action.
             printf("[Tcp] invalid data\n");
         }
 
@@ -93,7 +93,7 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
             , boost::asio::buffer(read_msg_.data(), chat_message::header_length)
             , boost::bind(&TcpChannel::handle_read_header, shared_from_this(), boost::asio::placeholders::error));
     } else {
-        // TODO(jh81.kim) : disconnected ?
+        // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_body] error\n");
         FireOnDisconnected();
     }
@@ -108,7 +108,7 @@ void TcpChannel::handle_write(const boost::system::error_code& error) {
                 , boost::bind(&TcpChannel::handle_write, shared_from_this(), boost::asio::placeholders::error));
         }
     } else {
-        // TODO(jh81.kim) : disconnected ?
+        // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_write] error\n");
         FireOnDisconnected();
     }

@@ -16,13 +16,13 @@ const DeviceInfo* DeviceInfo::Create(const std::string& basepath) {
 
     std::string json;
     if (!::ReadText(filepath.c_str(), json)) {
-        // TODO(jh81.kim): error message
+        // TODO(ghilbut): error message
         return 0;
     }
 
     Json::Value root;
     if (!::ReadJson(json, root)) {
-        // TODO(jh81.kim): error message
+        // TODO(ghilbut): error message
         return 0;
     }
 
@@ -30,7 +30,7 @@ const DeviceInfo* DeviceInfo::Create(const std::string& basepath) {
     const std::string& name = root["name"].asString();
     const std::string& model = root["model"].asString();
 
-    // TODO(jh81.kim): check validation of data
+    // TODO(ghilbut): check validation of data
 
     const DeviceInfo* info = new DeviceInfo(uipath, id, name, model);
     return info;

@@ -6,10 +6,10 @@ SsdpSender::SsdpSender(IOService& io_service)
     , interval_(boost::posix_time::seconds(kSendIntervalSec))
     , timer_(io_service, interval_) {
 
-        socket_.set_option(boost::asio::socket_base::broadcast(true));
+    socket_.set_option(boost::asio::socket_base::broadcast(true));
 
-        timer_.expires_from_now(interval_);
-        timer_.async_wait(boost::bind(&SsdpSender::handle_send, this));
+    timer_.expires_from_now(interval_);
+    timer_.async_wait(boost::bind(&SsdpSender::handle_send, this));
 }
 
 SsdpSender::~SsdpSender(void) {

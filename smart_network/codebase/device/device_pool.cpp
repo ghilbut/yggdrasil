@@ -3,17 +3,16 @@
 #include "boost_lib_fwd.h"
 
 
-DevicePool::DevicePool(const std::string& rootpath) {
+DevicePool::DevicePool(const std::string& description_root) {
 
-    boost::filesystem::path root(rootpath);
+    boost::filesystem::path root(description_root);
     boost::filesystem::directory_iterator itr(root);
     boost::filesystem::directory_iterator end;
     for (; itr != end; ++itr) {
         const boost::filesystem::path& path = itr->path();
-
         const DeviceInfo* info = DeviceInfo::Create(path.string());
         if (info == NULL) {
-            // TODO(jh81.kim): error handling.
+            // TODO(ghilbut): error handling.
             continue;
         }
         devices_[info->id()] = info;
@@ -28,7 +27,7 @@ DevicePool::~DevicePool(void) {
     }
 }
 
-const DeviceInfo* DevicePool::operator[] (const char* id) const {
+const DeviceInfo* DevicePool::operator[] (const std::string& id) const {
     DeviceMap::const_iterator itr = devices_.find(id);
     return (itr != devices_.end() ? itr->second : NULL);
 }

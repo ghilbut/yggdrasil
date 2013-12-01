@@ -5,33 +5,33 @@
 #include <set>
 
 
-class HttpObject;
-
 namespace Http {
+
+class Object;
 
 class WebsocketPingScheduler {
 public:
     enum { kPingIntervalSec = 30 };
 
 public:
-    WebsocketPingScheduler(void);
+    explicit WebsocketPingScheduler(IOService& io_service);
     ~WebsocketPingScheduler(void);
 
-    void Register(const HttpObject* object);
-    void Unregister(const HttpObject* object);
+    void Register(const Http::Object* object);
+    void Unregister(const Http::Object* object);
+
+    void Start(void);
+    void Stop(void);
 
 private:
-    void thread_ping(void);
-    void Ping(void);
+    void handle_ping(void);
 
 private:
-    boost::asio::io_service io_service_;
     boost::posix_time::time_duration interval_;
     mutable boost::asio::deadline_timer timer_;
-    boost::thread thread_;
-    boost::mutex mutex_;
 
-    std::set<const HttpObject*> objects_;
+    boost::mutex mutex_;
+    std::set<const Http::Object*> objects_;
 };
 
 }  // namespace Http;
