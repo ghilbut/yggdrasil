@@ -1,9 +1,9 @@
 #ifndef CHANNEL_H_
 #define CHANNEL_H_
 
-#include "codebase/chat_message.h"
+#include "chat_message.h"
 #include "channel_delegate.h"
-#include "codebase/boost_lib_fwd.h"
+#include "boost_lib_fwd.h"
 
 
 class ChannelDelegate;

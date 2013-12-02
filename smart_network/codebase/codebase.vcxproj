@@ -45,7 +45,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\jsoncpp-0.5.0\include;$(SolutionDir)..\codebase;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\jsoncpp-0.5.0\include;$(SolutionDir)..\third_party\mongoose-4.1;$(SolutionDir)..\codebase;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -62,7 +62,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\jsoncpp-0.5.0\include;$(SolutionDir)..\codebase;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\jsoncpp-0.5.0\include;$(SolutionDir)..\third_party\mongoose-4.1;$(SolutionDir)..\codebase;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -77,9 +77,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boost_lib_fwd.h" />
+    <ClInclude Include="channel.h" />
+    <ClInclude Include="channel_delegate.h" />
     <ClInclude Include="chat_message.h" />
     <ClInclude Include="device\device_desc.h" />
     <ClInclude Include="device\device_manager.h" />
+    <ClInclude Include="http_fwd.h" />
+    <ClInclude Include="http_object.h" />
+    <ClInclude Include="http_request.h" />
+    <ClInclude Include="http_ui_object.h" />
+    <ClInclude Include="http_websocket_manager.h" />
+    <ClInclude Include="http_websocket_ping_scheduler.h" />
     <ClInclude Include="ssdp.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
@@ -87,6 +95,13 @@
     <ClCompile Include="chat_message.cpp" />
     <ClCompile Include="device\device_desc.cpp" />
     <ClCompile Include="device\device_manager.cpp" />
+    <ClCompile Include="http_object.cpp" />
+    <ClCompile Include="http_request.cpp" />
+    <ClCompile Include="http_ui_object.cpp" />
+    <ClCompile Include="http_websocket_manager.cpp" />
+    <ClCompile Include="http_websocket_ping_scheduler.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="ssdp.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>

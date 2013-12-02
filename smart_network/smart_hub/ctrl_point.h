@@ -1,11 +1,11 @@
 #ifndef CTRL_POINT_H_
 #define CTRL_POINT_H_
 
-#include "channel_delegate.h"
+#include "codebase/channel_delegate.h"
 #include "service_factory.h"
 #include "main_ui_service.h"
 #include "main_ui_handler.h"
-#include "http/http_websocket_ping_scheduler.h"
+#include "codebase/http_websocket_ping_scheduler.h"
 #include "codebase/device/device_manager.h"
 #include "codebase/boost_lib_fwd.h"
 #include <map>

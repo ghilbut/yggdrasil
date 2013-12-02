@@ -1,12 +1,13 @@
 #ifndef HTTP_REQUEST_H_
 #define HTTP_REQUEST_H_
 
-#include "channel.h"
-#include "codebase/boost_lib_fwd.h"
+#include "boost_lib_fwd.h"
 #include <string>
 
 
 struct mg_connection;
+
+class Channel;
 
 class HttpRequest {
 public:

@@ -27,23 +27,18 @@ void SsdpSender::UnregistTarget(const std::string& target) {
 }
 
 void SsdpSender::handle_send(void) {
-    const double time = (double)timer_.expires_at().time_of_day().total_milliseconds() / 1000.0;    
+    const double time = (double)timer_.expires_at().time_of_day().total_milliseconds() / 1000.0;
+    printf("[INFO][SsdpSender] search service(s). [%8.3f]\n", time);
     if (!targets_.empty()) {
-        printf("[INFO][SsdpSender] search service(s). [%8.3f]\n", time);
         UDP::endpoint endpoint(boost::asio::ip::address_v4::broadcast(), 9432);
-
         boost::unique_lock<boost::mutex> lock(mutex_);
         std::set<std::string>::const_iterator itr = targets_.begin();
         std::set<std::string>::const_iterator end = targets_.end();
         for (; itr != end; ++itr) {
             const std::string& target = *itr;
             socket_.send_to(boost::asio::buffer(&target[0], target.length()), endpoint);
-            printf("  - %s\n", target.c_str());
         }
-    } else {
-        printf("[INFO][SsdpSender] there is no search service. [%8.3f]\n", time);
     }
-    printf("\n");
 
     timer_.expires_at(timer_.expires_at() + interval_);
     timer_.async_wait(boost::bind(&SsdpSender::handle_send, this));

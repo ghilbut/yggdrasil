@@ -1,7 +1,7 @@
 #ifndef MAIN_UI_SERVICE_H_
 #define MAIN_UI_SERVICE_H_
 
-#include "http/http_ui_object.h"
+#include "codebase/http_ui_object.h"
 
 
 class MainUIHandler;

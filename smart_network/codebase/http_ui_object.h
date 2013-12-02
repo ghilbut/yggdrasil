@@ -1,7 +1,7 @@
 #ifndef HTTP_UI_OBJECT_H_
 #define HTTP_UI_OBJECT_H_
 #include "http_object.h"
-#include "codebase/boost_lib_fwd.h"
+#include "boost_lib_fwd.h"
 
 
 struct mg_connection;

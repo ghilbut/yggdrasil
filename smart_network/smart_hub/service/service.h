@@ -1,9 +1,9 @@
 #ifndef SERVICE_H_
 #define SERVICE_H_
 
-#include "channel.h"
-#include "http/http_object.h"
+#include "codebase/http_object.h"
 #include "codebase/boost_lib_fwd.h"
+#include "codebase/channel.h"
 #include <string>
 
 

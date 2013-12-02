@@ -1,7 +1,7 @@
 #include "http_ui_object.h"
 
 #include "http_fwd.h"
-#include "codebase/boost_lib_fwd.h"
+#include "boost_lib_fwd.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
 

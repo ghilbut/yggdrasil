@@ -1,37 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="channel.h" />
     <ClInclude Include="ctrl_point.h" />
     <ClInclude Include="tcp_channel.h" />
     <ClInclude Include="tcp_server.h" />
-    <ClInclude Include="http\http_request.h">
-      <Filter>http</Filter>
-    </ClInclude>
-    <ClInclude Include="http\http_object.h">
-      <Filter>http</Filter>
-    </ClInclude>
-    <ClInclude Include="http\http_fwd.h">
-      <Filter>http</Filter>
-    </ClInclude>
     <ClInclude Include="service\service.h">
       <Filter>service</Filter>
     </ClInclude>
     <ClInclude Include="service\service_desc.h">
       <Filter>service</Filter>
     </ClInclude>
-    <ClInclude Include="http\http_websocket_manager.h">
-      <Filter>http</Filter>
-    </ClInclude>
-    <ClInclude Include="http\http_websocket_ping_scheduler.h">
-      <Filter>http</Filter>
-    </ClInclude>
-    <ClInclude Include="http\http_ui_object.h">
-      <Filter>http</Filter>
-    </ClInclude>
     <ClInclude Include="service_proxy.h" />
     <ClInclude Include="service_factory.h" />
-    <ClInclude Include="channel_delegate.h" />
     <ClInclude Include="main_ui_service.h" />
     <ClInclude Include="main_ui_handler.h" />
   </ItemGroup>
@@ -40,35 +20,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tcp_channel.cpp" />
     <ClCompile Include="tcp_server.cpp" />
-    <ClCompile Include="http\http_request.cpp">
-      <Filter>http</Filter>
-    </ClCompile>
-    <ClCompile Include="http\http_object.cpp">
-      <Filter>http</Filter>
-    </ClCompile>
     <ClCompile Include="service\service.cpp">
       <Filter>service</Filter>
     </ClCompile>
     <ClCompile Include="service\service_desc.cpp">
       <Filter>service</Filter>
     </ClCompile>
-    <ClCompile Include="http\http_websocket_manager.cpp">
-      <Filter>http</Filter>
-    </ClCompile>
-    <ClCompile Include="http\http_websocket_ping_scheduler.cpp">
-      <Filter>http</Filter>
-    </ClCompile>
-    <ClCompile Include="http\http_ui_object.cpp">
-      <Filter>http</Filter>
-    </ClCompile>
     <ClCompile Include="service_proxy.cpp" />
     <ClCompile Include="service_factory.cpp" />
     <ClCompile Include="main_ui_service.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="http">
-      <UniqueIdentifier>{c321860f-cf5e-469f-be9d-4a48b6a97708}</UniqueIdentifier>
-    </Filter>
     <Filter Include="service">
       <UniqueIdentifier>{b2d16d58-d9eb-4ed3-b05e-c5aed8869125}</UniqueIdentifier>
     </Filter>

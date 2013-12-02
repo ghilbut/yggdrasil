@@ -1,8 +1,8 @@
 #ifndef SERVICE_PROXY_H_
 #define SERVICE_PROXY_H_
 
-#include "channel_delegate.h"
-#include "http/http_ui_object.h"
+#include "codebase/channel_delegate.h"
+#include "codebase/http_ui_object.h"
 #include <map>
 
 

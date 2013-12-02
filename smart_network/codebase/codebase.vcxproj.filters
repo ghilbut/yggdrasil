@@ -14,6 +14,14 @@
     <ClInclude Include="utility.h" />
     <ClInclude Include="ssdp.h" />
     <ClInclude Include="boost_lib_fwd.h" />
+    <ClInclude Include="http_websocket_ping_scheduler.h" />
+    <ClInclude Include="http_fwd.h" />
+    <ClInclude Include="http_object.h" />
+    <ClInclude Include="http_request.h" />
+    <ClInclude Include="http_ui_object.h" />
+    <ClInclude Include="http_websocket_manager.h" />
+    <ClInclude Include="channel.h" />
+    <ClInclude Include="channel_delegate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />
@@ -25,6 +33,11 @@
     </ClCompile>
     <ClCompile Include="utility.cpp" />
     <ClCompile Include="ssdp.cpp" />
+    <ClCompile Include="http_websocket_ping_scheduler.cpp" />
+    <ClCompile Include="http_object.cpp" />
+    <ClCompile Include="http_request.cpp" />
+    <ClCompile Include="http_ui_object.cpp" />
+    <ClCompile Include="http_websocket_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="device">

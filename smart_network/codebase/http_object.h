@@ -1,8 +1,8 @@
 #ifndef HTTP_OBJECT_H_
 #define HTTP_OBJECT_H_
 
-#include "http/http_websocket_manager.h"
-#include "codebase/boost_lib_fwd.h"
+#include "http_websocket_manager.h"
+#include "boost_lib_fwd.h"
 #include <set>
 #include <string>
 #include <stdint.h>

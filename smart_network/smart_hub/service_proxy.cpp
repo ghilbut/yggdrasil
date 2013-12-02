@@ -1,8 +1,9 @@
 #include "service_proxy.h"
-#include "codebase/device/device_desc.h"
 #include "service/service_desc.h"
-#include "http/http_request.h"
+#include "codebase/device/device_desc.h"
+#include "codebase/http_request.h"
 #include "codebase/chat_message.h"
+#include "codebase/channel.h"
 #include <json/json.h>
 
 
