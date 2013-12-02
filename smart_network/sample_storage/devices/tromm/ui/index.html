@@ -18,7 +18,7 @@
 body {
 	width: 800px;
 	height: 400px;
-	background-color: floralwhite ;
+	background-color: floralwhite;
 }
 td {
 	width: 250px;
@@ -61,7 +61,7 @@ button {
 <table>
 <tr>
 
-<td><a id="mode7">표준세탁</a></td>
+<td><a id="mode6">표준세탁</a></td>
 
 <td rowspan="11">
 <!--<div class="demo">
@@ -72,18 +72,23 @@ data-angleArc=250 data-displayInput=false>
 <div class="demo" style="width:350px;">
     <div style="position:relative;">
         <div style="position:absolute;left:40px;top:10px">
-            <input class="knob" id="outline1" data-min="0" data-max="1" data-bgColor="#333" data-fgColor="red" data-displayInput=false data-width="270" data-height="270" data-thickness=".02" data-angleOffset=-125
-data-angleArc=140 value="1" readonly>
+        	<!-- right red outline -->
+            <input class="knob" id="outline1" data-min="0" data-max="1" data-bgColor="#333" data-fgColor="red" data-displayInput=false data-width="270" data-height="270" data-thickness=".02" data-angleOffset=-125 data-angleArc=140 value="1" readonly>
         </div>
         <div style="position:absolute;left:40px;top:10px">
-            <input class="knob" id="outline2" data-min="0" data-max="1" data-bgColor="#333" data-fgColor="black" data-displayInput=false data-width="270" data-height="270" data-thickness=".02" data-angleOffset=-335
-data-angleArc=100 value="1" readonly>
+        	<!-- left black outline -->
+            <input class="knob" id="outline2" data-min="0" data-max="1" data-bgColor="#333" data-fgColor="black" data-displayInput=false data-width="270" data-height="270" data-thickness=".02" data-angleOffset=-335 data-angleArc=100 value="1" readonly>
         </div>
         <div style="position:absolute;left:50px;top:20px">
-            <input class="knob" id="cursor" data-min="0" data-max="15" data-bgColor="#333" data-displayInput=false data-width="250" data-height="250" data-thickness=".45" data-angleOffset=-125
-data-angleArc=250 data-cursor=true value="1">
+        	<!-- background -->
+            <input class="knob" id="bkgnd" data-min="0" data-max="1" data-bgColor="#333" data-fgColor="333" data-displayInput=false data-width="250" data-height="250" data-thickness=".45" data-angleOffset=-110 data-angleArc=235 data-cursor=true readonly>
+		</div>
+        <div style="position:absolute;left:50px;top:20px">
+        	<!-- user control -->
+            <input class="knob" id="cursor" data-min="0" data-max="13" data-bgColor="#333" data-displayInput=false data-width="250" data-height="250" data-thickness=".45" data-angleOffset=-110 data-angleArc=220 data-cursor=true value="0">
         </div>
         <div style="position:absolute;left:115px;top:85px">
+        	<!-- inner green timeline -->
             <input class="knob" id="time" data-min="0" data-max="60" data-bgColor="#333" data-fgColor="rgb(127, 255, 0)" data-displayInput=false data-width="120" data-height="120" data-thickness=".3" readonly>
         </div>
     </div>
@@ -91,38 +96,38 @@ data-angleArc=250 data-cursor=true value="1">
 
 </td>
 
-<td><a id="mode8">기능성의류</a></td>
+<td><a id="mode7">기능성의류</a></td>
 
 </tr>
 
 <tr>
-<td><a id="mode6">찌든때</a></td>
-<td><a id="mode9">이불살균털기</a></td>
+<td><a id="mode5">찌든때</a></td>
+<td><a id="mode8">이불살균털기</a></td>
 </tr>
 
 <tr>
-<td><a id="mode5">아기옷</a></td>
-<td><a id="mode10">컬러케어</a></td>
+<td><a id="mode4">아기옷</a></td>
+<td><a id="mode9">컬러케어</a></td>
 </tr>
 
 <tr>
-<td><a id="mode4">알뜰삶음</a></td>
-<td><a id="mode11">찬물세탁</a></td>
+<td><a id="mode3">알뜰삶음</a></td>
+<td><a id="mode10">찬물세탁</a></td>
 </tr>
 
 <tr>
-<td><a id="mode3">스피드워시</a></td>
-<td><a id="mode12">란제리/울</a></td>
+<td><a id="mode2">스피드워시</a></td>
+<td><a id="mode11">란제리/울</a></td>
 </tr>
 
 <tr>
-<td><a id="mode2">알러지케어</a></td>
-<td><a id="mode13">이불</a></td>
+<td><a id="mode1">알러지케어</a></td>
+<td><a id="mode12">이불</a></td>
 </tr>
 
 <tr>
-<td><a id="mode1">스팀클리닝</a></td>
-<td><a id="mode14">행굼+탈수</a></td>
+<td><a id="mode0">스팀클리닝</a></td>
+<td><a id="mode13">행굼+탈수</a></td>
 </tr>
 
 <tr>
@@ -151,9 +156,11 @@ data-angleArc=250 data-cursor=true value="1">
 <script type="text/javascript" src="/static/jquery.knob.js"></script>
 <script type="text/javascript">
 
+window.onload = function () {
+
 var powerOn = false;
 var running = false;
-var mode = 1;
+var mode = 0;
 
 function refreshUI() {
 	if (powerOn) {
@@ -172,12 +179,11 @@ function refreshUI() {
 		document.getElementById("start").style.color = 'black';
 	}
 
-	for (var i = 1; i < 15; ++i) {
+	for (var i = 0; i < 14; ++i) {
 		document.getElementById('mode'+i).style.color = 'black';
 		document.getElementById('mode'+i).style.fontWeight = null;
 		document.getElementById('mode'+i).parentNode.style.backgroundColor = null;
 	}
-	console.log('tromm::refreshUI', mode);
 	if (powerOn) {
 		document.getElementById('mode'+mode).style.color = 'red';
 		document.getElementById('mode'+mode).style.fontWeight = 'bold';
@@ -191,7 +197,7 @@ document.getElementById("start").style.color = 'gray';
 document.getElementById("power").onclick = function () {
 	powerOn = !powerOn;
 	running = false;
-	mode = 1;
+	mode = 0;
 	refreshUI();
 	DoNotify();
 }
@@ -214,25 +220,9 @@ function onchange (value) {
 		return;
 	}
 
-	if (!powerOn) {
-		this.cv = 1;
-		return;
+	if (!powerOn || running) {
+		value = this.cv = mode;
 	}
-
-	if (running) {
-		this.cv = mode;
-		return;
-	}
-
-	if (value === 0) {
-		value = this.cv = 1;
-	}
-
-	if (value === 15) {
-		value = this.cv = 14;
-	}
-
-	console.log("change: " + value);
 
 	mode = value;
 	refreshUI();
@@ -242,43 +232,36 @@ $("#outline1").knob();
 $("#outline2").knob();
 $("#time").knob();
 
+$("#bkgnd").knob({
+	min: 0,
+	max: 1
+});
 $("#cursor").knob({
 	min: 0,
-	max: 15,
+	max: 13,
 	stopper: true,
-    //change : function (value) {
-    //    console.log("change : " + value);
-    //},
     change: onchange,
     release : function (value) {
         mode = value;
         DoNotify();
-    },
-    cancel : function () {
-        console.log("cancel : ", this);
-    },
-    draw : function () {
-
+        refreshUI();
     }
 });
 
 
 
+function getStatus(data) {
+	var params = JSON.parse(data).params;
+	powerOn = params.isPowerOn;
+	running = params.isRunning;
+	mode = params.mode;
+	$("#cursor").val(mode).trigger("change");
+	mode = params.mode;
+	refreshUI();
+}
 
+rabbitHole.request('get/status', '', getStatus, false);
 
-
-(function () {
-
-	function getStatus(data) {
-		var params = JSON.parse(data).params;
-		powerOn = params.isPowerOn;
-		running = params.isRunning;
-		mode = params.mode;
-		refreshUI();
-	}
-
-	rabbitHole.request('get/status', '', getSatus, false);
-})();
 
 
 
@@ -287,15 +270,19 @@ function DoNotify() {
 }
 
 rabbitHole.onevent = function (data) {
-	var params = JSON.parse(data).params;
-	console.log(params);
-
-	powerOn = params.isPowerOn;
-	running = params.isRunning;
-	mode = params.mode;
-	$("#cursor").val(mode).trigger("change");
-	refreshUI();
+	var json = JSON.parse(data);
+	var params = json.params;
+	if (json.name === 'statusChanged') {
+		powerOn = params.isPowerOn;
+		running = params.isRunning;
+		mode = params.mode;
+		$("#cursor").val(mode).trigger("change");
+		mode = params.mode;
+		refreshUI();
+	}
 }
+
+}; // window.onload
 
 </script>
 

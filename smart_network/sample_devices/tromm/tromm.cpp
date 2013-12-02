@@ -8,7 +8,7 @@ Tromm::Tromm(boost::asio::io_service& io_service, const std::string& description
     : Device(io_service, description)
     , is_power_on_(false) 
     , is_running_(false) 
-    , mode_(kMode01) {
+    , mode_(kMode00) {
     // nothing
 }
 

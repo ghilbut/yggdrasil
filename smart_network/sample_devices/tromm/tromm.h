@@ -7,9 +7,9 @@
 class Tromm : public Device {
 public:
     typedef enum {
-        kMode01 = 1, kMode02, kMode03, kMode04, kMode05, 
-        kMode06, kMode07, kMode08, kMode09, kMode10, 
-        kMode11, kMode12, kMode13, kMode14
+        kMode00 = 0, kMode01, kMode02, kMode03, kMode04, 
+        kMode05, kMode06, kMode07, kMode08, kMode09, 
+        kMode10, kMode11, kMode12, kMode13
     } Mode;
 
 public:
