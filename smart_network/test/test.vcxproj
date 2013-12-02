@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\codebase\http_object_test.cpp" />
     <ClCompile Include="..\codebase\ssdp_test.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\codebase\codebase.vcxproj">
@@ -22,6 +22,12 @@
     <ProjectReference Include="..\gmock\gmock.vcxproj">
       <Project>{8c528b2d-daa5-4ce6-b0a3-fdd7fde38b73}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\mongoose\mongoose.vcxproj">
+      <Project>{84fa6df3-15f8-4ca2-925e-16b42bf8b943}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="static.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8CC77308-BDCC-44F7-9727-805183686313}</ProjectGuid>

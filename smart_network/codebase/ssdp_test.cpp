@@ -56,9 +56,6 @@ public:
 };
 
 
-TEST_F(SsdpTest, run) {
-    ASSERT_FALSE(io_service_.stopped());
-}
 
 void DoSsdpCheck(const std::string& ssdp, boost::interprocess::interprocess_semaphore& done) {
     done.post();
@@ -70,6 +67,12 @@ ACTION_P2(DoSsdpCheck, target, sender) {
 
 ACTION_P(DoSsdpDone, done) {
     done->post();
+}
+
+
+
+TEST_F(SsdpTest, run) {
+    ASSERT_FALSE(io_service_.stopped());
 }
 
 TEST_F(SsdpTest, search_and_not_found_single_target) {
