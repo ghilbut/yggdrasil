@@ -137,14 +137,9 @@ function getDeviceListResult(data) {
 }
 
 window.onload = function () {
-
-	rabbitHole.request('get/device/list', '', getDeviceListResult, false);
-
-	/*var xhr = new XMLHttpRequest();
-	xhr.responseType = 'json';
-	xhr.onreadystatechange = getDeviceListResult;
-	xhr.open('GET', '/do/get/device/list', true);
-	xhr.send();*/
+	var req = new rabbitHole.Request('get/device/list');
+	req.onresponse = getDeviceListResult;
+	req.send();
 };
 
 

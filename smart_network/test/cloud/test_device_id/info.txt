@@ -1,0 +1,5 @@
+{
+  "id":"test_device_id",
+  "name":"test_device",
+  "model":"GHILBUT_TEST_DEVICE"
+}

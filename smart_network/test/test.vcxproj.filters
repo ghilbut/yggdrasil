@@ -4,6 +4,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\codebase\ssdp_test.cpp" />
     <ClCompile Include="..\codebase\http_object_test.cpp" />
+    <ClCompile Include="..\codebase\http_download_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="static.h" />

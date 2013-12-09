@@ -260,8 +260,9 @@ function getStatus(data) {
 	refreshUI();
 }
 
-rabbitHole.request('get/status', '', getStatus, false);
-
+var req = new rabbitHole.Request('get/status');
+req.onresponse = getStatus;
+req.send();
 
 
 

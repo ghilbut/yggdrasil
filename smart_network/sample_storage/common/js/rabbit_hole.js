@@ -1,20 +1,53 @@
 var rabbitHole = (function () {
 	var rh_ = {
-		request: request,
+		Request: Request,
 		notify: notify,
 		onevent: false
 	};
 
 	var ws = false;
 
-	function Request(query, data, onresponse, onerror) {
-		var xhr = new XMLHttpRequest()
-			, data = data
-			, onresponse = (typeof(onresponse) === 'function' ? onresponse : false)
-			, onerror = (typeof(onerror) === 'function' ? onerror : false);
+	function Request(query) {
+		var self = this
+			, xhr = new XMLHttpRequest()
+			, query = query
+			, params = false;
+
+		if (typeof(query) !== 'string') {
+			throw new TypeError('[ERROR] type of query should be string.');
+		}
+
 		xhr.onreadystatechange = resultCallback;
 		xhr.open('POST', '/do/' + query, false);
-		xhr.send(data);
+		xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+
+		self.setParam = function (key, value) {
+			var type = typeof(key);
+			if (type !== 'string') {
+				throw new TypeError('[ERROR] type of key should be string.');
+			}
+
+			type = typeof(value);
+			if (value !== null
+				&& type !== 'string'
+				&& type !== 'number'
+				&& type !== 'boolean') {
+				throw new TypeError('[ERROR] type of value should be one of null, string, number or boolean.');	
+			}
+
+			if (!params) {
+				params = {};
+			}
+
+			params[key] = value;
+		};
+		self.send = function () {
+			var data = { query: query, params: params };
+			xhr.send(params ? JSON.stringify(data) : null);
+		};
+
+		self.onresponse = false;
+		self.onerror = false;
 
 		function resultCallback() {
 			if (this.readyState !== this.DONE) {
@@ -22,47 +55,22 @@ var rabbitHole = (function () {
 			}
 
 			if (this.status === 200) {
-				if (onresponse) {
-					onresponse(this.response)
+				if (self.onresponse && typeof(self.onresponse) === 'function') {
+					self.onresponse(this.response)
 				}
 			} else {
 				// TODO(ghilbut): it is not designed which how to notify error, yet.
-				if (onerror) {
-					onerror();
+				if (self.onerror && typeof(self.onerror) === 'function') {
+					self.onerror();
 				}
 			}
 		}
-	}
-
-	function request(query, data, onresponse, onerror) {
-		// TODO(ghilbut):
-		// redesign get parameters of query
-		// key:value object is standard
-
-		var req = false;
-
-		if (typeof(query) !== 'string') {
-			console.log('[ERROR] query should be string type.', query);
-			return false;
-		}
-
-		if (typeof(data) !== 'string') {
-			if (data.constructor !== Object) {
-				console.log('[ERROR]', 'invalid data type', data);
-				return false;
-			}
-			data = JSON.stringify(data);
-		}
-
-		req = new Request(query, data, onresponse, onerror);
-		return true;
 	}
 
 	function notify(data) {
 		if (typeof(data) !== 'string') {
 			if (data.constructor !== Object) {
-				console.log('[ERROR]', 'invalid data type', data);
-				return false;
+				throw new TypeError('[ERROR] type of data should be string or object.');
 			}
 			data = JSON.stringify(data);
 		}
