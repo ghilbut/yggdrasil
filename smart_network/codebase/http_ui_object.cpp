@@ -24,7 +24,6 @@ void UIObject::UnbindCommonPathHandler(void) {
 }
 
 int UIObject::OnRequest(mg_connection* conn) {
-
     const struct mg_request_info *ri = mg_get_request_info(conn);
 
     const char* uri = ri->uri;

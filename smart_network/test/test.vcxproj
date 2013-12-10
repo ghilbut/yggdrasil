@@ -11,10 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\codebase\http_download_test.cpp" />
     <ClCompile Include="..\codebase\http_object_test.cpp" />
     <ClCompile Include="..\codebase\ssdp_test.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="fake_browser.cpp" />
+    <ClCompile Include="fake_browser_test.cpp" />
+    <ClCompile Include="mongoose_mock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\codebase\codebase.vcxproj">
@@ -28,7 +30,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mongoose_mock.h" />
     <ClInclude Include="static.h" />
+    <ClInclude Include="fake_browser.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8CC77308-BDCC-44F7-9727-805183686313}</ProjectGuid>

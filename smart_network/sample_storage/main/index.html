@@ -98,10 +98,13 @@ function openRemoteUI(id) {
 
 	var root = document.getElementById('remote_ui');
 	var iframe = document.createElement('iframe');
-	iframe.src = urlList[id];
 	root.appendChild(iframe);
 	currentUI = id;
 
+	iframe.onload = function () {
+		iframe.contentWindow.document.aaa();
+	};
+	iframe.src = urlList[id];
 	document.getElementById('remote_control').style.display = 'block';
 }
 

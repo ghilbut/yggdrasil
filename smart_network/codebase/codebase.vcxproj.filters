@@ -22,7 +22,6 @@
     <ClInclude Include="http_websocket_manager.h" />
     <ClInclude Include="channel.h" />
     <ClInclude Include="channel_delegate.h" />
-    <ClInclude Include="http_downloader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />
@@ -39,7 +38,6 @@
     <ClCompile Include="http_request.cpp" />
     <ClCompile Include="http_ui_object.cpp" />
     <ClCompile Include="http_websocket_manager.cpp" />
-    <ClCompile Include="http_downloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="device">

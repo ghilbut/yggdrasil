@@ -82,7 +82,6 @@
     <ClInclude Include="chat_message.h" />
     <ClInclude Include="device\device_desc.h" />
     <ClInclude Include="device\device_manager.h" />
-    <ClInclude Include="http_downloader.h" />
     <ClInclude Include="http_fwd.h" />
     <ClInclude Include="http_object.h" />
     <ClInclude Include="http_request.h" />
@@ -96,7 +95,6 @@
     <ClCompile Include="chat_message.cpp" />
     <ClCompile Include="device\device_desc.cpp" />
     <ClCompile Include="device\device_manager.cpp" />
-    <ClCompile Include="http_downloader.cpp" />
     <ClCompile Include="http_object.cpp" />
     <ClCompile Include="http_request.cpp" />
     <ClCompile Include="http_ui_object.cpp" />

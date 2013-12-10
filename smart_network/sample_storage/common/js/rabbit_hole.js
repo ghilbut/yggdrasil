@@ -113,10 +113,15 @@ var rabbitHole = (function () {
 	ws = ws_open(window.location.host);
 
 	setInterval(function () {
+		// ping websocket
 		if (ws && ws.readyState === ws.OPEN) {
 			ws.send('');
 		}
 	}, 3000);
+
+	document.aaa = function () {
+		alert('bbb');
+	};
 
 	return rh_;
 })();

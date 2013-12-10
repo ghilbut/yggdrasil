@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cloud_proxy", "cloud_proxy.vcxproj", "{A6801C45-EC98-49CF-8BD1-068BD7A0F899}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third_party", "third_party", "{E3ABA943-E44B-4042-853C-624E25056C98}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mongoose", "..\mongoose\mongoose.vcxproj", "{84FA6DF3-15F8-4CA2-925E-16B42BF8B943}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gmock", "..\gmock\gmock.vcxproj", "{8C528B2D-DAA5-4CE6-B0A3-FDD7FDE38B73}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "codebase", "..\codebase\codebase.vcxproj", "{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "..\test\test.vcxproj", "{8CC77308-BDCC-44F7-9727-805183686313}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "..\jsoncpp\jsoncpp.vcxproj", "{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6801C45-EC98-49CF-8BD1-068BD7A0F899}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A6801C45-EC98-49CF-8BD1-068BD7A0F899}.Debug|Win32.Build.0 = Debug|Win32
+		{A6801C45-EC98-49CF-8BD1-068BD7A0F899}.Release|Win32.ActiveCfg = Release|Win32
+		{A6801C45-EC98-49CF-8BD1-068BD7A0F899}.Release|Win32.Build.0 = Release|Win32
+		{84FA6DF3-15F8-4CA2-925E-16B42BF8B943}.Debug|Win32.ActiveCfg = Debug|Win32
+		{84FA6DF3-15F8-4CA2-925E-16B42BF8B943}.Debug|Win32.Build.0 = Debug|Win32
+		{84FA6DF3-15F8-4CA2-925E-16B42BF8B943}.Release|Win32.ActiveCfg = Release|Win32
+		{84FA6DF3-15F8-4CA2-925E-16B42BF8B943}.Release|Win32.Build.0 = Release|Win32
+		{8C528B2D-DAA5-4CE6-B0A3-FDD7FDE38B73}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8C528B2D-DAA5-4CE6-B0A3-FDD7FDE38B73}.Debug|Win32.Build.0 = Debug|Win32
+		{8C528B2D-DAA5-4CE6-B0A3-FDD7FDE38B73}.Release|Win32.ActiveCfg = Release|Win32
+		{8C528B2D-DAA5-4CE6-B0A3-FDD7FDE38B73}.Release|Win32.Build.0 = Release|Win32
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}.Debug|Win32.ActiveCfg = Debug|Win32
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}.Debug|Win32.Build.0 = Debug|Win32
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}.Release|Win32.ActiveCfg = Release|Win32
+		{838BA03F-CF78-4A0D-ABC9-8A0B103E8711}.Release|Win32.Build.0 = Release|Win32
+		{8CC77308-BDCC-44F7-9727-805183686313}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8CC77308-BDCC-44F7-9727-805183686313}.Debug|Win32.Build.0 = Debug|Win32
+		{8CC77308-BDCC-44F7-9727-805183686313}.Release|Win32.ActiveCfg = Release|Win32
+		{8CC77308-BDCC-44F7-9727-805183686313}.Release|Win32.Build.0 = Release|Win32
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Debug|Win32.Build.0 = Debug|Win32
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Release|Win32.ActiveCfg = Release|Win32
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{84FA6DF3-15F8-4CA2-925E-16B42BF8B943} = {E3ABA943-E44B-4042-853C-624E25056C98}
+		{8C528B2D-DAA5-4CE6-B0A3-FDD7FDE38B73} = {E3ABA943-E44B-4042-853C-624E25056C98}
+		{CE6F9B98-25C2-47B1-8E13-CBCCD80866DF} = {E3ABA943-E44B-4042-853C-624E25056C98}
+	EndGlobalSection
+EndGlobal
