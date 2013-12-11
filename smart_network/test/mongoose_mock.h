@@ -13,7 +13,7 @@ public:
     MongooseMock(const char* document_root, uint32_t port);
     ~MongooseMock(void);
 
-    MOCK_METHOD1(OnBeginRequest, int(mg_connection* conn));
+    MOCK_METHOD1(OnBeginRequest, int(struct mg_connection* conn));
     MOCK_METHOD2(OnEndRequest, void(const struct mg_connection* conn, int reply_status_code));
     MOCK_METHOD1(OnWebsocketConnect, int(const struct mg_connection* conn));
     MOCK_METHOD1(OnWebsocketReady, void(struct mg_connection* conn));

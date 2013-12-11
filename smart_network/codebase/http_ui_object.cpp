@@ -13,7 +13,7 @@ UIObject::UIObject(const std::string& document_root, uint32_t port)
     // nothing
 }
 
-void UIObject::BindCommonPathHandler(CommonPathHablder handle) {
+void UIObject::BindCommonPathHandler(CommonPathHandler handle) {
     BOOST_ASSERT(common_path_handle_ == 0);
     common_path_handle_ = handle;
 }
@@ -23,7 +23,9 @@ void UIObject::UnbindCommonPathHandler(void) {
     common_path_handle_ = 0;
 }
 
-int UIObject::OnRequest(mg_connection* conn) {
+int UIObject::OnBeginRequest(mg_connection* conn) {
+    // Returning non-zero tells mongoose that our function has replied to
+    // the client, and mongoose should not send client any more data.
     const struct mg_request_info *ri = mg_get_request_info(conn);
 
     const char* uri = ri->uri;
@@ -113,18 +115,73 @@ int UIObject::OnRequest(mg_connection* conn) {
     return 1;
 }
 
-void UIObject::OnWebsocketText(const std::string& data) {
-    DoNotify(data);
+void UIObject::OnEndRequest(const struct mg_connection* conn, int reply_status_code) {
+    // nothing
+}
+
+int UIObject::OnWebsocketConnect(const struct mg_connection* conn) {
+    // nothing
+    return 0;
+}
+
+void UIObject::OnWebsocketReady(struct mg_connection* conn) {
+    websockets_.Register(conn);
+}
+
+int UIObject::OnWebsocketData(struct mg_connection* conn, int bits, char* data, size_t data_len) {
+
+    const char opcode = static_cast<char>(bits & 0x0f);
+
+    if (opcode == WEBSOCKET_OPCODE_CONTINUATION) {
+        // nothing
+        return 1;
+    }
+
+    if (opcode == WEBSOCKET_OPCODE_TEXT) {
+        if (data_len > 0) {
+            std::string text(data, data + data_len);
+            if (text != "rabbit_hole_ping") {
+                DoNotify(data);
+            }
+        }
+        return 1;
+    }
+
+    if (opcode == WEBSOCKET_OPCODE_BINARY) {
+        // nothing
+        return 1;
+    }
+
+    if (opcode == WEBSOCKET_OPCODE_CONNECTION_CLOSE) {
+        websockets_.Unregister(conn);
+        return 0;
+    }
+
+    if (opcode == WEBSOCKET_OPCODE_PING) {
+        return mg_websocket_write(conn, WEBSOCKET_OPCODE_PONG, data, data_len);
+    }
+
+    if (opcode == WEBSOCKET_OPCODE_PONG) {
+        // TODO(ghilbut):
+        // should I check the pair 
+        // between PING request and this PONG response ?
+        return 1;
+    }
+
+    return 1;
 }
 
 void UIObject::FireEvent(const std::string& json) {
     SendWebSocketData(json);
 }
 
+void UIObject::SendWebSocketData(const std::string& data) {
+    websockets_.SendText(data);
+}
 
-
-
-
+void UIObject::PingWebSockets(void) {
+    websockets_.Ping();
+}
 
 static int HandleFile(mg_connection* conn
                       , const char* filepath) {

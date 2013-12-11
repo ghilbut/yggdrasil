@@ -4,6 +4,8 @@
 
 
 using ::testing::_;
+using ::testing::WithArgs;
+using ::testing::Invoke;
 
 extern std::string kStoragePath;
 
@@ -33,9 +35,23 @@ public:
 
 
 
+ACTION(DoBeginRequest) {
+    struct mg_connection* conn = arg0;
+    return 0;
+}
+
+ACTION(DoEndRequest) {
+    const struct mg_connection* conn = arg0;
+    const int reply_status_code = arg1;
+}
+
 TEST_F(FakeBrowserTest, empty) {
-    EXPECT_CALL(mock_, OnBeginRequest(_)).Times(1);
-    EXPECT_CALL(mock_, OnEndRequest(_, _)).Times(1);
+    EXPECT_CALL(mock_, OnBeginRequest(_))
+        .Times(1)
+        .WillOnce(WithArgs<0>(DoBeginRequest()));
+    EXPECT_CALL(mock_, OnEndRequest(_, _))
+        .Times(1)
+        .WillOnce(WithArgs<0, 1>(DoEndRequest()));
 
     Request r("GET", "/");
     r.set_host("localhost");
