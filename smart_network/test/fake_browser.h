@@ -3,33 +3,61 @@
 
 #include "codebase/boost_lib_fwd.h"
 #include <map>
+#include <vector>
 #include <string>
 
 
 class Request {
-public:
-    Request(const std::string& method, const std::string& query);
+protected:
+    Request(const std::string& method, const std::string& uri);
     virtual ~Request(void) {}
 
+public:
     void SetHeader(const std::string& key, const std::string& value);
-    void SetParam(const std::string& key, const std::string& value);
 
-    bool GetRequest(std::string& request) const;
+    virtual bool MakeProtocol(std::string& protocol) const;
+
+    // TODO(ghilbut): make websocket API
 
     const char* mothod(void) const;
-    const char* query(void) const;
+    const char* uri(void) const;
     const char* host(void) const;
     void set_host(const std::string& host);
     const char* referer(void) const;
     void set_referer(const std::string& referer);
 
-private:
+
+protected:
     const std::string method_;
-    const std::string query_;
+    const std::string uri_;
     std::string host_;
     std::string referer_;
     std::map<std::string, std::string> headers_;
+    mutable std::vector<char> data_;
+};
+
+class RequestGet : public Request {
+public:
+    RequestGet(const std::string& uri);
+    ~RequestGet(void) {}
+
+    void SetParam(const std::string& key, const std::string& value);
+
+    virtual bool MakeProtocol(std::string& protocol) const;
+
+private:
     std::map<std::string, std::string> params_;
+};
+
+class RequestPost : public Request {
+public:
+    RequestPost(const std::string& uri);
+    ~RequestPost(void) {}
+
+    template<class _Itr>
+    void SetData(_Itr begin, _Itr end) {
+        data_.swap(std::vector<char>(begin, end));
+    }
 };
 
 class Response {

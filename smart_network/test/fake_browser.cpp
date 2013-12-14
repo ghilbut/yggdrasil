@@ -3,8 +3,8 @@
 #include <sstream>
 
 
-Request::Request(const std::string& method, const std::string& query) 
-    : method_(method), query_(query) {
+Request::Request(const std::string& method, const std::string& uri) 
+    : method_(method), uri_(uri) {
     // nothing
 }
 
@@ -12,11 +12,7 @@ void Request::SetHeader(const std::string& key, const std::string& value) {
     headers_[key] = value;
 }
 
-void Request::SetParam(const std::string& key, const std::string& value) {
-    params_[key] = value;
-}
-
-bool Request::GetRequest(std::string& request) const {
+bool Request::MakeProtocol(std::string& protocol) const {
 
     if (method_ != "GET" && method_ != "POST") {
         return false;
@@ -26,19 +22,10 @@ bool Request::GetRequest(std::string& request) const {
         return false;
     }
 
-    std::string params;
-    if (!params_.empty()) {
-        std::map<std::string, std::string>::const_iterator itr = params_.begin();
-        std::map<std::string, std::string>::const_iterator end = params_.end();
-        params += (itr->first + "=" + itr->second);
-        for (++itr; itr != end; ++itr) {
-            params += ("&" + itr->first + "=" + itr->second);
-        }
-    }
-
-    std::string query = (query_.empty() ? "/" : query_.c_str());
+    std::string query = (uri_.empty() ? "/" : uri_.c_str());
     if (method_ == "GET") {
-        query += ("?" + params);
+        query += "?";
+        query.append(data_.begin(), data_.end());
     }
 
     std::ostringstream ss;
@@ -50,15 +37,16 @@ bool Request::GetRequest(std::string& request) const {
     if (!referer_.empty()) {
         ss << "Referer: " << referer_ << "\r\n";
     }
-    if (method_ == "POST" && !params.empty()) {
-        ss << "Content-Length: " << params.length() << "\r\n";
+    if (method_ == "POST" && !data_.empty()) {
+        ss << "Content-Length: " << data_.size() << "\r\n";
         ss << "\r\n";
-        ss << params;
+        protocol = ss.str();
+        protocol.append(data_.begin(), data_.end());
     } else {
         ss << "\r\n";
+        protocol = ss.str();
     }
 
-    request = ss.str();
     return true;
 }
 
@@ -66,8 +54,8 @@ const char* Request::mothod(void) const {
     return method_.c_str();
 }
 
-const char* Request::query(void) const {
-    return query_.c_str();
+const char* Request::uri(void) const {
+    return uri_.c_str();
 }
 
 const char* Request::host(void) const {
@@ -88,9 +76,41 @@ void Request::set_referer(const std::string& referer) {
 
 
 
+RequestGet::RequestGet(const std::string& uri)
+    : Request("GET", uri) {
+    // nothing
+}
+
+void RequestGet::SetParam(const std::string& key, const std::string& value) {
+    params_[key] = value;
+}
+
+bool RequestGet::MakeProtocol(std::string& protocol) const {
+    std::string params;
+    if (!params_.empty()) {
+        std::map<std::string, std::string>::const_iterator itr = params_.begin();
+        std::map<std::string, std::string>::const_iterator end = params_.end();
+        params += (itr->first + "=" + itr->second);
+        for (++itr; itr != end; ++itr) {
+            params += ("&" + itr->first + "=" + itr->second);
+        }
+    }
+    data_.swap(std::vector<char>(params.begin(), params.end()));
+    return Request::MakeProtocol(protocol);
+}
+
+
+RequestPost::RequestPost(const std::string& uri) 
+    : Request("POST", uri) {
+    // nothing
+}
+
+
+
 FakeBrowser::FakeBrowser(void)
     : thread_(boost::bind(&IOService::run, &io_service_))
     , socket_(io_service_) {
+    // nothing
 }
 
 FakeBrowser::~FakeBrowser(void) {
@@ -118,15 +138,13 @@ bool FakeBrowser::Send(const Request& request) {
         return false;
     }
 
-    std::string data;
-    if (!request.GetRequest(data)) {
+    std::string http;
+    if (!request.MakeProtocol(http)) {
         return false;
     }
 
-    boost::asio::write(socket_, boost::asio::buffer(data.c_str(), data.length()));
+    boost::asio::write(socket_, boost::asio::buffer(http.c_str(), http.length()));
 
-    //char response[1024];
-    //const size_t read_bytes = boost::asio::read(socket_, boost::asio::buffer(response, 1024));
     boost::asio::streambuf response;
     const size_t read_bytes = boost::asio::read_until(socket_, response, "\0");
 
