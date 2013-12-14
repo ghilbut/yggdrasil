@@ -43,8 +43,8 @@ private:
 
 
 private:
-    WebsocketManager websockets_;
     CommonPathHandler common_path_handle_;
+    WebsocketManager websockets_;
 };
 
 }  // namespace Http

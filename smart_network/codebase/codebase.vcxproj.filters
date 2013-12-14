@@ -15,7 +15,6 @@
     <ClInclude Include="ssdp.h" />
     <ClInclude Include="boost_lib_fwd.h" />
     <ClInclude Include="http_websocket_ping_scheduler.h" />
-    <ClInclude Include="http_fwd.h" />
     <ClInclude Include="http_object.h" />
     <ClInclude Include="http_request.h" />
     <ClInclude Include="http_ui_object.h" />

@@ -26,7 +26,7 @@ bool MainUIService::DoExecute(mg_connection* conn, const char* method, const cha
 
 bool MainUIService::DoRequest(mg_connection* conn, const char* method, const char* query) {
 
-    if (strcmp(query, "get/device/list") == 0) {
+    if (strcmp(query, "/get/device/list") == 0) {
 
         std::string json;
         ui_handler_->handle_get_device_list(json);

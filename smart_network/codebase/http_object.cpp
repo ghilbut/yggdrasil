@@ -1,6 +1,5 @@
 #include "http_object.h"
 
-#include "http_fwd.h"
 #include "boost_lib_fwd.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
@@ -90,6 +89,10 @@ void Object::Stop() {
         mg_stop(ctx_);
         ctx_ = 0;
     }
+}
+
+const char* Object::document_root(void) const {
+    return document_root_.c_str();
 }
 
 uint32_t Object::port(void) const {

@@ -5,7 +5,6 @@
 #include "service/service.h"
 #include "service/service_desc.h"
 #include "codebase/ssdp.h"
-#include "codebase/http_fwd.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
 
@@ -158,7 +157,7 @@ void CtrlPoint::handle_get_device_list(std::string& json) {
 
 bool CtrlPoint::handle_get_common_path(const char* uri, std::string& filepath) {
     const boost::filesystem::path root(common_root_);
-    filepath = (root / (uri + kCommonKeySize)).string();
+    filepath = (root / uri).string();
     return boost::filesystem::is_regular_file(filepath);
 }
 

@@ -82,7 +82,6 @@
     <ClInclude Include="chat_message.h" />
     <ClInclude Include="device\device_desc.h" />
     <ClInclude Include="device\device_manager.h" />
-    <ClInclude Include="http_fwd.h" />
     <ClInclude Include="http_object.h" />
     <ClInclude Include="http_request.h" />
     <ClInclude Include="http_ui_object.h" />

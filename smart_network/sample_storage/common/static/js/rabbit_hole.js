@@ -18,7 +18,7 @@ var rabbitHole = (function () {
 		}
 
 		xhr.onreadystatechange = resultCallback;
-		xhr.open('POST', '/do/' + query, false);
+		xhr.open('POST', '/' + query, false);
 		xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 
 		self.setParam = function (key, value) {

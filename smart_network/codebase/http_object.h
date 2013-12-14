@@ -29,6 +29,7 @@ public:
     bool Start(void);
     void Stop(void);
 
+    const char* document_root(void) const;
     uint32_t port(void) const;
 
 
