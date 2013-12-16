@@ -98,7 +98,7 @@ int UIObject::OnWebsocketData(struct mg_connection* conn, int bits, char* data, 
         if (data_len > 0) {
             std::string text(data, data + data_len);
             if (text != "rabbit_hole_ping") {
-                DoNotify(data);
+                DoNotify(text);
             }
         }
         return 1;
