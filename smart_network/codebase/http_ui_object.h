@@ -33,13 +33,10 @@ public:
 
 
 private:
-    virtual bool DoExecute(mg_connection* conn
-                           , const char* method
-                           , const char* query) = 0;
-    virtual bool DoRequest(mg_connection* conn
-                           , const char* method
-                           , const char* query) = 0;
-    virtual bool DoNotify(const std::string& text) = 0;
+    virtual bool FireRequest(mg_connection* conn
+                             , const char* method
+                             , const char* query) = 0;
+    virtual bool FireNotify(const std::string& text) = 0;
 
 
 private:

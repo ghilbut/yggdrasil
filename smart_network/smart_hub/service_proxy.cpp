@@ -77,15 +77,9 @@ const ServiceDesc& ServiceProxy::desc(void) const {
     return service_desc_;
 }
 
-bool ServiceProxy::DoExecute(mg_connection* conn
-                             , const char* method
-                             , const char* query) {
-    return false;
-}
-
-bool ServiceProxy::DoRequest(mg_connection* conn
-                             , const char* method
-                             , const char* query) {
+bool ServiceProxy::FireRequest(mg_connection* conn
+                               , const char* method
+                               , const char* query) {
 
     boost::uuids::random_generator gen;
     const std::string id = to_string(gen());
@@ -100,7 +94,7 @@ bool ServiceProxy::DoRequest(mg_connection* conn
     return false;
 }
 
-bool ServiceProxy::DoNotify(const std::string& text) {
+bool ServiceProxy::FireNotify(const std::string& text) {
 
     if (channel_ != 0) {
         chat_message msg;

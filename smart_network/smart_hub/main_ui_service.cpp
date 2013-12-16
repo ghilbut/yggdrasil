@@ -19,12 +19,7 @@ void MainUIService::UnbindUIHandler(void) {
     ui_handler_ = 0;
 }
 
-
-bool MainUIService::DoExecute(mg_connection* conn, const char* method, const char* query) {
-    return false;
-}
-
-bool MainUIService::DoRequest(mg_connection* conn, const char* method, const char* query) {
+bool MainUIService::FireRequest(mg_connection* conn, const char* method, const char* query) {
 
     if (strcmp(query, "/get/device/list") == 0) {
 
@@ -54,6 +49,6 @@ bool MainUIService::DoRequest(mg_connection* conn, const char* method, const cha
     return false;
 }
 
-bool MainUIService::DoNotify(const std::string& text) {
+bool MainUIService::FireNotify(const std::string& text) {
     return false;
 }

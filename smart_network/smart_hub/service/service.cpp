@@ -28,15 +28,9 @@ void Service::UnbindChannel(void) {
     //channel_.reset();
 }
 
-bool Service::DoExecute(mg_connection* conn
-                        , const char* method
-                        , const char* uri) {
-    return false;
-}
-
-bool Service::DoRequest(mg_connection* conn
-                        , const char* method
-                        , const char* uri) {
+bool Service::FireRequest(mg_connection* conn
+                          , const char* method
+                          , const char* uri) {
 
     boost::uuids::random_generator gen;
     const std::string id = to_string(gen());
@@ -51,7 +45,7 @@ bool Service::DoRequest(mg_connection* conn
     return false;
 }
 
-bool Service::DoNotify(const std::string& text) {
+bool Service::FireNotify(const std::string& text) {
 
     if (channel_.get() != 0) {
         chat_message msg;

@@ -26,13 +26,10 @@ public:
     void UnbindChannel(void);
 
     // HttpObject
-    virtual bool Service::DoExecute(mg_connection* conn
-                                    , const char* method
-                                    , const char* uri);
-    virtual bool DoRequest(mg_connection* conn
-                                    , const char* method
-                                    , const char* uri);
-    virtual bool DoNotify(const std::string& text);
+    virtual bool FireRequest(mg_connection* conn
+                             , const char* method
+                             , const char* uri);
+    virtual bool FireNotify(const std::string& text);
 
     // channel binding
     void OnResponse(const std::string& json);

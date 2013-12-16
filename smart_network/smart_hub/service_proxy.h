@@ -34,13 +34,10 @@ public:
 
 
 protected:
-    virtual bool DoExecute(mg_connection* conn
-                           , const char* method
-                           , const char* query);
-    virtual bool DoRequest(mg_connection* conn
-                           , const char* method
-                           , const char* query);
-    virtual bool DoNotify(const std::string& text);
+    virtual bool FireRequest(mg_connection* conn
+                             , const char* method
+                             , const char* query);
+    virtual bool FireNotify(const std::string& text);
 
 
 private:

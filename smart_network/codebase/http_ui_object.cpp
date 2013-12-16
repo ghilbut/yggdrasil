@@ -47,7 +47,7 @@ int UIObject::OnBeginRequest(mg_connection* conn) {
 
     if (strcmp(method, "POST") == 0) {
         // forward command over channel
-        if (DoRequest(conn, method, uri)) {
+        if (FireRequest(conn, method, uri)) {
             // TODO(ghilbut):
             // how can I response ?
         } else {
@@ -98,7 +98,7 @@ int UIObject::OnWebsocketData(struct mg_connection* conn, int bits, char* data, 
         if (data_len > 0) {
             std::string text(data, data + data_len);
             if (text != "rabbit_hole_ping") {
-                DoNotify(text);
+                FireNotify(text);
             }
         }
         return 1;
