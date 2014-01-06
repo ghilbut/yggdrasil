@@ -1,17 +1,16 @@
 #include "ctrl_point.h"
-//#include "uart_server.h"
+//#include "uart_adapter.h"
 #include "tcp_adapter.h"
 #include "service_broker.h"
-#include "service/service.h"
-#include "service/service_desc.h"
-#include "codebase/ssdp.h"
+#include "service_desc.h"
+#include "codebase/ssdp_scheduler.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
 
 
 
 CtrlPoint::CtrlPoint(const std::string& storage_root)
-    : ssdp_sender_(0)
+    : ssdp_scheduler_(0)
     // , ws_ping_scheduler_(io_service_)
     , common_root_((boost::filesystem::path(storage_root) / "common").string())
     
@@ -53,7 +52,7 @@ void CtrlPoint::OnConnected(const std::string& json, Channel* channel) {
     s->BindChannel(channel);
 
     connecting_list_.insert(id);
-    ssdp_sender_->UnregistTarget(id.c_str());
+    ssdp_scheduler_->UnregistTarget(id.c_str());
 
     {
         Json::Value root(Json::objectValue);
@@ -92,7 +91,7 @@ void CtrlPoint::thread_main(void) {
     
     TcpAdapter t(io_service_, this, 8070);
 
-    SsdpSender ss(io_service_);
+    Ssdp::Scheduler ss(io_service_);
     ServiceFactory::Iterator itr = service_factory_.Begin();
     ServiceFactory::Iterator end = service_factory_.End();
     for (; itr != end; ++itr) {
@@ -102,7 +101,7 @@ void CtrlPoint::thread_main(void) {
         service->BindDisconnectedHandler(boost::bind(&CtrlPoint::handle_disconnected, this, _1));
         ss.RegistTarget(id);
     }
-    ssdp_sender_ = &ss;
+    ssdp_scheduler_ = &ss;
 
 
 
@@ -132,7 +131,7 @@ void CtrlPoint::thread_main(void) {
     const std::string json = writer.write(root);
     main_ui_service_.FireEvent(json);
 
-    ssdp_sender_ = 0;
+    ssdp_scheduler_ = 0;
 }
 
 void CtrlPoint::handle_get_device_list(std::string& json) {
@@ -162,7 +161,7 @@ bool CtrlPoint::handle_get_common_path(const char* uri, std::string& filepath) {
 }
 
 void CtrlPoint::handle_disconnected(const std::string& id) {
-    ssdp_sender_->RegistTarget(id);
+    ssdp_scheduler_->RegistTarget(id);
     connecting_list_.erase(id);
 
     Json::Value root(Json::objectValue);

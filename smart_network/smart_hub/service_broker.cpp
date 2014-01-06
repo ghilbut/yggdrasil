@@ -1,5 +1,5 @@
 #include "service_broker.h"
-#include "service/service_desc.h"
+#include "service_desc.h"
 #include "codebase/device/device_desc.h"
 #include "codebase/http_request.h"
 #include "codebase/chat_message.h"

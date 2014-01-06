@@ -6,7 +6,7 @@
 #include "device_delegator.h"
 #include "codebase/utility.h"
 #include "codebase/chat_message.h"
-#include "codebase/ssdp.h"
+#include "codebase/ssdp_listener.h"
 #include <json/json.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <deque>

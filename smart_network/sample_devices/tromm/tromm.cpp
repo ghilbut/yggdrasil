@@ -24,7 +24,7 @@ void Tromm::OnRequest(const Request& req, Response& res) {
 
     const std::string& query = req.query();
 
-    if (query == "get/status") {
+    if (query == "/get/status") {
         res.SetParam("isPowerOn", is_power_on_);
         res.SetParam("isRunning", is_running_);
         res.SetParam("mode", mode_);

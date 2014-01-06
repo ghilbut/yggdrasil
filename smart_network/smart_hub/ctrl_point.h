@@ -12,7 +12,9 @@
 #include <set>
 
 
-class SsdpSender;
+namespace Ssdp {
+class Scheduler;
+}  // namespace Ssdp
 
 class CtrlPoint : public MainUIHandler
                   , public ChannelDelegate {
@@ -44,7 +46,7 @@ private:
     IOService io_service_;
     boost::thread thread_;
 
-    SsdpSender* ssdp_sender_;
+    Ssdp::Scheduler* ssdp_scheduler_;
     // Http::WebsocketPingScheduler ws_ping_scheduler_;
     const std::string common_root_;
 

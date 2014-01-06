@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include "codebase/boost_lib_fwd.h"
-#include "codebase/ssdp.h"
+#include "codebase/ssdp_scheduler.h"
+#include "codebase/ssdp_listener.h"
 #include <boost/thread.hpp>
 #include <boost/interprocess/sync/interprocess_semaphore.hpp>
 
@@ -50,7 +51,7 @@ protected:
 public:
     boost::thread thread_;
     IOService io_service_;
-    SsdpSender sender_;
+    Ssdp::Scheduler sender_;
     MockListener mock_listener_;
     SsdpListener& listener_;
 };
@@ -87,7 +88,7 @@ TEST_F(SsdpTest, search_and_not_found_single_target) {
 
     sender_.RegistTarget(target);
 
-    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    const long sec = Ssdp::Scheduler::kSendIntervalSec * 2 + 1;
     boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_FALSE(done.timed_wait(until));
 }
@@ -104,7 +105,7 @@ TEST_F(SsdpTest, search_and_found_single_target_1) {
 
     sender_.RegistTarget(target);
 
-    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    const long sec = Ssdp::Scheduler::kSendIntervalSec * 2 + 1;
     boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_FALSE(done.timed_wait(until));
 }
@@ -122,7 +123,7 @@ TEST_F(SsdpTest, DISABLED_search_and_found_single_target_2) {
 
     sender_.RegistTarget(target);
 
-    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    const long sec = Ssdp::Scheduler::kSendIntervalSec * 2 + 1;
     boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_TRUE(done.timed_wait(until));
 }
@@ -143,7 +144,7 @@ TEST_F(SsdpTest, search_and_not_found_multi_target) {
     sender_.RegistTarget(target2);
     sender_.RegistTarget(target3);
 
-    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    const long sec = Ssdp::Scheduler::kSendIntervalSec * 2 + 1;
     boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_FALSE(done1.timed_wait(until));
     EXPECT_FALSE(done2.timed_wait(until));
@@ -166,7 +167,7 @@ TEST_F(SsdpTest, search_and_found_multi_target) {
     sender_.RegistTarget(target2);
     sender_.RegistTarget(target3);
 
-    const long sec = SsdpSender::kSendIntervalSec * 2 + 1;
+    const long sec = Ssdp::Scheduler::kSendIntervalSec * 2 + 1;
     boost::posix_time::ptime until = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(sec);
     EXPECT_TRUE(done1.timed_wait(until));
     EXPECT_TRUE(done2.timed_wait(until));

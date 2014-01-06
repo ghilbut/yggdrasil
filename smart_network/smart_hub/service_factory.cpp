@@ -1,6 +1,6 @@
 #include "service_factory.h"
 #include "service_broker.h"
-#include "service/service_desc.h"
+#include "service_desc.h"
 #include "codebase/device/device_manager.h"
 #include "codebase/boost_lib_fwd.h"
 

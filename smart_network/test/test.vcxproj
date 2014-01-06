@@ -93,6 +93,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\mongoose-4.1;$(SolutionDir)..\third_party\gmock-1.7.0\gtest\include;$(SolutionDir)..\third_party\gmock-1.7.0\include;$(SolutionDir)..\test;$(SolutionDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

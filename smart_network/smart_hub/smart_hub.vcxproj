@@ -83,8 +83,7 @@
     <ClInclude Include="ctrl_point.h" />
     <ClInclude Include="main_ui_service.h" />
     <ClInclude Include="main_ui_handler.h" />
-    <ClInclude Include="service\service.h" />
-    <ClInclude Include="service\service_desc.h" />
+    <ClInclude Include="service_desc.h" />
     <ClInclude Include="service_factory.h" />
     <ClInclude Include="service_broker.h" />
     <ClInclude Include="tcp_channel.h" />
@@ -94,10 +93,7 @@
     <ClCompile Include="ctrl_point.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_service.cpp" />
-    <ClCompile Include="service\service.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="service\service_desc.cpp" />
+    <ClCompile Include="service_desc.cpp" />
     <ClCompile Include="service_factory.cpp" />
     <ClCompile Include="service_broker.cpp" />
     <ClCompile Include="tcp_channel.cpp" />

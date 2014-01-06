@@ -2,6 +2,7 @@
 #define DEVICE_DELEGATOR_H_
 
 #include <boost/scoped_ptr.hpp>
+#include <string>
 
 
 class Event;
