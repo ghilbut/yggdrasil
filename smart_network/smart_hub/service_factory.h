@@ -7,14 +7,14 @@
 
 
 class DeviceManager;
-class ServiceProxy;
+class ServiceBroker;
 
 class ServiceFactory {
     enum { kPortBegin = 7000 };
 
 
 public:
-    typedef std::map<const std::string, ServiceProxy*> ServiceList;
+    typedef std::map<const std::string, ServiceBroker*> ServiceList;
     typedef ServiceList::iterator Iterator;
 
 
@@ -22,13 +22,13 @@ public:
     ServiceFactory(const DeviceManager& device_fac, const std::string& description_root);
     ~ServiceFactory(void);
 
-    ServiceProxy* GetOrCreate(const std::string& id);
+    ServiceBroker* GetOrCreate(const std::string& id);
     void Remove(const std::string& id);
 
     void StartAll(void);
     void StopAll(void);
 
-    ServiceProxy* operator[] (const std::string& id);
+    ServiceBroker* operator[] (const std::string& id);
     Iterator Begin(void);
     Iterator End(void);
 

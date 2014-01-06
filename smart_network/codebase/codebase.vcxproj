@@ -100,6 +100,7 @@
     <ClCompile Include="http_websocket_manager.cpp" />
     <ClCompile Include="http_websocket_ping_scheduler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="ssdp.cpp" />
     <ClCompile Include="utility.cpp" />

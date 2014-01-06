@@ -1,7 +1,7 @@
 #include "ctrl_point.h"
 //#include "uart_server.h"
-#include "tcp_server.h"
-#include "service_proxy.h"
+#include "tcp_adapter.h"
+#include "service_broker.h"
 #include "service/service.h"
 #include "service/service_desc.h"
 #include "codebase/ssdp.h"
@@ -40,7 +40,7 @@ void CtrlPoint::OnConnected(const std::string& json, Channel* channel) {
         , root["nickname"].asCString()
         , root["protocol"].asCString());
 
-    ServiceProxy* s = service_factory_[id];
+    ServiceBroker* s = service_factory_[id];
     // TODO(ghilbut):
     // I'm worryed about channel's life sycle
     {
@@ -90,14 +90,14 @@ void CtrlPoint::Stop(void) {
 
 void CtrlPoint::thread_main(void) {
     
-    TcpServer t(io_service_, this, 8070);
+    TcpAdapter t(io_service_, this, 8070);
 
     SsdpSender ss(io_service_);
     ServiceFactory::Iterator itr = service_factory_.Begin();
     ServiceFactory::Iterator end = service_factory_.End();
     for (; itr != end; ++itr) {
         const std::string& id = itr->first;
-        ServiceProxy* service = itr->second;
+        ServiceBroker* service = itr->second;
         service->BindCommonPathHandler(boost::bind(&CtrlPoint::handle_get_common_path, this, _1, _2));
         service->BindDisconnectedHandler(boost::bind(&CtrlPoint::handle_disconnected, this, _1));
         ss.RegistTarget(id);
@@ -141,7 +141,7 @@ void CtrlPoint::handle_get_device_list(std::string& json) {
     ServiceFactory::Iterator itr = service_factory_.Begin();
     ServiceFactory::Iterator end = service_factory_.End();
     for (; itr != end; ++itr) {
-        const ServiceProxy* s = itr->second;
+        const ServiceBroker* s = itr->second;
         const ServiceDesc& info = s->desc();
         Json::Value item(Json::objectValue);
         item["id"] = info.id();

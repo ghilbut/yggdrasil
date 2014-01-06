@@ -1,8 +1,8 @@
-#include "tcp_server.h"
+#include "tcp_adapter.h"
 #include <algorithm>
 
 
-TcpServer::TcpServer(IOService& io_service, ChannelDelegate* delegate, unsigned short port) 
+TcpAdapter::TcpAdapter(IOService& io_service, ChannelDelegate* delegate, unsigned short port) 
         : io_service_(io_service)
         , acceptor_(io_service, TCP::endpoint(TCP::v4(), port)) 
         , delegate_(delegate) {
@@ -12,21 +12,21 @@ TcpServer::TcpServer(IOService& io_service, ChannelDelegate* delegate, unsigned 
     DoListen();
 }
 
-TcpServer::~TcpServer(void) {
+TcpAdapter::~TcpAdapter(void) {
     // nothing
 }
 
 
 
-void TcpServer::DoListen(void) {
+void TcpAdapter::DoListen(void) {
     TcpChannel* channel = new TcpChannel(io_service_);
     channel->BindDelegate(delegate_);
 
     acceptor_.async_accept(channel->socket()
-                           , boost::bind(&TcpServer::handle_accept, this, channel, boost::asio::placeholders::error));
+                           , boost::bind(&TcpAdapter::handle_accept, this, channel, boost::asio::placeholders::error));
 }
 
-void TcpServer::handle_accept(TcpChannel* channel, const boost::system::error_code& error) {
+void TcpAdapter::handle_accept(TcpChannel* channel, const boost::system::error_code& error) {
     if (!error) {
         channel->Start();
     }

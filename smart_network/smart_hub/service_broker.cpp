@@ -1,4 +1,4 @@
-#include "service_proxy.h"
+#include "service_broker.h"
 #include "service/service_desc.h"
 #include "codebase/device/device_desc.h"
 #include "codebase/http_request.h"
@@ -7,7 +7,7 @@
 #include <json/json.h>
 
 
-ServiceProxy::ServiceProxy(const DeviceDesc& device_desc, ServiceDesc& service_desc, uint32_t port)
+ServiceBroker::ServiceBroker(const DeviceDesc& device_desc, ServiceDesc& service_desc, uint32_t port)
     : Http::UIObject(device_desc.uiroot(), port) 
     , device_desc_(device_desc)
     , service_desc_(service_desc)
@@ -15,11 +15,11 @@ ServiceProxy::ServiceProxy(const DeviceDesc& device_desc, ServiceDesc& service_d
     // nothing
 }
 
-void ServiceProxy::OnConnected(const std::string& json, Channel* channel) {
+void ServiceBroker::OnConnected(const std::string& json, Channel* channel) {
     BOOST_ASSERT(false);
 }
 
-void ServiceProxy::OnResponse(const std::string& json) {
+void ServiceBroker::OnResponse(const std::string& json) {
 
     printf("[Service][Response] %s\n", json.c_str());
 
@@ -50,11 +50,11 @@ void ServiceProxy::OnResponse(const std::string& json) {
     requests_[id]->DoResponse(json);
 }
 
-void ServiceProxy::OnEvent(const std::string& text) {
+void ServiceBroker::OnEvent(const std::string& text) {
     FireEvent(text);
 }
 
-void ServiceProxy::OnDisconnected(void) {
+void ServiceBroker::OnDisconnected(void) {
     delete channel_;
     channel_ = 0;
 
@@ -63,21 +63,21 @@ void ServiceProxy::OnDisconnected(void) {
     }
 }
 
-void ServiceProxy::BindChannel(Channel* channel) {
+void ServiceBroker::BindChannel(Channel* channel) {
     channel_ = channel;
     channel_->BindDelegate(this);
 }
 
-void ServiceProxy::BindDisconnectedHandler(HandleDisconnected handle) {
+void ServiceBroker::BindDisconnectedHandler(HandleDisconnected handle) {
     BOOST_ASSERT(handle != 0);
     handle_disconnected_ = handle;
 }
 
-const ServiceDesc& ServiceProxy::desc(void) const {
+const ServiceDesc& ServiceBroker::desc(void) const {
     return service_desc_;
 }
 
-bool ServiceProxy::FireRequest(mg_connection* conn
+bool ServiceBroker::FireRequest(mg_connection* conn
                                , const char* method
                                , const char* query) {
 
@@ -94,7 +94,7 @@ bool ServiceProxy::FireRequest(mg_connection* conn
     return false;
 }
 
-bool ServiceProxy::FireNotify(const std::string& text) {
+bool ServiceBroker::FireNotify(const std::string& text) {
 
     if (channel_ != 0) {
         chat_message msg;

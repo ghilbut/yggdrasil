@@ -86,9 +86,9 @@
     <ClInclude Include="service\service.h" />
     <ClInclude Include="service\service_desc.h" />
     <ClInclude Include="service_factory.h" />
-    <ClInclude Include="service_proxy.h" />
+    <ClInclude Include="service_broker.h" />
     <ClInclude Include="tcp_channel.h" />
-    <ClInclude Include="tcp_server.h" />
+    <ClInclude Include="tcp_adapter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctrl_point.cpp" />
@@ -99,9 +99,9 @@
     </ClCompile>
     <ClCompile Include="service\service_desc.cpp" />
     <ClCompile Include="service_factory.cpp" />
-    <ClCompile Include="service_proxy.cpp" />
+    <ClCompile Include="service_broker.cpp" />
     <ClCompile Include="tcp_channel.cpp" />
-    <ClCompile Include="tcp_server.cpp" />
+    <ClCompile Include="tcp_adapter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\codebase\codebase.vcxproj">

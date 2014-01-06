@@ -1,5 +1,5 @@
-#ifndef TCP_SERVER_H_
-#define TCP_SERVER_H_
+#ifndef TCP_ADAPTER_H_
+#define TCP_ADAPTER_H_
 
 #include "tcp_channel.h"
 #include <string>
@@ -7,10 +7,10 @@
 
 class ConnectionDelegate;
 
-class TcpServer {
+class TcpAdapter {
 public:
-    TcpServer(IOService& io_service, ChannelDelegate* delegate, unsigned short port = 8091);
-    ~TcpServer(void);
+    TcpAdapter(IOService& io_service, ChannelDelegate* delegate, unsigned short port = 8091);
+    ~TcpAdapter(void);
 
 
 private:
@@ -25,4 +25,4 @@ private:
 };
 
 
-#endif  // TCP_SERVER_H_
+#endif  // TCP_ADAPTER_H_

@@ -1,5 +1,5 @@
 #include "service_factory.h"
-#include "service_proxy.h"
+#include "service_broker.h"
 #include "service/service_desc.h"
 #include "codebase/device/device_manager.h"
 #include "codebase/boost_lib_fwd.h"
@@ -28,7 +28,7 @@ ServiceFactory::ServiceFactory(const DeviceManager& device_fac, const std::strin
             continue;
         }
 
-        ServiceProxy* service = new ServiceProxy(*device_desc, *service_desc, ++next_port_);
+        ServiceBroker* service = new ServiceBroker(*device_desc, *service_desc, ++next_port_);
         if (service == NULL) {
             // TODO(ghilbut): error handling.
             ServiceDesc::Delete(service_desc);
@@ -47,7 +47,7 @@ ServiceFactory::~ServiceFactory(void) {
     }
 }
 
-ServiceProxy* ServiceFactory::GetOrCreate(const std::string& id) {
+ServiceBroker* ServiceFactory::GetOrCreate(const std::string& id) {
     ServiceList::iterator itr = service_list_.find(id);
     if (itr != service_list_.end()) {
         return itr->second;
@@ -68,7 +68,7 @@ ServiceProxy* ServiceFactory::GetOrCreate(const std::string& id) {
         return 0;
     }
 
-    ServiceProxy* service = new ServiceProxy(*device_desc, *service_desc, next_port_++);
+    ServiceBroker* service = new ServiceBroker(*device_desc, *service_desc, next_port_++);
     if (service == 0) {
         ServiceDesc::Delete(service_desc);
         printf("[ERROR] service(%s) creation failed.\n", id.c_str());
@@ -103,7 +103,7 @@ void ServiceFactory::StopAll(void) {
     }
 }
 
-ServiceProxy* ServiceFactory::operator[] (const std::string& id) {
+ServiceBroker* ServiceFactory::operator[] (const std::string& id) {
     return service_list_[id];
 }
 

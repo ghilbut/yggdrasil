@@ -1,5 +1,5 @@
-#ifndef SERVICE_PROXY_H_
-#define SERVICE_PROXY_H_
+#ifndef SERVICE_BROKER_H_
+#define SERVICE_BROKER_H_
 
 #include "codebase/channel_delegate.h"
 #include "codebase/http_ui_object.h"
@@ -11,15 +11,15 @@ class ServiceDesc;
 class Channel;
 class HttpRequest;
 
-class ServiceProxy :public Http::UIObject
+class ServiceBroker :public Http::UIObject
                     , public ChannelDelegate {
 public:
     typedef boost::function<void (const char*)> HandleDisconnected;
 
 
 public:
-    ServiceProxy(const DeviceDesc& device_desc, ServiceDesc& service_desc, uint32_t port);
-    ~ServiceProxy(void) {}
+    ServiceBroker(const DeviceDesc& device_desc, ServiceDesc& service_desc, uint32_t port);
+    ~ServiceBroker(void) {}
 
     // ChannelDelegate
     virtual void OnConnected(const std::string& json, Channel* channel);
@@ -51,4 +51,4 @@ private:
     HandleDisconnected handle_disconnected_;
 };
 
-#endif  // SERVICE_PROXY_H_
+#endif  // SERVICE_BROKER_H_
