@@ -87,10 +87,13 @@
     <ClInclude Include="http_ui_object.h" />
     <ClInclude Include="http_websocket_manager.h" />
     <ClInclude Include="http_websocket_ping_scheduler.h" />
+    <ClInclude Include="network_adapter.h" />
+    <ClInclude Include="network_manager.h" />
     <ClInclude Include="ssdp_listener.h" />
     <ClInclude Include="ssdp_ethernet_sender.h" />
     <ClInclude Include="ssdp_scheduler.h" />
-    <ClInclude Include="ssdp_sender.h" />
+    <ClInclude Include="tcp_adapter.h" />
+    <ClInclude Include="tcp_channel.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +108,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="network_manager.cpp" />
     <ClCompile Include="ssdp_listener.cpp" />
     <ClCompile Include="ssdp_ethernet_sender.cpp" />
     <ClCompile Include="ssdp_scheduler.cpp" />
+    <ClCompile Include="tcp_adapter.cpp" />
+    <ClCompile Include="tcp_channel.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>

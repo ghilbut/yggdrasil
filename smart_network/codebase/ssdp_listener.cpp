@@ -20,17 +20,10 @@ SsdpListener::~SsdpListener(void) {
     // nothing
 }
 
-void SsdpListener::handle_receive_from(const boost::system::error_code& error,
-    size_t bytes_recvd)
-{
+void SsdpListener::handle_receive_from(const boost::system::error_code& error, size_t bytes_recvd) {
     if (!error)
     {
-        std::cout.write(data_, bytes_recvd);
-        std::cout << sender_endpoint_.address().to_string();
-        std::cout << std::endl;
-
         OnSsdp(std::string(data_, data_ + bytes_recvd), sender_endpoint_.address().to_string());
-
         socket_.async_receive_from(boost::asio::buffer(data_, max_length)
                                    , sender_endpoint_
                                    , boost::bind(&SsdpListener::handle_receive_from, this

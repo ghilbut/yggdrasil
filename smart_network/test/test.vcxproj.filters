@@ -7,6 +7,7 @@
     <ClCompile Include="fake_browser.cpp" />
     <ClCompile Include="fake_browser_test.cpp" />
     <ClCompile Include="mongoose_mock.cpp" />
+    <ClCompile Include="..\codebase\ssdp_ethernet_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="static.h" />

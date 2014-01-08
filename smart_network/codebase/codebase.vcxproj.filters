@@ -22,8 +22,11 @@
     <ClInclude Include="channel.h" />
     <ClInclude Include="channel_delegate.h" />
     <ClInclude Include="ssdp_ethernet_sender.h" />
-    <ClInclude Include="ssdp_sender.h" />
     <ClInclude Include="ssdp_scheduler.h" />
+    <ClInclude Include="network_adapter.h" />
+    <ClInclude Include="network_manager.h" />
+    <ClInclude Include="tcp_adapter.h" />
+    <ClInclude Include="tcp_channel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />
@@ -42,6 +45,9 @@
     <ClCompile Include="http_websocket_manager.cpp" />
     <ClCompile Include="ssdp_ethernet_sender.cpp" />
     <ClCompile Include="ssdp_scheduler.cpp" />
+    <ClCompile Include="network_manager.cpp" />
+    <ClCompile Include="tcp_channel.cpp" />
+    <ClCompile Include="tcp_adapter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="device">

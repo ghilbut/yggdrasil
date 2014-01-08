@@ -1,6 +1,6 @@
 #ifndef SSDP_LISTENER_H_
 #define SSDP_LISTENER_H_
-// NOTE(jh81.kim): SSDP - Simple Service Discovery Protocol
+// NOTE(ghilbut): SSDP - Simple Service Discovery Protocol
 #include "ssdp_ethernet_sender.h"
 #include "boost_lib_fwd.h"
 #include <set>
@@ -13,7 +13,7 @@ public:
     virtual ~SsdpListener(void);
 
 protected:
-    // jh81.kim(28No2013): current step, ssdp is just service id.
+    // ghilbut(28No2013): current step, ssdp is just service id.
     virtual void OnSsdp(const std::string& ssdp, const std::string& address) = 0;
 
 private:

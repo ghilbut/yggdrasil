@@ -1,9 +1,9 @@
 #ifndef TCP_CHANNEL_H_
 #define TCP_CHANNEL_H_
 
-#include "codebase/channel.h"
-#include "codebase/boost_lib_fwd.h"
-#include "codebase/chat_message.h"
+#include "channel.h"
+#include "boost_lib_fwd.h"
+#include "chat_message.h"
 #include <deque>
 
 

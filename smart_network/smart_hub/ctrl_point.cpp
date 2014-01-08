@@ -1,6 +1,7 @@
 #include "ctrl_point.h"
 //#include "uart_adapter.h"
-#include "tcp_adapter.h"
+#include "codebase/network_manager.h"
+#include "codebase/tcp_adapter.h"
 #include "service_broker.h"
 #include "service_desc.h"
 #include "codebase/ssdp_scheduler.h"
@@ -52,7 +53,7 @@ void CtrlPoint::OnConnected(const std::string& json, Channel* channel) {
     s->BindChannel(channel);
 
     connecting_list_.insert(id);
-    ssdp_scheduler_->UnregistTarget(id.c_str());
+//    ssdp_scheduler_->UnregistTarget(id.c_str());
 
     {
         Json::Value root(Json::objectValue);
@@ -91,7 +92,19 @@ void CtrlPoint::thread_main(void) {
     
     TcpAdapter t(io_service_, this, 8070);
 
+
+
+    NetworkManager net_manager(io_service_);
+
+    NetworkAdapter::Ptr eth_adapter(new TcpAdapter(io_service_, this));
+    net_manager.Register("ethernet", eth_adapter);
+
     Ssdp::Scheduler ss(io_service_);
+    ss.BindTrigger(boost::bind(&NetworkManager::SendSsdp, &net_manager));
+
+
+
+
     ServiceFactory::Iterator itr = service_factory_.Begin();
     ServiceFactory::Iterator end = service_factory_.End();
     for (; itr != end; ++itr) {
@@ -99,7 +112,7 @@ void CtrlPoint::thread_main(void) {
         ServiceBroker* service = itr->second;
         service->BindCommonPathHandler(boost::bind(&CtrlPoint::handle_get_common_path, this, _1, _2));
         service->BindDisconnectedHandler(boost::bind(&CtrlPoint::handle_disconnected, this, _1));
-        ss.RegistTarget(id);
+//        ss.RegistTarget(id);
     }
     ssdp_scheduler_ = &ss;
 
@@ -161,7 +174,7 @@ bool CtrlPoint::handle_get_common_path(const char* uri, std::string& filepath) {
 }
 
 void CtrlPoint::handle_disconnected(const std::string& id) {
-    ssdp_scheduler_->RegistTarget(id);
+//    ssdp_scheduler_->RegistTarget(id);
     connecting_list_.erase(id);
 
     Json::Value root(Json::objectValue);

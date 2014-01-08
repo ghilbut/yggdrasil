@@ -41,7 +41,7 @@ int UIObject::OnBeginRequest(mg_connection* conn) {
                 return 1;
             }
         }
-        // TODO(jh81.kim): handle pretty 404 page
+        // TODO(ghilbut): handle pretty 404 page
         return 0;
     }
 

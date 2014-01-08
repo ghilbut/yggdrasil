@@ -5,33 +5,43 @@ namespace Ssdp {
 
 Scheduler::Scheduler(IOService& io_service)
     : interval_(boost::posix_time::seconds(kSendIntervalSec))
-    , timer_(io_service, interval_) 
-    , eth_sender_(io_service) {
-
-    timer_.expires_from_now(interval_);
-    timer_.async_wait(boost::bind(&Scheduler::handle_send, this));
+    , timer_(io_service, interval_) {
+    // nothing
 }
 
 Scheduler::~Scheduler(void) {
     // nothing
 }
 
-void Scheduler::RegistTarget(const std::string& target) {
-    eth_sender_.RegistTarget(target);
+ScheduleTrigger Scheduler::BindTrigger(ScheduleTrigger f) {
+    ScheduleTrigger old = trigger_;
+    trigger_ = f;
+    return old;
 }
 
-void Scheduler::UnregistTarget(const std::string& target) {
-    eth_sender_.UnregistTarget(target);
+void Scheduler::UnbindTrigger(void) {
+    trigger_ = 0;
 }
 
-void Scheduler::handle_send(void) {
+void Scheduler::Start(void) {
+    timer_.expires_from_now(interval_);
+    timer_.async_wait(boost::bind(&Scheduler::handle_fire_trigger, this));
+}
+
+void Scheduler::Stop(void) {
+    timer_.cancel();
+}
+
+void Scheduler::handle_fire_trigger(void) {
     const double time = (double)timer_.expires_at().time_of_day().total_milliseconds() / 1000.0;
     printf("[INFO][Scheduler] search service(s). [%8.3f]\n", time);
 
-    eth_sender_.Send();
+    if (!trigger_.empty()) {
+        trigger_();
+    }
 
     timer_.expires_at(timer_.expires_at() + interval_);
-    timer_.async_wait(boost::bind(&Scheduler::handle_send, this));
+    timer_.async_wait(boost::bind(&Scheduler::handle_fire_trigger, this));
 }
 
 }  // namespace Ssdp

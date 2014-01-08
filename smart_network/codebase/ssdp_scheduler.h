@@ -1,12 +1,14 @@
 #ifndef SSDP_SCHEDULER_H_
 #define SSDP_SCHEDULER_H_
-// NOTE(jh81.kim): SSDP - Simple Service Discovery Protocol
+// NOTE(ghilbut): SSDP - Simple Service Discovery Protocol
 #include "ssdp_ethernet_sender.h"
 #include "boost_lib_fwd.h"
 #include <set>
 
 
 namespace Ssdp {
+
+typedef boost::function<void ()> ScheduleTrigger;
 
 class Scheduler {
 public:
@@ -16,18 +18,21 @@ public:
     Scheduler(IOService& io_service);
     ~Scheduler(void);
 
-    void RegistTarget(const std::string& target);
-    void UnregistTarget(const std::string& target);
+    ScheduleTrigger BindTrigger(ScheduleTrigger f);
+    void UnbindTrigger(void);
+
+    void Start(void);
+    void Stop(void);
+
 
 private:
-    void handle_send(void);
+    void handle_fire_trigger(void);
 
 
 private:
     boost::posix_time::time_duration interval_;
     mutable boost::asio::deadline_timer timer_;
-
-    Ssdp::EthernetSender eth_sender_;
+    ScheduleTrigger trigger_;
 };
 
 }  // namespace Ssdp 
