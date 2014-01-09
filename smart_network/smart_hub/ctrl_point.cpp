@@ -1,4 +1,5 @@
 #include "ctrl_point.h"
+#include "codebase/storage_path.h"
 #include "codebase/tcp_adapter.h"
 #include "service_broker.h"
 #include "service_desc.h"
@@ -7,11 +8,11 @@
 
 
 
-CtrlPoint::CtrlPoint(const std::string& storage_root)
-    : common_root_((boost::filesystem::path(storage_root) / "common").string())
-    , device_manager_((boost::filesystem::path(storage_root) / "devices").string())
-    , main_ui_service_((boost::filesystem::path(storage_root) / "main").string(), 80)
-    , service_factory_(device_manager_, (boost::filesystem::path(storage_root) / "services").string()) 
+CtrlPoint::CtrlPoint(const StoragePath& storage)
+    : common_root_(storage.common_root())
+    , device_manager_(storage.device_root())
+    , main_ui_service_(storage.main_ui_root(), 80)
+    , service_factory_(device_manager_, storage.service_root()) 
     // , ws_ping_scheduler_(io_service_)
     , net_manager_(io_service_) {
     // nothing

@@ -27,6 +27,7 @@
     <ClInclude Include="network_manager.h" />
     <ClInclude Include="tcp_adapter.h" />
     <ClInclude Include="tcp_channel.h" />
+    <ClInclude Include="storage_path.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_message.cpp" />
@@ -48,6 +49,7 @@
     <ClCompile Include="network_manager.cpp" />
     <ClCompile Include="tcp_channel.cpp" />
     <ClCompile Include="tcp_adapter.cpp" />
+    <ClCompile Include="storage_path.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="device">

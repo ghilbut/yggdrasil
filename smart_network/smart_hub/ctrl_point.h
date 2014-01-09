@@ -17,10 +17,13 @@ namespace Ssdp {
 class Scheduler;
 }  // namespace Ssdp
 
+class StoragePath;
+
+
 class CtrlPoint : public MainUIHandler
                   , public ChannelDelegate {
 public:
-    CtrlPoint(const std::string& storage_root);
+    CtrlPoint(const StoragePath& storage);
     ~CtrlPoint(void);
 
     // ChannelDelegate

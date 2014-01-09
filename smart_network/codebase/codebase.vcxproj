@@ -92,6 +92,7 @@
     <ClInclude Include="ssdp_listener.h" />
     <ClInclude Include="ssdp_ethernet_sender.h" />
     <ClInclude Include="ssdp_scheduler.h" />
+    <ClInclude Include="storage_path.h" />
     <ClInclude Include="tcp_adapter.h" />
     <ClInclude Include="tcp_channel.h" />
     <ClInclude Include="utility.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="ssdp_listener.cpp" />
     <ClCompile Include="ssdp_ethernet_sender.cpp" />
     <ClCompile Include="ssdp_scheduler.cpp" />
+    <ClCompile Include="storage_path.cpp" />
     <ClCompile Include="tcp_adapter.cpp" />
     <ClCompile Include="tcp_channel.cpp" />
     <ClCompile Include="utility.cpp" />

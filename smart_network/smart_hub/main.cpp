@@ -1,3 +1,4 @@
+#include "codebase/storage_path.h"
 #include "ctrl_point.h"
 #include <string>
 #include <iostream>
@@ -12,7 +13,8 @@ int main(int argc, const char** argv)
     }
 
     const char* storage_root = argv[1];
-    CtrlPoint cp(storage_root);
+    StoragePath storage(storage_root);
+    CtrlPoint cp(storage);
     if (!cp.Start()) {
         printf("[MAIN] ctrl-point start failed.\n");
         return -1;
