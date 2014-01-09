@@ -1,23 +1,19 @@
 #include "ctrl_point.h"
-//#include "uart_adapter.h"
-#include "codebase/network_manager.h"
 #include "codebase/tcp_adapter.h"
 #include "service_broker.h"
 #include "service_desc.h"
-#include "codebase/ssdp_scheduler.h"
 #include <mongoose/mongoose.h>
 #include <json/json.h>
 
 
 
 CtrlPoint::CtrlPoint(const std::string& storage_root)
-    : ssdp_scheduler_(0)
-    // , ws_ping_scheduler_(io_service_)
-    , common_root_((boost::filesystem::path(storage_root) / "common").string())
-    
+    : common_root_((boost::filesystem::path(storage_root) / "common").string())
     , device_manager_((boost::filesystem::path(storage_root) / "devices").string())
+    , main_ui_service_((boost::filesystem::path(storage_root) / "main").string(), 80)
     , service_factory_(device_manager_, (boost::filesystem::path(storage_root) / "services").string()) 
-    , main_ui_service_((boost::filesystem::path(storage_root) / "main").string(), 80) {
+    // , ws_ping_scheduler_(io_service_)
+    , net_manager_(io_service_) {
     // nothing
 }
 
@@ -53,7 +49,7 @@ void CtrlPoint::OnConnected(const std::string& json, Channel* channel) {
     s->BindChannel(channel);
 
     connecting_list_.insert(id);
-//    ssdp_scheduler_->UnregistTarget(id.c_str());
+    net_manager_.UnregisterSsdpTarget("ethernet", id);
 
     {
         Json::Value root(Json::objectValue);
@@ -89,19 +85,10 @@ void CtrlPoint::Stop(void) {
 }
 
 void CtrlPoint::thread_main(void) {
-    
-    TcpAdapter t(io_service_, this, 8070);
 
-
-
-    NetworkManager net_manager(io_service_);
-
-    NetworkAdapter::Ptr eth_adapter(new TcpAdapter(io_service_, this));
-    net_manager.Register("ethernet", eth_adapter);
-
-    Ssdp::Scheduler ss(io_service_);
-    ss.BindTrigger(boost::bind(&NetworkManager::SendSsdp, &net_manager));
-
+    NetworkAdapter::Ptr eth_adapter(new TcpAdapter(io_service_, this, 8070));
+    net_manager_.Register("ethernet", eth_adapter);
+    net_manager_.Start();
 
 
 
@@ -112,9 +99,8 @@ void CtrlPoint::thread_main(void) {
         ServiceBroker* service = itr->second;
         service->BindCommonPathHandler(boost::bind(&CtrlPoint::handle_get_common_path, this, _1, _2));
         service->BindDisconnectedHandler(boost::bind(&CtrlPoint::handle_disconnected, this, _1));
-//        ss.RegistTarget(id);
+        net_manager_.RegisterSsdpTarget("ethernet", id);
     }
-    ssdp_scheduler_ = &ss;
 
 
 
@@ -144,7 +130,7 @@ void CtrlPoint::thread_main(void) {
     const std::string json = writer.write(root);
     main_ui_service_.FireEvent(json);
 
-    ssdp_scheduler_ = 0;
+    net_manager_.Stop();
 }
 
 void CtrlPoint::handle_get_device_list(std::string& json) {
@@ -174,7 +160,8 @@ bool CtrlPoint::handle_get_common_path(const char* uri, std::string& filepath) {
 }
 
 void CtrlPoint::handle_disconnected(const std::string& id) {
-//    ssdp_scheduler_->RegistTarget(id);
+
+    net_manager_.RegisterSsdpTarget("ethernet", id);
     connecting_list_.erase(id);
 
     Json::Value root(Json::objectValue);
