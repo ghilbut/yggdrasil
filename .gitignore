@@ -219,3 +219,13 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+
+
+
+
+#############
+## Yggdrasil
+#############
+
+smart_network/third_party
