@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="service_broker.cpp" />
+    <ClCompile Include="http_object.cpp" />
+    <ClCompile Include="main_ui_channel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="service_broker.h" />
+    <ClInclude Include="http_object.h" />
+    <ClInclude Include="protocol_layer.h" />
+    <ClInclude Include="main_ui_channel.h" />
+    <ClInclude Include="channel.h" />
+  </ItemGroup>
+</Project>
