@@ -75,8 +75,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\mongoose-4.1;$(SolutionDir)..\third_party\gmock-1.7.0\gtest\include;$(SolutionDir)..\third_party\gmock-1.7.0\include;$(SolutionDir)..\test;$(SolutionDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.2;$(SolutionDir)..\third_party\gmock-1.7.0\gtest\include;$(SolutionDir)..\third_party\gmock-1.7.0\include;$(SolutionDir)..\test;$(SolutionDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -95,6 +96,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_54_0\include;$(SolutionDir)..\third_party\mongoose-4.1;$(SolutionDir)..\third_party\gmock-1.7.0\gtest\include;$(SolutionDir)..\third_party\gmock-1.7.0\include;$(SolutionDir)..\test;$(SolutionDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

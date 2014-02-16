@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gmock", "..\gmock\gmock.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "..\test\test.vcxproj", "{8CC77308-BDCC-44F7-9727-805183686313}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "localbox", "..\localbox\localbox.vcxproj", "{DF4146AB-D916-4CC1-8FA5-F31244A87560}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -51,6 +53,10 @@ Global
 		{8CC77308-BDCC-44F7-9727-805183686313}.Debug|Win32.Build.0 = Debug|Win32
 		{8CC77308-BDCC-44F7-9727-805183686313}.Release|Win32.ActiveCfg = Release|Win32
 		{8CC77308-BDCC-44F7-9727-805183686313}.Release|Win32.Build.0 = Release|Win32
+		{DF4146AB-D916-4CC1-8FA5-F31244A87560}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DF4146AB-D916-4CC1-8FA5-F31244A87560}.Debug|Win32.Build.0 = Debug|Win32
+		{DF4146AB-D916-4CC1-8FA5-F31244A87560}.Release|Win32.ActiveCfg = Release|Win32
+		{DF4146AB-D916-4CC1-8FA5-F31244A87560}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
