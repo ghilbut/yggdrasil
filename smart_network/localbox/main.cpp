@@ -1,21 +1,27 @@
-//#include "http_object.h"
+#include "storage.h"
 #include "service_broker.h"
+
+#include <v8.h>
 
 
 int main(const int argc, const char* argv[]) {
 
-    //Http::Object obj;
-    //obj.Start();
-
-    ServiceBroker b;
-    b.Start();
-
-    while (true)
-    {
+    if (argc < 2) {
+        return -1;
     }
 
-    b.Stop();
+    v8::V8::InitializeICU();
+    int c = 2;
+    char* v[] = {"", "--expose_gc"};
+    v8::V8::SetFlagsFromCommandLine(&c, v, true);
 
-    //obj.Stop();
+    Storage s(argv[1]);
+
+    {
+        ServiceBroker service(s);
+        service.RunShell();
+    }
+    v8::V8::Dispose();
+
     return 0;
 }

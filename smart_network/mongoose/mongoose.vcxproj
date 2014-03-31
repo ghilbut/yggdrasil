@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\third_party\mongoose-5.2\mongoose.c" />
+    <ClInclude Include="..\third_party\mongoose-5.3\mongoose.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\third_party\mongoose-5.2\mongoose.h" />
+    <ClCompile Include="..\third_party\mongoose-5.3\mongoose.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{84FA6DF3-15F8-4CA2-925E-16B42BF8B943}</ProjectGuid>

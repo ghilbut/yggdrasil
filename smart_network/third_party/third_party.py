@@ -1,5 +1,5 @@
-#!/usr/bin/python
 # -*- coding:utf-8 -*-
+#!/usr/bin/python
 
 import os
 import re
@@ -86,13 +86,13 @@ jsoncpp = {
 }
 
 mongoose = {
-  'url': 'https://github.com/cesanta/mongoose/archive/5.2.tar.gz',
+  'url': 'https://github.com/cesanta/mongoose/archive/5.3.tar.gz',
   'success': (lambda num, path: None),
   'failed':  (lambda num, path: failed(num, path))
 }
 
 v8 = {
-  'url': 'https://github.com/v8/v8/archive/3.24.39.tar.gz',
+  'url': 'https://github.com/v8/v8/archive/3.25.30.tar.gz',
   'success': (lambda num, path: None),
   'failed':  (lambda num, path: failed(num, path))
 }

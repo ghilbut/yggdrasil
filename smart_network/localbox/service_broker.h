@@ -1,30 +1,22 @@
 #ifndef SERVICE_BROKER_H_
 #define SERVICE_BROKER_H_
 
-#include "http_object.h"
+#include <string>
+#include <stdint.h>
 
 
-class Channel;
+class Storage;
 
-class ServiceBroker : public ProtocolLayer {
+class ServiceBroker {
 public:
-    ServiceBroker(void) {}
-    ~ServiceBroker(void) {}
+    ServiceBroker(const Storage& storage);
+    ~ServiceBroker(void);
 
-    void Start(void);
-    void Stop(void);
-
-
-    // ProtocolLayer
-    virtual void OnRequest();
-    virtual void OnResponse();
-    virtual void OnNotify();
-    virtual void OnEvent();
-
+    void RunShell(void);
 
 private:
-    Http::Object httpd_;
-    Channel* channel_;
+    class Impl;
+    Impl* pimpl_;
 };
 
 #endif  // SERVICE_BROKER_H_

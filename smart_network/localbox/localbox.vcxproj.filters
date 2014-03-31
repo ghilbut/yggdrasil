@@ -2,15 +2,32 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="service_broker.cpp" />
-    <ClCompile Include="http_object.cpp" />
     <ClCompile Include="main_ui_channel.cpp" />
+    <ClCompile Include="http_request.cpp" />
+    <ClCompile Include="http_request_template.cpp" />
+    <ClCompile Include="http_response.cpp" />
+    <ClCompile Include="http_response_template.cpp" />
+    <ClCompile Include="http_server.cpp" />
+    <ClCompile Include="http_server_template.cpp" />
+    <ClCompile Include="http.cpp" />
+    <ClCompile Include="http_object_test.cpp" />
+    <ClCompile Include="service_broker_impl.cpp" />
+    <ClCompile Include="sample.cpp" />
+    <ClCompile Include="storage.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="service_broker.h" />
-    <ClInclude Include="http_object.h" />
-    <ClInclude Include="protocol_layer.h" />
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="channel.h" />
+    <ClInclude Include="http_request.h" />
+    <ClInclude Include="http_request_template.h" />
+    <ClInclude Include="http_response.h" />
+    <ClInclude Include="http_response_template.h" />
+    <ClInclude Include="http_server.h" />
+    <ClInclude Include="http_server_template.h" />
+    <ClInclude Include="http.h" />
+    <ClInclude Include="service_broker_impl.h" />
+    <ClInclude Include="service_broker.h" />
+    <ClInclude Include="sample.h" />
+    <ClInclude Include="storage.h" />
   </ItemGroup>
 </Project>

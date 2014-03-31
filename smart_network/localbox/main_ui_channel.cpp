@@ -2,7 +2,7 @@
 
 
 void MainUIChannel::OnRequest() {
-    FireResponse();
+    
 }
 
 void MainUIChannel::OnResponse() {
@@ -10,7 +10,7 @@ void MainUIChannel::OnResponse() {
 }
 
 void MainUIChannel::OnNotify() {
-    FireEvent();
+    
 }
 
 void MainUIChannel::OnEvent() {

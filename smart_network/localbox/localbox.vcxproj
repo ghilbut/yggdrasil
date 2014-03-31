@@ -50,13 +50,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.2;$(SolutionDir)..\third_party\v8-3.24.39\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.3;$(SolutionDir)..\third_party\v8-3.25.30\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\boost_1_55_0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;advapi32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,7 +69,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.2;$(SolutionDir)..\third_party\v8-3.24.39\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.3;$(SolutionDir)..\third_party\v8-3.25.30\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -77,24 +78,66 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\boost_1_55_0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;advapi32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="http_object.cpp" />
+    <ClCompile Include="http.cpp" />
+    <ClCompile Include="http_object_test.cpp" />
+    <ClCompile Include="http_request.cpp" />
+    <ClCompile Include="http_request_template.cpp" />
+    <ClCompile Include="http_response.cpp" />
+    <ClCompile Include="http_response_template.cpp" />
+    <ClCompile Include="http_server.cpp" />
+    <ClCompile Include="http_server_template.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_channel.cpp" />
-    <ClCompile Include="service_broker.cpp" />
+    <ClCompile Include="sample.cpp" />
+    <ClCompile Include="service_broker_impl.cpp" />
+    <ClCompile Include="storage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="channel.h" />
-    <ClInclude Include="http_object.h" />
+    <ClInclude Include="http.h" />
+    <ClInclude Include="http_request.h" />
+    <ClInclude Include="http_request_template.h" />
+    <ClInclude Include="http_response.h" />
+    <ClInclude Include="http_response_template.h" />
+    <ClInclude Include="http_server.h" />
+    <ClInclude Include="http_server_template.h" />
     <ClInclude Include="main_ui_channel.h" />
-    <ClInclude Include="protocol_layer.h" />
+    <ClInclude Include="sample.h" />
     <ClInclude Include="service_broker.h" />
+    <ClInclude Include="service_broker_impl.h" />
+    <ClInclude Include="storage.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mongoose\mongoose.vcxproj">
       <Project>{84fa6df3-15f8-4ca2-925e-16b42bf8b943}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\third_party\v8-3.25.30\third_party\icu\icudata.vcxproj">
+      <Project>{17d0fa24-692c-d822-5f28-9e72b0eea949}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\third_party\v8-3.25.30\third_party\icu\icui18n.vcxproj">
+      <Project>{a754b2e4-3631-0b46-1250-795eab3ef036}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\third_party\v8-3.25.30\third_party\icu\icuuc.vcxproj">
+      <Project>{977d721b-0369-a199-41a9-6c0073e40cd2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\third_party\v8-3.25.30\tools\gyp\generate_trig_table.vcxproj">
+      <Project>{33556602-891c-2f8c-6235-7a506bb97acd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\third_party\v8-3.25.30\tools\gyp\js2c.vcxproj">
+      <Project>{9d056715-8a57-da23-f010-acd847f9f155}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\third_party\v8-3.25.30\tools\gyp\v8.vcxproj">
+      <Project>{e3d0b7e1-02f9-3581-9644-c9318b56af26}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\third_party\v8-3.25.30\tools\gyp\v8_base.ia32.vcxproj">
+      <Project>{a8ae36ca-e4e4-7e51-fc0f-893c7c1e43a7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\third_party\v8-3.25.30\tools\gyp\v8_snapshot.vcxproj">
+      <Project>{3835b5ef-172b-bffe-a131-b4b7e3d4ee3d}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
