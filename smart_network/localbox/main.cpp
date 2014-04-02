@@ -1,6 +1,7 @@
 #include "storage.h"
 #include "service_broker.h"
 
+#include "localbox.h"
 #include <v8.h>
 
 
@@ -17,9 +18,10 @@ int main(const int argc, const char* argv[]) {
 
     Storage s(argv[1]);
 
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
     {
-        ServiceBroker service(s);
-        service.RunShell();
+        LocalBox box(isolate, argv[1]);
+        box.RunShell();
     }
     v8::V8::Dispose();
 

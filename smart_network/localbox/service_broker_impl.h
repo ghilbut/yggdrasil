@@ -11,7 +11,7 @@ class Storage;
 
 class ServiceBroker::Impl {
 public:
-    Impl(const Storage& storage);
+    Impl(v8::Isolate* isolate, const Storage& storage);
     ~Impl(void);
 
     void RunShell(void);
@@ -19,11 +19,12 @@ public:
 private:
     const Storage& storage_;
 
-    boost::asio::io_service io_service_;
-    boost::asio::io_service::work* work_;
-    boost::thread thread_;
+    //boost::asio::io_service io_service_;
+    //boost::asio::io_service::work* work_;
+    //boost::thread thread_;
 
     v8::Isolate* isolate_;
+    v8::Isolate::Scope isolate_scope_;
     v8::HandleScope handle_scope_;
     v8::Handle<v8::Context> context_;
 };

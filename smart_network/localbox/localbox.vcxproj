@@ -90,6 +90,7 @@
     <ClCompile Include="http_response_template.cpp" />
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="http_server_template.cpp" />
+    <ClCompile Include="localbox.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_channel.cpp" />
     <ClCompile Include="sample.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="http_response_template.h" />
     <ClInclude Include="http_server.h" />
     <ClInclude Include="http_server_template.h" />
+    <ClInclude Include="localbox.h" />
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="sample.h" />
     <ClInclude Include="service_broker.h" />

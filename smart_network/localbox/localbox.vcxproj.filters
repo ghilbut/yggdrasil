@@ -14,6 +14,7 @@
     <ClCompile Include="service_broker_impl.cpp" />
     <ClCompile Include="sample.cpp" />
     <ClCompile Include="storage.cpp" />
+    <ClCompile Include="localbox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
@@ -29,5 +30,6 @@
     <ClInclude Include="service_broker.h" />
     <ClInclude Include="sample.h" />
     <ClInclude Include="storage.h" />
+    <ClInclude Include="localbox.h" />
   </ItemGroup>
 </Project>

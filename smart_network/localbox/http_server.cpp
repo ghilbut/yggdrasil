@@ -239,8 +239,12 @@ void Server::thread_main(void) {
         goto ERROR0;
     }
 
-    char sport[10];  
-    sprintf(sport, "%d", port_);
+    char sport[10];
+
+    static int port = 80;
+    sprintf(sport, "%d", port++);
+
+    //sprintf(sport, "%d", port_);
     const char* error_msg = mg_set_option(server, "listening_port", sport);
     if (error_msg) {
         // TODO(ghilbut): delegate error

@@ -6,8 +6,8 @@
 
 
 
-ServiceBroker::ServiceBroker(const Storage& storage)
-    : pimpl_(new ServiceBroker::Impl(storage)) {
+ServiceBroker::ServiceBroker(v8::Isolate* isolate, const Storage& storage)
+    : pimpl_(new ServiceBroker::Impl(isolate, storage)) {
 }
 
 ServiceBroker::~ServiceBroker(void) {
@@ -17,20 +17,22 @@ void ServiceBroker::RunShell(void) {
     pimpl_->RunShell();
 }
 
-ServiceBroker::Impl::Impl(const Storage& storage)
+ServiceBroker::Impl::Impl(v8::Isolate* isolate, const Storage& storage)
     : storage_(storage)
-    , work_(new boost::asio::io_service::work(io_service_))
-    , thread_(boost::bind(&boost::asio::io_service::run, &io_service_))
-    , isolate_(v8::Isolate::GetCurrent())
+    //, work_(new boost::asio::io_service::work(io_service_))
+    //, thread_(boost::bind(&boost::asio::io_service::run, &io_service_))
+    , isolate_(isolate)
+    //, isolate_(v8::Isolate::New())
+    , isolate_scope_(isolate_)
     , handle_scope_(isolate_) {
 
 
 
-    v8::Isolate* isolate = isolate_;
-    isolate->SetData(0, &io_service_);
 
 
 
+
+    //v8::Isolate* isolate = isolate_;
     v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
     global->Set(v8::String::NewFromUtf8(isolate, "print"), v8::FunctionTemplate::New(isolate, Print));
     global->Set(v8::String::NewFromUtf8(isolate, "read"), v8::FunctionTemplate::New(isolate, Read));
@@ -40,11 +42,10 @@ ServiceBroker::Impl::Impl(const Storage& storage)
 
 
 
-    global->Set(
+   global->Set(
         v8::String::NewFromUtf8(isolate, "Http")
         , Http::Template::New(isolate)
         , Http::kAttribute);
-
 
 
     context_ = v8::Context::New(isolate, NULL, global);
@@ -81,9 +82,9 @@ ServiceBroker::Impl::~Impl(void) {
 
     context_->Exit();
 
-    delete work_;
-    io_service_.stop();
-    thread_.join();
+    //delete work_;
+    //io_service_.stop();
+    //thread_.join();
 }
 
 void ServiceBroker::Impl::RunShell(void) {
