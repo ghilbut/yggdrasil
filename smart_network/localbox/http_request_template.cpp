@@ -6,68 +6,58 @@
 
 namespace Http {
 
-v8::Persistent<v8::FunctionTemplate> RequestTemplate::template_;
-v8::Persistent<v8::ObjectTemplate> RequestTemplate::headers_t_;
-
 v8::Local<v8::FunctionTemplate> RequestTemplate::Get(v8::Isolate* isolate) {
     
-    v8::Local<v8::FunctionTemplate> ft;
-    if (template_.IsEmpty()) {
-        ft = v8::FunctionTemplate::New(isolate);
-        ft->SetClassName(v8::String::NewFromUtf8(isolate, "Request"));
+    v8::Local<v8::FunctionTemplate> ft = v8::FunctionTemplate::New(isolate);
+    ft->SetClassName(v8::String::NewFromUtf8(isolate, "Request"));
 
-        v8::Handle<v8::ObjectTemplate> ot = ft->InstanceTemplate();
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "request_method")
-            , RequestTemplate::GetMethod
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "uri")
-            , RequestTemplate::GetUri
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "http_version")
-            , RequestTemplate::GetHttpVersion
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "query_string")
-            , RequestTemplate::GetQueryString
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "remote_ip")
-            , RequestTemplate::GetRemoteIP
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "local_ip")
-            , RequestTemplate::GetLocalIP
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "remote_port")
-            , RequestTemplate::GetRemotePort
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "local_port")
-            , RequestTemplate::GetLocalPort
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "content")
-            , RequestTemplate::GetContent
-            , 0
-            , v8::Handle<v8::Value>()
-            , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
-        ot->SetInternalFieldCount(1);
-
-        template_.Reset(isolate, ft);
-    } else {
-        ft = v8::Local<v8::FunctionTemplate>::New(isolate, template_);
-    }
+    v8::Handle<v8::ObjectTemplate> ot = ft->InstanceTemplate();
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "request_method")
+        , RequestTemplate::GetMethod
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "uri")
+        , RequestTemplate::GetUri
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "http_version")
+        , RequestTemplate::GetHttpVersion
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "query_string")
+        , RequestTemplate::GetQueryString
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "remote_ip")
+        , RequestTemplate::GetRemoteIP
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "local_ip")
+        , RequestTemplate::GetLocalIP
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "remote_port")
+        , RequestTemplate::GetRemotePort
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "local_port")
+        , RequestTemplate::GetLocalPort
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "content")
+        , RequestTemplate::GetContent
+        , 0
+        , v8::Handle<v8::Value>()
+        , static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING));
+    ot->SetInternalFieldCount(1);
 
     return ft;
 }
@@ -77,16 +67,10 @@ v8::Local<v8::Object> RequestTemplate::NewInstance(v8::Isolate* isolate, struct 
     v8::Local<v8::Function> f = ft->GetFunction();
     v8::Local<v8::Object> i = f->NewInstance();
 
-    v8::Local<v8::ObjectTemplate> headers_t;
-    if (headers_t_.IsEmpty()) {
-        headers_t = v8::ObjectTemplate::New(isolate);
-        headers_t->SetNamedPropertyHandler(RequestTemplate::HeaderGetter);
-        headers_t->SetIndexedPropertyHandler(RequestTemplate::HeaderGetter);
-        headers_t->SetInternalFieldCount(1);
-        headers_t_.Reset(isolate, headers_t);
-    } else {
-        headers_t = v8::Local<v8::ObjectTemplate>::New(isolate, headers_t_);
-    }
+    v8::Local<v8::ObjectTemplate> headers_t = v8::ObjectTemplate::New(isolate);
+    headers_t->SetNamedPropertyHandler(RequestTemplate::HeaderGetter);
+    headers_t->SetIndexedPropertyHandler(RequestTemplate::HeaderGetter);
+    headers_t->SetInternalFieldCount(1);
 
     Request* request = new Request(conn);
 
@@ -101,15 +85,11 @@ v8::Local<v8::Object> RequestTemplate::NewInstance(v8::Isolate* isolate, struct 
 v8::Local<v8::Object> RequestTemplate::NewInstance(v8::Isolate* isolate, Request* req) {
 
     v8::Local<v8::ObjectTemplate> headers_t;
-    if (headers_t_.IsEmpty()) {
-        headers_t = v8::ObjectTemplate::New(isolate);
-        headers_t->SetNamedPropertyHandler(RequestTemplate::HeaderGetter);
-        headers_t->SetIndexedPropertyHandler(RequestTemplate::HeaderGetter);
-        headers_t->SetInternalFieldCount(1);
-        headers_t_.Reset(isolate, headers_t);
-    } else {
-        headers_t = v8::Local<v8::ObjectTemplate>::New(isolate, headers_t_);
-    }
+
+    headers_t = v8::ObjectTemplate::New(isolate);
+    headers_t->SetNamedPropertyHandler(RequestTemplate::HeaderGetter);
+    headers_t->SetIndexedPropertyHandler(RequestTemplate::HeaderGetter);
+    headers_t->SetInternalFieldCount(1);
 
     v8::Local<v8::Object> headers = headers_t->NewInstance();
     //headers->SetInternalField(0, v8::External::New(isolate, req));

@@ -10,11 +10,12 @@
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="http_server_template.cpp" />
     <ClCompile Include="http.cpp" />
-    <ClCompile Include="http_object_test.cpp" />
     <ClCompile Include="service_broker_impl.cpp" />
     <ClCompile Include="sample.cpp" />
     <ClCompile Include="storage.cpp" />
     <ClCompile Include="localbox.cpp" />
+    <ClCompile Include="template_factory.cpp" />
+    <ClCompile Include="environ.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
@@ -31,5 +32,7 @@
     <ClInclude Include="sample.h" />
     <ClInclude Include="storage.h" />
     <ClInclude Include="localbox.h" />
+    <ClInclude Include="template_factory.h" />
+    <ClInclude Include="environ.h" />
   </ItemGroup>
 </Project>

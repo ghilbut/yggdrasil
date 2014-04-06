@@ -1,16 +1,19 @@
 #ifndef SERVICE_BROKER_H_
 #define SERVICE_BROKER_H_
 
+#include <v8.h>
+#include <boost/asio.hpp>
 #include <string>
 #include <stdint.h>
-#include <v8.h>
 
 
 class Storage;
 
 class ServiceBroker {
 public:
-    ServiceBroker(v8::Isolate* isolate, const Storage& storage);
+    ServiceBroker(boost::asio::io_service& io_service
+                  , const char* basepath
+                  , int port);
     ~ServiceBroker(void);
 
     void RunShell(void);

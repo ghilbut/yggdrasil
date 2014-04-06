@@ -5,26 +5,19 @@
 
 namespace Http {
 
-static v8::Persistent<v8::FunctionTemplate> template_;
-
 v8::Local<v8::FunctionTemplate> ResponseTemplate::Get(v8::Isolate* isolate) {
-    v8::Local<v8::FunctionTemplate> ft;
-    if (template_.IsEmpty()) {
-        ft = v8::FunctionTemplate::New(isolate, Constructor);
-        ft->SetClassName(v8::String::NewFromUtf8(isolate, "Response"));
 
-        v8::Local<v8::ObjectTemplate> ot = ft->InstanceTemplate();
-        ot->SetInternalFieldCount(1);
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "statusCode"), GetStatusCode, SetStatusCode);
-        ot->Set(isolate, "getHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::GetHeader));
-        ot->Set(isolate, "setHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::SetHeader));
-        ot->Set(isolate, "removeHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::RemoveHeader));
-        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "data"), GetData, SetData);
+    v8::Local<v8::FunctionTemplate> ft = v8::FunctionTemplate::New(isolate, Constructor);
+    ft->SetClassName(v8::String::NewFromUtf8(isolate, "Response"));
 
-        template_.Reset(isolate, ft);
-    } else {
-        ft = v8::Local<v8::FunctionTemplate>::New(isolate, template_);
-    }
+    v8::Local<v8::ObjectTemplate> ot = ft->InstanceTemplate();
+    ot->SetInternalFieldCount(1);
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "statusCode"), GetStatusCode, SetStatusCode);
+    ot->Set(isolate, "getHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::GetHeader));
+    ot->Set(isolate, "setHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::SetHeader));
+    ot->Set(isolate, "removeHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::RemoveHeader));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "data"), GetData, SetData);
+
     return ft;
 }
 

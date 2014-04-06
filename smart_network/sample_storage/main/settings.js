@@ -1,6 +1,7 @@
 count = 0;
 
-h1 = new http.Server();
+//h1 = new http.Server();
+h1 = new Server();
 h1.onrequest = function (request) {
 
 	var r = request;
@@ -28,7 +29,8 @@ h1.onrequest = function (request) {
 		print('----------------------------------------');
 	}
 
-    var res = new http.Response();
+    //var res = new http.Response();
+	var res = new Response();
 	print(res);
     print(res.statusCode);
     res.statusCode = 500;

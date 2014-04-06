@@ -3,18 +3,19 @@
 #include "http_request_template.h"
 #include "http_response.h"
 #include "http_response_template.h"
+#include "template_factory.h"
 #include <mongoose.h>
 
 
 
 namespace Http {
 
-Server::Server(v8::Isolate* isolate, boost::asio::io_service& io_service)
-    : isolate_(isolate)
-    , io_service_(io_service)
-    , strand_(io_service_)
+Server::Server(Environ* env)
+    : isolate_(env->isolate())
+    , strand_(env->io_service())
+    , port_(env->port())
     , is_alive_(false)
-    , is_stop_(false){
+    , is_stop_(false) {
    // nothing
 }
 
@@ -40,12 +41,12 @@ void Server::ClearWeak(void) {
     self_.ClearWeak();
 }
 
-bool Server::DoListen(uint16_t port) {
+bool Server::DoListen(void) {
     boost::promise<bool> promise;
 
     void (boost::promise<bool>::*setter)(const bool&) = &boost::promise<bool>::set_value;
     boost::function<void(const bool&)> promise_setter = boost::bind(setter, &promise, _1);
-    strand_.post(boost::bind(&Server::handle_listen, this, port, promise_setter));
+    strand_.post(boost::bind(&Server::handle_listen, this, promise_setter));
 
     return promise.get_future().get();
 }
@@ -101,7 +102,7 @@ void Server::FireError(void) {
     strand_.post(boost::bind(&Server::handle_error, this));
 }
 
-void Server::handle_listen(uint16_t port, boost::function<void(const bool&)> ret_setter) {
+void Server::handle_listen(boost::function<void(const bool&)> ret_setter) {
     if (is_alive_) {
         ret_setter(false);
         return;
@@ -109,7 +110,6 @@ void Server::handle_listen(uint16_t port, boost::function<void(const bool&)> ret
 
     is_alive_ = true;
     is_stop_ = false;
-    port_ = port;
 
     if (thread_.joinable()) {
         thread_.join();
@@ -141,22 +141,20 @@ void Server::handle_request(struct mg_connection *conn, Request* req, boost::fun
     }
 
     v8::Handle<v8::Value> params[1];
-    //params[0] = Request::NewRecvRequest(isolate_, conn);
     params[0] = RequestTemplate::NewInstance(isolate_, req);
 
     v8::Local<v8::Object> object = v8::Local<v8::Object>::New(isolate_, self_);
     v8::Local<v8::Value> retval = func->Call(object, 1, params);
 
-    if (retval->IsString()) {
-        v8::Local<v8::String> str = retval->ToString();
-    }
-
     if (retval->IsObject()) {
         v8::Local<v8::Object> obj = retval->ToObject();
-        if (obj->GetConstructor() == ResponseTemplate::Get(isolate)->GetFunction()) {
+
+        TemplateFactory* tf = static_cast<TemplateFactory*>(isolate->GetData(1));
+        v8::Local<v8::FunctionTemplate> rt = tf->ResponseTemplate(isolate);
+        if (obj->GetConstructor() == rt->GetFunction()) {
             Response* res = static_cast<Response*>(obj->GetAlignedPointerFromInternalField(0));
             ret_setter(ResponsePtr(res));
-            res->ClearWeak();
+            //res->ClearWeak();
             return;
         }
     }
@@ -240,11 +238,7 @@ void Server::thread_main(void) {
     }
 
     char sport[10];
-
-    static int port = 80;
-    sprintf(sport, "%d", port++);
-
-    //sprintf(sport, "%d", port_);
+    sprintf(sport, "%d", port_);
     const char* error_msg = mg_set_option(server, "listening_port", sport);
     if (error_msg) {
         // TODO(ghilbut): delegate error

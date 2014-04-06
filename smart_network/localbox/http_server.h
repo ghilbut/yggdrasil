@@ -1,6 +1,7 @@
 #ifndef HTTP_SERVER_H_
 #define HTTP_SERVER_H_
 
+#include "environ.h"
 #include <v8.h>
 #include <boost/asio.hpp>
 #include <boost/atomic.hpp>
@@ -13,6 +14,8 @@ struct mg_server;
 struct mg_connection;
 enum mg_event;
 
+class Environ;
+
 namespace Http {
 
 class Request;
@@ -21,14 +24,14 @@ typedef boost::shared_ptr<Response> ResponsePtr;
 
 class Server {
 public:
-    Server(v8::Isolate* isolate, boost::asio::io_service& io_service);
+    Server(Environ* env);
     ~Server(void);
 
     static void WeakCallback(const v8::WeakCallbackData<v8::Object, Server>& data);
     void MakeWeak(v8::Isolate* isolate, v8::Local<v8::Object> self);
     void ClearWeak(void);
 
-    bool DoListen(uint16_t port);
+    bool DoListen(void);
     void DoClose(void);
 
     v8::Local<v8::Function> request_trigger(v8::Isolate* isolate) const;
@@ -43,7 +46,7 @@ private:
     void FireMessage(struct mg_connection *conn);
     void FireError(void);
 
-    void handle_listen(uint16_t port, boost::function<void(const bool&)> ret_setter);
+    void handle_listen(boost::function<void(const bool&)> ret_setter);
     void handle_close(void);
 
     void handle_request(struct mg_connection *conn, Request* req, boost::function<void(const ResponsePtr&)> ret_setter);
@@ -62,7 +65,6 @@ private:
     v8::Persistent<v8::Function> on_message_;
     v8::Persistent<v8::Function> on_error_;
 
-    boost::asio::io_service& io_service_;
     boost::asio::strand strand_;
     boost::atomic_bool is_alive_;
     boost::atomic_bool is_stop_;

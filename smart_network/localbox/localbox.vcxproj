@@ -82,8 +82,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="environ.cpp" />
     <ClCompile Include="http.cpp" />
-    <ClCompile Include="http_object_test.cpp" />
     <ClCompile Include="http_request.cpp" />
     <ClCompile Include="http_request_template.cpp" />
     <ClCompile Include="http_response.cpp" />
@@ -96,9 +96,11 @@
     <ClCompile Include="sample.cpp" />
     <ClCompile Include="service_broker_impl.cpp" />
     <ClCompile Include="storage.cpp" />
+    <ClCompile Include="template_factory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="channel.h" />
+    <ClInclude Include="environ.h" />
     <ClInclude Include="http.h" />
     <ClInclude Include="http_request.h" />
     <ClInclude Include="http_request_template.h" />
@@ -112,6 +114,7 @@
     <ClInclude Include="service_broker.h" />
     <ClInclude Include="service_broker_impl.h" />
     <ClInclude Include="storage.h" />
+    <ClInclude Include="template_factory.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mongoose\mongoose.vcxproj">

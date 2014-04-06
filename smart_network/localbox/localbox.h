@@ -1,7 +1,6 @@
 #ifndef LOCALBOX_H_
 #define LOCALBOX_H_
 
-#include "storage.h"
 #include "service_broker.h"
 #include <v8.h>
 #include <boost/asio.hpp>
@@ -10,7 +9,7 @@
 
 class LocalBox {
 public:
-    LocalBox(v8::Isolate* isolate, const char* rootpath);
+    LocalBox(const char* rootpath);
     ~LocalBox(void);
 
     void RunShell(void);
@@ -24,9 +23,6 @@ private:
     boost::asio::io_service::work* work_;
     boost::thread thread_;
 
-
-
-    Storage s_;
     ServiceBroker* service0_;
     ServiceBroker* service1_;
     ServiceBroker* service2_;

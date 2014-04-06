@@ -1,31 +1,31 @@
 #include "localbox.h"
 #include "sample.h"
 #include "http.h"
+#include "environ.h"
 
 
-LocalBox::LocalBox(v8::Isolate* isolate, const char* rootpath) 
+LocalBox::LocalBox(const char* rootpath) 
     : work_(new boost::asio::io_service::work(io_service_))
     , thread_(boost::bind(&boost::asio::io_service::run, &io_service_))
-    , isolate_(isolate)
-    , handle_scope_(isolate_)
-    , s_(rootpath) {
+    , isolate_(v8::Isolate::GetCurrent())
+    , handle_scope_(isolate_) {
 
-    isolate->SetData(0, &io_service_);
+    isolate_->SetData(0, &io_service_);
 
-    v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
-    global->Set(v8::String::NewFromUtf8(isolate, "print"), v8::FunctionTemplate::New(isolate, Print));
-    global->Set(v8::String::NewFromUtf8(isolate, "read"), v8::FunctionTemplate::New(isolate, Read));
-    global->Set(v8::String::NewFromUtf8(isolate, "load"), v8::FunctionTemplate::New(isolate, Load));
-    global->Set(v8::String::NewFromUtf8(isolate, "quit"), v8::FunctionTemplate::New(isolate, Quit));
-    global->Set(v8::String::NewFromUtf8(isolate, "version"), v8::FunctionTemplate::New(isolate, Version));
+    v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate_);
+    global->Set(v8::String::NewFromUtf8(isolate_, "print"), v8::FunctionTemplate::New(isolate_, Print));
+    global->Set(v8::String::NewFromUtf8(isolate_, "read"), v8::FunctionTemplate::New(isolate_, Read));
+    global->Set(v8::String::NewFromUtf8(isolate_, "load"), v8::FunctionTemplate::New(isolate_, Load));
+    global->Set(v8::String::NewFromUtf8(isolate_, "quit"), v8::FunctionTemplate::New(isolate_, Quit));
+    global->Set(v8::String::NewFromUtf8(isolate_, "version"), v8::FunctionTemplate::New(isolate_, Version));
 
     global->Set(
-        v8::String::NewFromUtf8(isolate, "Http")
-        , Http::Template::New(isolate)
+        v8::String::NewFromUtf8(isolate_, "Http")
+        , Http::Template::New(isolate_)
         , Http::kAttribute);
 
 
-    v8::Local<v8::Context> context = v8::Context::New(isolate, NULL, global);
+    v8::Local<v8::Context> context = v8::Context::New(isolate_, NULL, global);
 
     
     
@@ -37,18 +37,16 @@ LocalBox::LocalBox(v8::Isolate* isolate, const char* rootpath)
     {
         v8::HandleScope handle_scope(context->GetIsolate());
         context->Global()->Set(
-            v8::String::NewFromUtf8(isolate, "http")
-            , Http::NewInstance(isolate)
+            v8::String::NewFromUtf8(isolate_, "http")
+            , Http::NewInstance(isolate_)
             , Http::kAttribute);
     }
 
     context_ = context;
 
-
-
-    service0_ = new ServiceBroker(isolate, s_);
-    service1_ = new ServiceBroker(isolate, s_);
-    service2_ = new ServiceBroker(isolate, s_);
+    service0_ = new ServiceBroker(io_service_, rootpath, 81);
+    service1_ = new ServiceBroker(io_service_, rootpath, 82);
+    service2_ = new ServiceBroker(io_service_, rootpath, 83);
 }
 
 LocalBox::~LocalBox(void) {
