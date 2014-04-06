@@ -4,14 +4,18 @@
 #include <v8.h>
 
 
+class Environ;
+
 namespace Http {
 
 class Server;
 
 class ServerTemplate {
 public:
-    static v8::Local<v8::FunctionTemplate> Get(v8::Isolate* isolate);
+    static v8::Local<v8::FunctionTemplate> Get(Environ* env);
     static void Constructor(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+    static v8::Local<v8::Object> ServerTemplate::NewInstance(Environ* env);
 
     template<typename T>
     static Server* Unwrap(T _t);

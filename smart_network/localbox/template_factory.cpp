@@ -6,8 +6,7 @@
 
 TemplateFactory::TemplateFactory(v8::Isolate* isolate)
     : request_t_(isolate, Http::RequestTemplate::Get(isolate))
-    , response_t_(isolate, Http::ResponseTemplate::Get(isolate))
-    , server_t_(isolate, Http::ServerTemplate::Get(isolate)) {
+    , response_t_(isolate, Http::ResponseTemplate::Get(isolate)) {
     // nothing
 }
 
@@ -17,8 +16,4 @@ v8::Local<v8::FunctionTemplate> TemplateFactory::RequestTemplate(v8::Isolate* is
 
 v8::Local<v8::FunctionTemplate> TemplateFactory::ResponseTemplate(v8::Isolate* isolate) const {
     return v8::Local<v8::FunctionTemplate>::New(isolate, response_t_);
-}
-
-v8::Local<v8::FunctionTemplate> TemplateFactory::ServerTemplate(v8::Isolate* isolate) const {
-    return v8::Local<v8::FunctionTemplate>::New(isolate, server_t_);
 }

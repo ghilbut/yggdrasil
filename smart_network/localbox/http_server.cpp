@@ -11,7 +11,8 @@
 namespace Http {
 
 Server::Server(Environ* env)
-    : isolate_(env->isolate())
+    : env_(env)
+    , isolate_(env->isolate())
     , strand_(env->io_service())
     , port_(env->port())
     , is_alive_(false)
@@ -149,8 +150,8 @@ void Server::handle_request(struct mg_connection *conn, Request* req, boost::fun
     if (retval->IsObject()) {
         v8::Local<v8::Object> obj = retval->ToObject();
 
-        TemplateFactory* tf = static_cast<TemplateFactory*>(isolate->GetData(1));
-        v8::Local<v8::FunctionTemplate> rt = tf->ResponseTemplate(isolate);
+        TemplateFactory& tf = env_->template_factory();
+        v8::Local<v8::FunctionTemplate> rt = tf.ResponseTemplate(isolate);
         if (obj->GetConstructor() == rt->GetFunction()) {
             Response* res = static_cast<Response*>(obj->GetAlignedPointerFromInternalField(0));
             ret_setter(ResponsePtr(res));

@@ -57,6 +57,8 @@ private:
     void thread_main(void);
 
 private:
+    Environ* env_;
+
     uint16_t port_;
 
     v8::Isolate* isolate_;

@@ -1,8 +1,6 @@
 count = 0;
 
-//h1 = new http.Server();
-h1 = new Server();
-h1.onrequest = function (request) {
+http.onrequest = function (request) {
 
 	var r = request;
 	print(request);
@@ -30,7 +28,8 @@ h1.onrequest = function (request) {
 	}
 
     //var res = new http.Response();
-	var res = new Response();
+	//var res = new Response();
+	var res = new this.Response();
 	print(res);
     print(res.statusCode);
     res.statusCode = 500;
@@ -52,23 +51,30 @@ h1.onrequest = function (request) {
     print(res.data);
     res.data = 'C';
     print(res.data);
+	
+	r = [res, "ABC", null, undefined, NaN, http.Response];
+	i = count++;
+	if (count == r.length) {
+		count = 0;
+	}
+	return r[i];
 
-    return res;
+    //return res;
     //return "ABC";
     //return null;
     //return undefined;
     //return NaN;
     //return http.Response;
 };
-h1.onmessage = function () {
+http.onmessage = function () {
 	print('message');
 };
-h1.onerror = function (request) {
+http.onerror = function (request) {
 	print('error');
 };
-print(h1.listen(80));
+print(http.listen());
 
 
-print(h1)
-print(h1.constructor);
-print(h1.constructor.prototpye);
+print(http)
+print(http.constructor);
+print(http.constructor.prototpye);

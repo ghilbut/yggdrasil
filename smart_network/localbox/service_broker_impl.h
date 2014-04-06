@@ -23,9 +23,6 @@ private:
     Environ env_;
 
     const Storage& storage_;
-    v8::Isolate* isolate_;
-    v8::Isolate::Scope isolate_scope_;
-    v8::HandleScope handle_scope_;
     v8::Handle<v8::Context> context_;
 };
 
