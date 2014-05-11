@@ -5,6 +5,8 @@
 #include "http_response_template.h"
 #include "template_factory.h"
 #include <mongoose.h>
+#include <ctime>
+#include <cstdlib>
 
 
 
@@ -61,6 +63,14 @@ void Server::DoClose(void) {
     }
 }
 
+void Server::DoSend(const char* data, int data_len) {
+    strand_.post(boost::bind(&Server::handle_send, this, data, data_len));
+}
+
+void Server::DoSendAll(const char* data, int data_len) {
+    strand_.post(boost::bind(&Server::handle_send_all, this, data, data_len));
+}
+
 v8::Local<v8::Function> Server::request_trigger(v8::Isolate* isolate) const {
     return v8::Local<v8::Function>::New(isolate, on_request_);
 }
@@ -85,12 +95,12 @@ void Server::set_error_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> tr
     on_error_.Reset(isolate, trigger);
 }
 
-ResponsePtr Server::FireRequest(struct mg_connection *conn, Request* req) {
+ResponsePtr Server::FireRequest(struct mg_connection *conn) {
     boost::promise<ResponsePtr> promise;
 
     void (boost::promise<ResponsePtr>::*setter)(const ResponsePtr&) = &boost::promise<ResponsePtr>::set_value;
     boost::function<void(const ResponsePtr&)> promise_setter = boost::bind(setter, &promise, _1);
-    strand_.post(boost::bind(&Server::handle_request, this, conn, req, promise_setter));
+    strand_.post(boost::bind(&Server::handle_request, this, conn, promise_setter));
 
     return promise.get_future().get();
 }
@@ -123,7 +133,20 @@ void Server::handle_close() {
     is_stop_ = true;
 }
 
-void Server::handle_request(struct mg_connection *conn, Request* req, boost::function<void(const ResponsePtr&)> ret_setter) {
+void Server::handle_send(const char* data, int data_len) {
+    // TODO(ghilbut): send to single websocket.
+    handle_send_all(data, data_len);
+}
+
+void Server::handle_send_all(const char* data, int data_len) {
+    std::map<mg_connection*, mg_connection*>::const_iterator itr = websockets_.begin();
+    std::map<mg_connection*, mg_connection*>::const_iterator end = websockets_.end();
+    for (; itr != end; ++itr) {
+        mg_websocket_write(itr->first, 0x1, data, data_len);
+    }
+}
+
+void Server::handle_request(struct mg_connection *conn, boost::function<void(const ResponsePtr&)> ret_setter) {
     if (on_request_.IsEmpty()) {
         // TODO(ghilbut): error handling
         mg_send_data(conn, 0, 0);
@@ -142,6 +165,7 @@ void Server::handle_request(struct mg_connection *conn, Request* req, boost::fun
     }
 
     v8::Handle<v8::Value> params[1];
+    Request* req = new Request(conn);
     params[0] = RequestTemplate::NewInstance(isolate_, req);
 
     v8::Local<v8::Object> object = v8::Local<v8::Object>::New(isolate_, self_);
@@ -186,12 +210,58 @@ void Server::handle_message(struct mg_connection *conn) {
     v8::Isolate::Scope isolate_scope(isolate_);
     v8::HandleScope handle_scope(isolate_);
 
-    v8::Handle<v8::Value> params[2];
-    params[0] = v8::Integer::New(isolate_, 10);
-    params[1] = v8::Integer::New(isolate_, 2);
+    //v8::Handle<v8::Value> params[2];
+    //params[0] = v8::Integer::New(isolate_, 10);
+    //params[1] = v8::Integer::New(isolate_, 2);
 
-    v8::Local<v8::Object> object = v8::Local<v8::Object>::New(isolate_, self_);
-    func->Call(object, 1, params);
+    //v8::Local<v8::Object> object = v8::Local<v8::Object>::New(isolate_, self_);
+    //func->Call(object, 1, params);
+
+
+
+
+    std::map<mg_connection*, mg_connection*>::iterator itr = websockets_.find(conn);
+    if (itr == websockets_.end()) {
+        websockets_[conn] = conn;
+    }
+
+    switch (conn->wsbits & 0x0f) {
+    case 0x00:
+        // denotes a continuation frame
+        break;
+    case 0x01:
+        {
+            v8::Handle<v8::Value> params[1];
+            params[0] = v8::String::NewFromUtf8(isolate_, conn->content, v8::String::kNormalString, conn->content_len);
+            v8::Local<v8::Object> object = v8::Local<v8::Object>::New(isolate_, self_);
+            func->Call(object, 1, params);
+
+            //mg_websocket_write(conn, 0x1, conn->content, conn->content_len);
+        }
+        break;
+    case 0x02:
+        // denotes a binary frame
+        break;
+    case 0x08:
+        // denotes a connection close
+        {
+            std::map<mg_connection*, mg_connection*>::iterator itr = websockets_.find(conn);
+            if (itr != websockets_.end()) {
+                websockets_.erase(conn);
+            }
+        }
+        break;
+    case 0x09:
+        // denotes a ping
+        break;
+    case 0x0A:
+        // denotes a pong
+        break;
+    default:
+        // %x3-7 are reserved for further non-control frames
+        // %xB-F are reserved for further control frames
+        break;
+    }
 }
 
 void Server::handle_error(void) {
@@ -219,10 +289,12 @@ int Server::request_handler(struct mg_connection *conn, enum mg_event ev) {
 
     if (ev == MG_REQUEST) {
         Server* s = static_cast<Server*>(conn->server_param);
-
-        Request* req = new Request(conn);
-        ResponsePtr res = s->FireRequest(conn, req);
-        res->Send(conn);
+        if (conn->is_websocket) {
+            s->FireMessage(conn);
+        } else {
+            ResponsePtr res = s->FireRequest(conn);
+            res->Send(conn);
+        }
         return MG_TRUE;
     } else if (ev == MG_AUTH) {
         return MG_TRUE;
@@ -246,8 +318,8 @@ void Server::thread_main(void) {
         goto ERROR1;
     }
 
-    while(is_stop_ == false) {
-        mg_poll_server(server, 1000);
+    while (is_stop_ == false) {
+        mg_poll_server(server, 100);
     }
 
 ERROR1:

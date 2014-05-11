@@ -1,6 +1,28 @@
 count = 0;
 
+function static_handler(request) {
+print (http.Response);
+  var res = new http.Response();
+  print('STATIC');
+  res.data = 'STATIC';
+  return res;
+}
+
+urlpatterns = [
+  [/^\/static\/[^?#]+($|[?#]{1}.*)/, static_handler]
+]
+
 http.onrequest = function (request) {
+
+  for (var i = 0, len = urlpatterns.length; i < len; ++i) {
+     var pattern = urlpatterns[i];
+	 print(pattern[0].test);
+	 print(typeof(pattern[1]));
+	 print(request.uri);
+     if (pattern[0].test(request.uri)) {
+	   return pattern[1](request);
+	 }
+  }
 
 	var r = request;
 	print(request);
@@ -66,10 +88,12 @@ http.onrequest = function (request) {
     //return NaN;
     //return http.Response;
 };
-http.onmessage = function () {
-	print('message');
+http.onmessage = function (message) {
+	print(message);
+    http.send(message);
+    //http.sendAll(message);
 };
-http.onerror = function (request) {
+http.onerror = function (error) {
 	print('error');
 };
 print(http.listen());

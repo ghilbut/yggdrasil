@@ -29,6 +29,9 @@ public:
     static void Listen(const v8::FunctionCallbackInfo<v8::Value>& args);
     static void Close(const v8::FunctionCallbackInfo<v8::Value>& args);
 
+    static void Send(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SendAll(const v8::FunctionCallbackInfo<v8::Value>& args);
+
 private:
     static v8::Persistent<v8::FunctionTemplate> template_;
     ServerTemplate(void) {}

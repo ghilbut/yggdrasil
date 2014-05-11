@@ -7,6 +7,7 @@
 #include <boost/atomic.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
+#include <map>
 #include <stdint.h>
 
 
@@ -34,6 +35,9 @@ public:
     bool DoListen(void);
     void DoClose(void);
 
+    void DoSend(const char* data, int data_len);
+    void DoSendAll(const char* data, int data_len);
+
     v8::Local<v8::Function> request_trigger(v8::Isolate* isolate) const;
     void set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> trigger);
     v8::Local<v8::Function> message_trigger(v8::Isolate* isolate) const;
@@ -42,14 +46,17 @@ public:
     void set_error_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> trigger);
 
 private:
-    ResponsePtr FireRequest(struct mg_connection *conn, Request* req);
+    ResponsePtr FireRequest(struct mg_connection *conn);
     void FireMessage(struct mg_connection *conn);
     void FireError(void);
 
     void handle_listen(boost::function<void(const bool&)> ret_setter);
     void handle_close(void);
 
-    void handle_request(struct mg_connection *conn, Request* req, boost::function<void(const ResponsePtr&)> ret_setter);
+    void handle_send(const char* data, int data_len);
+    void handle_send_all(const char* data, int data_len);
+
+    void handle_request(struct mg_connection *conn, boost::function<void(const ResponsePtr&)> ret_setter);
     void handle_message(struct mg_connection *conn);
     void handle_error(void);
 
@@ -71,6 +78,10 @@ private:
     boost::atomic_bool is_alive_;
     boost::atomic_bool is_stop_;
     boost::thread thread_;
+
+
+
+    std::map<mg_connection*, mg_connection*> websockets_;
 };
 
 }  // namespace Http
