@@ -1,6 +1,7 @@
 #include "http_server.h"
 #include "http_server_template.h"
 #include "http_response_template.h"
+#include "http_message.h"
 #include "environ.h"
 
 
@@ -20,7 +21,7 @@ v8::Local<v8::FunctionTemplate> ServerTemplate::Get(Environ* env) {
     ot->Set(v8::String::NewFromUtf8(isolate, "listen"), v8::FunctionTemplate::New(isolate, ServerTemplate::Listen));
     ot->Set(v8::String::NewFromUtf8(isolate, "close"), v8::FunctionTemplate::New(isolate, ServerTemplate::Close));
     ot->Set(v8::String::NewFromUtf8(isolate, "send"), v8::FunctionTemplate::New(isolate, ServerTemplate::Send));
-    ot->Set(v8::String::NewFromUtf8(isolate, "sendAll"), v8::FunctionTemplate::New(isolate, ServerTemplate::SendAll));
+    ot->Set(v8::String::NewFromUtf8(isolate, "notify"), v8::FunctionTemplate::New(isolate, ServerTemplate::Notify));
     ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onrequest"), ServerTemplate::GetEventRequest, ServerTemplate::SetEventRequest);
     ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onmessage"), ServerTemplate::GetEventMessage, ServerTemplate::SetEventMessage);
 
@@ -150,13 +151,13 @@ void ServerTemplate::Send(const v8::FunctionCallbackInfo<v8::Value>& args) {
     char* data = new char[data_len];
     str->WriteUtf8(data, data_len);
 
-    Server* s = Unwrap(args);
-    s->DoSend(data, data_len);
+    Message msg(data, data_len);
 
-    delete[] data;
+    Server* s = Unwrap(args);
+    s->DoSend(msg);
 }
 
-void ServerTemplate::SendAll(const v8::FunctionCallbackInfo<v8::Value>& args) {
+void ServerTemplate::Notify(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
     if (args.Length() < 1) {
         // TODO(ghilbut): throw exception
@@ -177,10 +178,10 @@ void ServerTemplate::SendAll(const v8::FunctionCallbackInfo<v8::Value>& args) {
     char* data = new char[data_len];
     str->WriteUtf8(data, data_len);
 
-    Server* s = Unwrap(args);
-    s->DoSend(data, data_len);
+    Message msg(data, data_len);
 
-    delete[] data;
+    Server* s = Unwrap(args);
+    s->DoNotify(msg);
 }
 
 }  // namespace Http

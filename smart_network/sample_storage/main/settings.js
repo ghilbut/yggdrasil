@@ -90,8 +90,8 @@ http.onrequest = function (request) {
 };
 http.onmessage = function (message) {
 	print(message);
-    http.send(message);
-    //http.sendAll(message);
+    //http.send(message);
+    http.notify(message);
 };
 http.onerror = function (error) {
 	print('error');

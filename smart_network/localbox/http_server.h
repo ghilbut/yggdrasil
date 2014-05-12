@@ -21,6 +21,7 @@ namespace Http {
 
 class Request;
 class Response;
+class Message;
 typedef boost::shared_ptr<Response> ResponsePtr;
 
 class Server {
@@ -35,8 +36,8 @@ public:
     bool DoListen(void);
     void DoClose(void);
 
-    void DoSend(const char* data, int data_len);
-    void DoSendAll(const char* data, int data_len);
+    void DoSend(const Message& msg);
+    void DoNotify(const Message& msg);
 
     v8::Local<v8::Function> request_trigger(v8::Isolate* isolate) const;
     void set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> trigger);
@@ -53,8 +54,8 @@ private:
     void handle_listen(boost::function<void(const bool&)> ret_setter);
     void handle_close(void);
 
-    void handle_send(const char* data, int data_len);
-    void handle_send_all(const char* data, int data_len);
+    void handle_send(const Message msg);
+    void handle_notify(const Message msg);
 
     void handle_request(struct mg_connection *conn, boost::function<void(const ResponsePtr&)> ret_setter);
     void handle_message(struct mg_connection *conn);

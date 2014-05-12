@@ -3,6 +3,7 @@
 #include "http_request_template.h"
 #include "http_response.h"
 #include "http_response_template.h"
+#include "http_message.h"
 #include "template_factory.h"
 #include <mongoose.h>
 #include <ctime>
@@ -63,12 +64,12 @@ void Server::DoClose(void) {
     }
 }
 
-void Server::DoSend(const char* data, int data_len) {
-    strand_.post(boost::bind(&Server::handle_send, this, data, data_len));
+void Server::DoSend(const Message& msg) {
+    strand_.post(boost::bind(&Server::handle_send, this, msg));
 }
 
-void Server::DoSendAll(const char* data, int data_len) {
-    strand_.post(boost::bind(&Server::handle_send_all, this, data, data_len));
+void Server::DoNotify(const Message& msg) {
+    strand_.post(boost::bind(&Server::handle_notify, this, msg));
 }
 
 v8::Local<v8::Function> Server::request_trigger(v8::Isolate* isolate) const {
@@ -133,16 +134,16 @@ void Server::handle_close() {
     is_stop_ = true;
 }
 
-void Server::handle_send(const char* data, int data_len) {
+void Server::handle_send(const Message msg) {
     // TODO(ghilbut): send to single websocket.
-    handle_send_all(data, data_len);
+    handle_notify(msg);
 }
 
-void Server::handle_send_all(const char* data, int data_len) {
+void Server::handle_notify(const Message msg) {
     std::map<mg_connection*, mg_connection*>::const_iterator itr = websockets_.begin();
     std::map<mg_connection*, mg_connection*>::const_iterator end = websockets_.end();
     for (; itr != end; ++itr) {
-        mg_websocket_write(itr->first, 0x1, data, data_len);
+        mg_websocket_write(itr->first, 0x1, msg.data(), msg.data_len());
     }
 }
 

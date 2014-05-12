@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClCompile Include="environ.cpp" />
     <ClCompile Include="http.cpp" />
+    <ClCompile Include="http_message_impl.cpp" />
     <ClCompile Include="http_request.cpp" />
     <ClCompile Include="http_request_template.cpp" />
     <ClCompile Include="http_response.cpp" />
@@ -102,6 +103,9 @@
     <ClInclude Include="channel.h" />
     <ClInclude Include="environ.h" />
     <ClInclude Include="http.h" />
+    <ClInclude Include="http_forward.h" />
+    <ClInclude Include="http_message.h" />
+    <ClInclude Include="http_message_impl.h" />
     <ClInclude Include="http_request.h" />
     <ClInclude Include="http_request_template.h" />
     <ClInclude Include="http_response.h" />
