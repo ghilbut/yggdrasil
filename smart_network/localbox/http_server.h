@@ -2,6 +2,7 @@
 #define HTTP_SERVER_H_
 
 #include "environ.h"
+#include "http_websocket_manager.h"
 #include <v8.h>
 #include <boost/asio.hpp>
 #include <boost/atomic.hpp>
@@ -36,7 +37,6 @@ public:
     bool DoListen(void);
     void DoClose(void);
 
-    void DoSend(const Message& msg);
     void DoNotify(const Message& msg);
 
     v8::Local<v8::Function> request_trigger(v8::Isolate* isolate) const;
@@ -48,17 +48,12 @@ public:
 
 private:
     ResponsePtr FireRequest(struct mg_connection *conn);
-    void FireMessage(struct mg_connection *conn);
     void FireError(void);
 
     void handle_listen(boost::function<void(const bool&)> ret_setter);
     void handle_close(void);
 
-    void handle_send(const Message msg);
-    void handle_notify(const Message msg);
-
     void handle_request(struct mg_connection *conn, boost::function<void(const ResponsePtr&)> ret_setter);
-    void handle_message(struct mg_connection *conn);
     void handle_error(void);
 
     static int request_handler(struct mg_connection *conn, enum mg_event ev);
@@ -72,7 +67,7 @@ private:
     v8::Isolate* isolate_;
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Function> on_request_;
-    v8::Persistent<v8::Function> on_message_;
+    //v8::Persistent<v8::Function> on_message_
     v8::Persistent<v8::Function> on_error_;
 
     boost::asio::strand strand_;
@@ -80,9 +75,7 @@ private:
     boost::atomic_bool is_stop_;
     boost::thread thread_;
 
-
-
-    std::map<mg_connection*, mg_connection*> websockets_;
+    WebSocketManager ws_manager_;
 };
 
 }  // namespace Http

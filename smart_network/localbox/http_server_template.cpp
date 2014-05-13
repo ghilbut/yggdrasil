@@ -20,7 +20,6 @@ v8::Local<v8::FunctionTemplate> ServerTemplate::Get(Environ* env) {
 
     ot->Set(v8::String::NewFromUtf8(isolate, "listen"), v8::FunctionTemplate::New(isolate, ServerTemplate::Listen));
     ot->Set(v8::String::NewFromUtf8(isolate, "close"), v8::FunctionTemplate::New(isolate, ServerTemplate::Close));
-    ot->Set(v8::String::NewFromUtf8(isolate, "send"), v8::FunctionTemplate::New(isolate, ServerTemplate::Send));
     ot->Set(v8::String::NewFromUtf8(isolate, "notify"), v8::FunctionTemplate::New(isolate, ServerTemplate::Notify));
     ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onrequest"), ServerTemplate::GetEventRequest, ServerTemplate::SetEventRequest);
     ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onmessage"), ServerTemplate::GetEventMessage, ServerTemplate::SetEventMessage);
@@ -128,33 +127,6 @@ void ServerTemplate::Close(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
     Server* s = Unwrap(args);
     s->DoClose();
-}
-
-void ServerTemplate::Send(const v8::FunctionCallbackInfo<v8::Value>& args) {
-
-    if (args.Length() < 1) {
-        // TODO(ghilbut): throw exception
-        return;
-    }
-
-    if (!args[0]->IsString()) {
-        // TODO(ghilbut): throw exception
-        return;
-    }
-
-    v8::Isolate* isolate = args.GetIsolate();
-    v8::HandleScope handle_scope(isolate);
-
-    v8::Local<v8::String> str = args[0]->ToString();
-
-    const int data_len = str->Utf8Length();
-    char* data = new char[data_len];
-    str->WriteUtf8(data, data_len);
-
-    Message msg(data, data_len);
-
-    Server* s = Unwrap(args);
-    s->DoSend(msg);
 }
 
 void ServerTemplate::Notify(const v8::FunctionCallbackInfo<v8::Value>& args) {

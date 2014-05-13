@@ -17,6 +17,9 @@
     <ClCompile Include="template_factory.cpp" />
     <ClCompile Include="environ.cpp" />
     <ClCompile Include="http_message_impl.cpp" />
+    <ClCompile Include="http_websocket.cpp" />
+    <ClCompile Include="http_websocket_template.cpp" />
+    <ClCompile Include="http_websocket_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
@@ -38,5 +41,8 @@
     <ClInclude Include="http_message.h" />
     <ClInclude Include="http_forward.h" />
     <ClInclude Include="http_message_impl.h" />
+    <ClInclude Include="http_websocket_template.h" />
+    <ClInclude Include="http_websocket.h" />
+    <ClInclude Include="http_websocket_manager.h" />
   </ItemGroup>
 </Project>

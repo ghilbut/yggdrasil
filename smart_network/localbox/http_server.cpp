@@ -3,6 +3,7 @@
 #include "http_request_template.h"
 #include "http_response.h"
 #include "http_response_template.h"
+#include "http_websocket_template.h"
 #include "http_message.h"
 #include "template_factory.h"
 #include <mongoose.h>
@@ -19,7 +20,8 @@ Server::Server(Environ* env)
     , strand_(env->io_service())
     , port_(env->port())
     , is_alive_(false)
-    , is_stop_(false) {
+    , is_stop_(false)
+    , ws_manager_(env) {
    // nothing
 }
 
@@ -64,12 +66,8 @@ void Server::DoClose(void) {
     }
 }
 
-void Server::DoSend(const Message& msg) {
-    strand_.post(boost::bind(&Server::handle_send, this, msg));
-}
-
 void Server::DoNotify(const Message& msg) {
-    strand_.post(boost::bind(&Server::handle_notify, this, msg));
+    ws_manager_.DoNotify(msg);
 }
 
 v8::Local<v8::Function> Server::request_trigger(v8::Isolate* isolate) const {
@@ -81,11 +79,11 @@ void Server::set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> 
 }
 
 v8::Local<v8::Function> Server::message_trigger(v8::Isolate* isolate) const {
-    return v8::Local<v8::Function>::New(isolate, on_message_);
+    return ws_manager_.message_trigger(isolate);
 }
 
 void Server::set_message_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> trigger) {
-    on_message_.Reset(isolate, trigger);
+    ws_manager_.set_message_trigger(isolate, trigger);
 }
 
 v8::Local<v8::Function> Server::error_trigger(v8::Isolate* isolate) const {
@@ -104,10 +102,6 @@ ResponsePtr Server::FireRequest(struct mg_connection *conn) {
     strand_.post(boost::bind(&Server::handle_request, this, conn, promise_setter));
 
     return promise.get_future().get();
-}
-
-void Server::FireMessage(struct mg_connection *conn) {
-    strand_.post(boost::bind(&Server::handle_message, this, conn));
 }
 
 void Server::FireError(void) {
@@ -132,19 +126,6 @@ void Server::handle_listen(boost::function<void(const bool&)> ret_setter) {
 
 void Server::handle_close() {
     is_stop_ = true;
-}
-
-void Server::handle_send(const Message msg) {
-    // TODO(ghilbut): send to single websocket.
-    handle_notify(msg);
-}
-
-void Server::handle_notify(const Message msg) {
-    std::map<mg_connection*, mg_connection*>::const_iterator itr = websockets_.begin();
-    std::map<mg_connection*, mg_connection*>::const_iterator end = websockets_.end();
-    for (; itr != end; ++itr) {
-        mg_websocket_write(itr->first, 0x1, msg.data(), msg.data_len());
-    }
 }
 
 void Server::handle_request(struct mg_connection *conn, boost::function<void(const ResponsePtr&)> ret_setter) {
@@ -198,73 +179,6 @@ void Server::handle_request(struct mg_connection *conn, boost::function<void(con
     delete[] buf;
 }
 
-void Server::handle_message(struct mg_connection *conn) {
-    if (on_message_.IsEmpty()) {
-        return;
-    }
-    v8::Local<v8::Function> func = v8::Local<v8::Function>::New(isolate_, on_message_);
-    if (!func->IsCallable()) {
-        return;
-    }
-
-    v8::Isolate* isolate = isolate_; 
-    v8::Isolate::Scope isolate_scope(isolate_);
-    v8::HandleScope handle_scope(isolate_);
-
-    //v8::Handle<v8::Value> params[2];
-    //params[0] = v8::Integer::New(isolate_, 10);
-    //params[1] = v8::Integer::New(isolate_, 2);
-
-    //v8::Local<v8::Object> object = v8::Local<v8::Object>::New(isolate_, self_);
-    //func->Call(object, 1, params);
-
-
-
-
-    std::map<mg_connection*, mg_connection*>::iterator itr = websockets_.find(conn);
-    if (itr == websockets_.end()) {
-        websockets_[conn] = conn;
-    }
-
-    switch (conn->wsbits & 0x0f) {
-    case 0x00:
-        // denotes a continuation frame
-        break;
-    case 0x01:
-        {
-            v8::Handle<v8::Value> params[1];
-            params[0] = v8::String::NewFromUtf8(isolate_, conn->content, v8::String::kNormalString, conn->content_len);
-            v8::Local<v8::Object> object = v8::Local<v8::Object>::New(isolate_, self_);
-            func->Call(object, 1, params);
-
-            //mg_websocket_write(conn, 0x1, conn->content, conn->content_len);
-        }
-        break;
-    case 0x02:
-        // denotes a binary frame
-        break;
-    case 0x08:
-        // denotes a connection close
-        {
-            std::map<mg_connection*, mg_connection*>::iterator itr = websockets_.find(conn);
-            if (itr != websockets_.end()) {
-                websockets_.erase(conn);
-            }
-        }
-        break;
-    case 0x09:
-        // denotes a ping
-        break;
-    case 0x0A:
-        // denotes a pong
-        break;
-    default:
-        // %x3-7 are reserved for further non-control frames
-        // %xB-F are reserved for further control frames
-        break;
-    }
-}
-
 void Server::handle_error(void) {
     if (on_error_.IsEmpty()) {
         return;
@@ -291,7 +205,8 @@ int Server::request_handler(struct mg_connection *conn, enum mg_event ev) {
     if (ev == MG_REQUEST) {
         Server* s = static_cast<Server*>(conn->server_param);
         if (conn->is_websocket) {
-            s->FireMessage(conn);
+            //s->FireMessage(conn);
+            s->ws_manager_.HandleMessage(conn);
         } else {
             ResponsePtr res = s->FireRequest(conn);
             res->Send(conn);

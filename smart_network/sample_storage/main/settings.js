@@ -88,10 +88,19 @@ http.onrequest = function (request) {
     //return NaN;
     //return http.Response;
 };
-http.onmessage = function (message) {
+var sock_ = false;
+http.onmessage = function (sock, message) {
 	print(message);
-    //http.send(message);
-    http.notify(message);
+    //http.send(sock, message);
+    if (!sock_) {
+        print('XXXXXXXXXXXX');
+        sock_ = sock;
+    }
+    print('[1]' + message);
+    sock_.send('[SEND]' + message);
+    print(sock === sock_);
+    print('[2]' + message);
+    http.notify('[NOTIFY]' + message);
 };
 http.onerror = function (error) {
 	print('error');

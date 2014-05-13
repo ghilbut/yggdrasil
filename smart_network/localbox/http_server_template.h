@@ -15,7 +15,7 @@ public:
     static v8::Local<v8::FunctionTemplate> Get(Environ* env);
     static void Constructor(const v8::FunctionCallbackInfo<v8::Value>& args);
 
-    static v8::Local<v8::Object> ServerTemplate::NewInstance(Environ* env);
+    static v8::Local<v8::Object> NewInstance(Environ* env);
 
     template<typename T>
     static Server* Unwrap(T _t);
@@ -29,7 +29,6 @@ public:
     static void Listen(const v8::FunctionCallbackInfo<v8::Value>& args);
     static void Close(const v8::FunctionCallbackInfo<v8::Value>& args);
 
-    static void Send(const v8::FunctionCallbackInfo<v8::Value>& args);
     static void Notify(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 private:
