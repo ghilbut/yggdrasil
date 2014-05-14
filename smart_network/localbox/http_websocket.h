@@ -14,26 +14,30 @@ class Message;
 
 class WebSocket {
 public:
+    WebSocket(void);
     WebSocket(Environ* env, struct mg_connection* conn);
+    WebSocket(const WebSocket& other);
     ~WebSocket(void);
 
-    static void WeakCallback(const v8::WeakCallbackData<v8::Object, WebSocket>& data);
-    void MakeWeak(v8::Isolate* isolate, v8::Local<v8::Object> self);
-    void ClearWeak(void);
+    WebSocket& operator= (WebSocket& other);
 
+    // methods
     void DoSend(const Message& msg) const;
+    void FireMessage(const Message& msg) const;
+    void FireClosed(void) const;
+
+    // properties
+    v8::Local<v8::Object> self(v8::Isolate* isolate) const;
+    v8::Local<v8::Object> message_trigger(v8::Isolate* isolate) const;
+    void set_message_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger);
+    v8::Local<v8::Object> closed_trigger(v8::Isolate* isolate) const;
+    void set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger);
 
 
-private:
-    void handle_send(const Message& msg) const;
-
-
-private:
-    v8::Isolate* isolate_;
-    v8::Persistent<v8::Object> self_;
-
-    mutable boost::asio::strand strand_;
-    struct mg_connection* conn_;
+public:
+    //friend WebSocketTemplate;
+    class Impl;
+    Impl* pimpl_;
 };
 
 }  // namespace Http

@@ -5,6 +5,7 @@ Environ::Environ(boost::asio::io_service& io_service
                  , const char* basepath
                  , int port)
     : io_service_(io_service)
+    , strand_(io_service_)
     , isolate_(v8::Isolate::New())
     , isolate_scope_(isolate_)
     , handle_scope_(isolate_)

@@ -80,5 +80,6 @@ ServiceBroker::Impl::~Impl(void) {
 }
 
 void ServiceBroker::Impl::RunShell(void) {
+    v8::HandleScope handle_scope(env_.isolate());
     ::RunShell(context_);
 }

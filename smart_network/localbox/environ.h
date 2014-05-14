@@ -20,8 +20,15 @@ public:
     Storage& storage(void) const;
     int port(void) const;
 
+    template <typename F>
+    inline void Post(const F& handler) {
+        strand_.post(handler);
+    }
+
 private:
     boost::asio::io_service& io_service_;
+    boost::asio::strand strand_;
+
     v8::Isolate* isolate_;
     v8::Isolate::Scope isolate_scope_;
     v8::HandleScope handle_scope_;

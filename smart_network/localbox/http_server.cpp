@@ -2,6 +2,7 @@
 #include "http_request.h"
 #include "http_request_template.h"
 #include "http_response.h"
+#include "http_response_impl.h"
 #include "http_response_template.h"
 #include "http_websocket_template.h"
 #include "http_message.h"
@@ -21,7 +22,7 @@ Server::Server(Environ* env)
     , port_(env->port())
     , is_alive_(false)
     , is_stop_(false)
-    , ws_manager_(env) {
+    , ws_manager_(env, self_) {
    // nothing
 }
 
@@ -78,12 +79,12 @@ void Server::set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> 
     on_request_.Reset(isolate, trigger);
 }
 
-v8::Local<v8::Function> Server::message_trigger(v8::Isolate* isolate) const {
-    return ws_manager_.message_trigger(isolate);
+v8::Local<v8::Object> Server::open_trigger(v8::Isolate* isolate) const {
+    return ws_manager_.open_trigger(isolate);
 }
 
-void Server::set_message_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> trigger) {
-    ws_manager_.set_message_trigger(isolate, trigger);
+void Server::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger) {
+    ws_manager_.set_open_trigger(isolate, trigger);
 }
 
 v8::Local<v8::Function> Server::error_trigger(v8::Isolate* isolate) const {
@@ -94,11 +95,11 @@ void Server::set_error_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> tr
     on_error_.Reset(isolate, trigger);
 }
 
-ResponsePtr Server::FireRequest(struct mg_connection *conn) {
-    boost::promise<ResponsePtr> promise;
+Response Server::FireRequest(struct mg_connection *conn) {
+    boost::promise<Response> promise;
 
-    void (boost::promise<ResponsePtr>::*setter)(const ResponsePtr&) = &boost::promise<ResponsePtr>::set_value;
-    boost::function<void(const ResponsePtr&)> promise_setter = boost::bind(setter, &promise, _1);
+    void (boost::promise<Response>::*setter)(const Response&) = &boost::promise<Response>::set_value;
+    boost::function<void(const Response&)> promise_setter = boost::bind(setter, &promise, _1);
     strand_.post(boost::bind(&Server::handle_request, this, conn, promise_setter));
 
     return promise.get_future().get();
@@ -128,7 +129,7 @@ void Server::handle_close() {
     is_stop_ = true;
 }
 
-void Server::handle_request(struct mg_connection *conn, boost::function<void(const ResponsePtr&)> ret_setter) {
+void Server::handle_request(struct mg_connection *conn, boost::function<void(const Response&)> ret_setter) {
     if (on_request_.IsEmpty()) {
         // TODO(ghilbut): error handling
         mg_send_data(conn, 0, 0);
@@ -159,9 +160,9 @@ void Server::handle_request(struct mg_connection *conn, boost::function<void(con
         TemplateFactory& tf = env_->template_factory();
         v8::Local<v8::FunctionTemplate> rt = tf.ResponseTemplate(isolate);
         if (obj->GetConstructor() == rt->GetFunction()) {
-            Response* res = static_cast<Response*>(obj->GetAlignedPointerFromInternalField(0));
-            ret_setter(ResponsePtr(res));
-            //res->ClearWeak();
+            Response res;
+            res.Reset(static_cast<Response::Impl*>(obj->GetAlignedPointerFromInternalField(0)));
+            ret_setter(res);
             return;
         }
     }
@@ -172,8 +173,9 @@ void Server::handle_request(struct mg_connection *conn, boost::function<void(con
     char* buf = new char[len];
     str->WriteUtf8(buf, len);
 
-    ResponsePtr res(new Response());
-    res->set_data(buf, len);
+    Response res;
+    res.Reset(Response::Impl::New());
+    res.set_data(buf, len);
     ret_setter(res);
     
     delete[] buf;
@@ -208,8 +210,8 @@ int Server::request_handler(struct mg_connection *conn, enum mg_event ev) {
             //s->FireMessage(conn);
             s->ws_manager_.HandleMessage(conn);
         } else {
-            ResponsePtr res = s->FireRequest(conn);
-            res->Send(conn);
+            Response res = s->FireRequest(conn);
+            res.Send(conn);
         }
         return MG_TRUE;
     } else if (ev == MG_AUTH) {

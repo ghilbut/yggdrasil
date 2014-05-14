@@ -45,7 +45,7 @@ void Request::MakeWeak(v8::Isolate* isolate, v8::Local<v8::Object> self) {
     v8::HandleScope handle_scope(isolate);
     self_.Reset(isolate, self);
     self->SetAlignedPointerInInternalField(0, this);
-    self_.MarkIndependent();
+    //self_.MarkIndependent();
     self_.SetWeak(this, WeakCallback);
 }
 

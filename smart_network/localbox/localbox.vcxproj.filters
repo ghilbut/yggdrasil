@@ -5,7 +5,6 @@
     <ClCompile Include="main_ui_channel.cpp" />
     <ClCompile Include="http_request.cpp" />
     <ClCompile Include="http_request_template.cpp" />
-    <ClCompile Include="http_response.cpp" />
     <ClCompile Include="http_response_template.cpp" />
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="http_server_template.cpp" />
@@ -17,9 +16,10 @@
     <ClCompile Include="template_factory.cpp" />
     <ClCompile Include="environ.cpp" />
     <ClCompile Include="http_message_impl.cpp" />
-    <ClCompile Include="http_websocket.cpp" />
     <ClCompile Include="http_websocket_template.cpp" />
     <ClCompile Include="http_websocket_manager.cpp" />
+    <ClCompile Include="http_websocket_impl.cpp" />
+    <ClCompile Include="http_response_impl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
@@ -44,5 +44,7 @@
     <ClInclude Include="http_websocket_template.h" />
     <ClInclude Include="http_websocket.h" />
     <ClInclude Include="http_websocket_manager.h" />
+    <ClInclude Include="http_websocket_impl.h" />
+    <ClInclude Include="http_response_impl.h" />
   </ItemGroup>
 </Project>

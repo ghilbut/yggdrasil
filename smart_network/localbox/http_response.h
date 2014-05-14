@@ -15,12 +15,13 @@ class Request;
 
 class Response {
 public:
+    class Impl;
     Response(void);
-    ~Response(void) {}
+    Response(const Response& other);
+    ~Response(void);
 
-    static void WeakCallback(const v8::WeakCallbackData<v8::Object, Response>& data);
-    void MakeWeak(v8::Isolate* isolate, v8::Local<v8::Object> self);
-    void ClearWeak(void);
+    void Reset(Impl* pimpl);
+    Response& operator= (const Response& other);
 
     int status_code(void) const;
     void set_status_code(int status_code);
@@ -34,13 +35,9 @@ public:
 
     void Send(struct mg_connection* conn) const;
 
-private:
-    typedef std::map<std::string, std::string> HeaderMap;
-    int status_code_;
-    HeaderMap headers_;
-    std::string data_;
 
-    v8::Persistent<v8::Object> self_;
+private:
+    Impl* pimpl_;
 };
 
 }  // namespace Http

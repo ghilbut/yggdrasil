@@ -1,4 +1,5 @@
 #include "http_websocket.h"
+#include "http_websocket_impl.h"
 #include "http_websocket_template.h"
 #include "http_message.h"
 
@@ -12,36 +13,40 @@ v8::Local<v8::FunctionTemplate> WebSocketTemplate::Get(v8::Isolate* isolate) {
 
     v8::Handle<v8::ObjectTemplate> ot = ft->InstanceTemplate();
     ot->SetInternalFieldCount(1);
-    //ot->SetAccessor(v8::String::NewFromUtf8(isolate, "statusCode"), GetStatusCode, SetStatusCode);
-    //ot->Set(isolate, "getHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::GetHeader));
-    //ot->Set(isolate, "setHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::SetHeader));
-    //ot->Set(isolate, "removeHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::RemoveHeader));
-    //ot->SetAccessor(v8::String::NewFromUtf8(isolate, "data"), GetData, SetData);
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onmessage"), GetEventMessage, SetEventMessage);
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onclosed"), GetEventClosed, SetEventClosed);
     ot->Set(isolate, "send", v8::FunctionTemplate::New(isolate, WebSocketTemplate::Send));
 
     return ft;
 }
 
-v8::Local<v8::Object> WebSocketTemplate::NewInstance(v8::Isolate* isolate, struct mg_connection* conn) {
-    v8::Local<v8::FunctionTemplate> ft = WebSocketTemplate::Get(isolate);
-    v8::Local<v8::Function> f = ft->GetFunction();
-    v8::Local<v8::Object> i = f->NewInstance();
-
-    Environ* env = static_cast<Environ*>(isolate->GetData(0));
-    WebSocket* sock = new WebSocket(env, conn);
-    sock->MakeWeak(isolate, i);
-    i->SetAlignedPointerInInternalField(0, sock);
-    //i->SetAlignedPointerInInternalField(0, conn);
-    return i;
-}
-
 template<typename T>
-WebSocket* WebSocketTemplate::Unwrap(T _t) {
+static WebSocket::Impl* Unwrap(T _t) {
     v8::Local<v8::Object> object = _t.Holder();
     //v8::Handle<v8::External> wrap = v8::Handle<v8::External>::Cast(object->GetInternalField(0));
     //void* ptr = wrap->Value();
     //return static_cast<Server*>(ptr);
-    return static_cast<WebSocket*>(object->GetAlignedPointerFromInternalField(0));
+    return static_cast<WebSocket::Impl*>(object->GetAlignedPointerFromInternalField(0));
+}
+
+void WebSocketTemplate::GetEventMessage(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
+    WebSocket::Impl* ws = Unwrap(info);
+    info.GetReturnValue().Set(ws->message_trigger(info.GetIsolate()));
+}
+
+void WebSocketTemplate::SetEventMessage(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
+    v8::Local<v8::Object> trigger = v8::Local<v8::Object>::Cast(value);
+    Unwrap(info)->set_message_trigger(info.GetIsolate(), trigger);
+}
+
+void WebSocketTemplate::GetEventClosed(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
+    WebSocket::Impl* ws = Unwrap(info);
+    info.GetReturnValue().Set(ws->closed_trigger(info.GetIsolate()));
+}
+
+void WebSocketTemplate::SetEventClosed(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
+    v8::Local<v8::Object> trigger = v8::Local<v8::Object>::Cast(value);
+    Unwrap(info)->set_closed_trigger(info.GetIsolate(), trigger);
 }
 
 void WebSocketTemplate::Send(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -69,7 +74,7 @@ void WebSocketTemplate::Send(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
     Message msg(data, data_len);
 
-    WebSocket* ws = Unwrap(args);
+    WebSocket::Impl* ws = Unwrap(args);
     ws->DoSend(msg);
 }
 

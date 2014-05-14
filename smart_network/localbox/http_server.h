@@ -23,7 +23,6 @@ namespace Http {
 class Request;
 class Response;
 class Message;
-typedef boost::shared_ptr<Response> ResponsePtr;
 
 class Server {
 public:
@@ -41,19 +40,19 @@ public:
 
     v8::Local<v8::Function> request_trigger(v8::Isolate* isolate) const;
     void set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> trigger);
-    v8::Local<v8::Function> message_trigger(v8::Isolate* isolate) const;
-    void set_message_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> trigger);
+    v8::Local<v8::Object> open_trigger(v8::Isolate* isolate) const;
+    void set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger);
     v8::Local<v8::Function> error_trigger(v8::Isolate* isolate) const;
     void set_error_trigger(v8::Isolate* isolate, v8::Handle<v8::Function> trigger);
 
 private:
-    ResponsePtr FireRequest(struct mg_connection *conn);
+    Response FireRequest(struct mg_connection *conn);
     void FireError(void);
 
     void handle_listen(boost::function<void(const bool&)> ret_setter);
     void handle_close(void);
 
-    void handle_request(struct mg_connection *conn, boost::function<void(const ResponsePtr&)> ret_setter);
+    void handle_request(struct mg_connection *conn, boost::function<void(const Response&)> ret_setter);
     void handle_error(void);
 
     static int request_handler(struct mg_connection *conn, enum mg_event ev);
@@ -67,7 +66,6 @@ private:
     v8::Isolate* isolate_;
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Function> on_request_;
-    //v8::Persistent<v8::Function> on_message_
     v8::Persistent<v8::Function> on_error_;
 
     boost::asio::strand strand_;

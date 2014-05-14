@@ -1,4 +1,5 @@
 #include "http_response.h"
+#include "http_response_impl.h"
 #include "http_response_template.h"
 #include "http_request_template.h"
 
@@ -33,15 +34,17 @@ void ResponseTemplate::Constructor(const v8::FunctionCallbackInfo<v8::Value>& ar
     }
 
     v8::Local<v8::Object> object = args.Holder();
-    Response* response = new Response();
+    Response::Impl* response = Response::Impl::New();
+    response->AddRef();
     response->MakeWeak(isolate, object);
     args.GetReturnValue().Set(object);
+    response->Release();
 }
 
 template<typename T>
-Response* ResponseTemplate::Unwrap(T _t) {
+static Response::Impl* Unwrap(T _t) {
     v8::Local<v8::Object> object = _t.Holder();
-    return static_cast<Response*>(object->GetAlignedPointerFromInternalField(0));
+    return static_cast<Response::Impl*>(object->GetAlignedPointerFromInternalField(0));
 }
 
 void ResponseTemplate::GetStatusCode(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
@@ -146,7 +149,7 @@ void ResponseTemplate::RemoveHeader(const v8::FunctionCallbackInfo<v8::Value>& a
 
 void ResponseTemplate::GetData(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
     v8::Isolate* isolate = info.GetIsolate();
-    Response* res = Unwrap(info);
+    Response::Impl* res = Unwrap(info);
 
     const std::string& data = res->data();
     v8::Local<v8::String> str = v8::String::NewFromUtf8(info.GetIsolate(), data.c_str());
@@ -155,7 +158,7 @@ void ResponseTemplate::GetData(v8::Local<v8::String> property, const v8::Propert
 
 void ResponseTemplate::SetData(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
     v8::Isolate* isolate = info.GetIsolate();
-    Response* res = Unwrap(info);
+    Response::Impl* res = Unwrap(info);
 
     v8::Local<v8::String> str = value->ToString();
 

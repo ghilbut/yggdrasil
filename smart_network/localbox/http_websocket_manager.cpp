@@ -11,9 +11,9 @@
 
 namespace Http {
 
-WebSocketManager::WebSocketManager(Environ* env) 
-    : isolate_(env->isolate())
-    , strand_(env->io_service()) {
+WebSocketManager::WebSocketManager(Environ* env, v8::Persistent<v8::Object>& caller) 
+    : env_(env)
+    , caller_(caller) {
     // nothing
 }
 
@@ -21,13 +21,13 @@ WebSocketManager::~WebSocketManager(void) {
 }
 
 void WebSocketManager::HandleMessage(mg_connection* conn) {
-    v8::Isolate* isolate = isolate_; 
+    v8::Isolate* isolate = env_->isolate(); 
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
     WebSocketMap::iterator itr = websockets_.find(conn);
     if (itr == websockets_.end()) {
-        strand_.post(boost::bind(&WebSocketManager::event_open, this, conn));
+        env_->Post(boost::bind(&WebSocketManager::event_open, this, conn));
     }
 
     switch (conn->wsbits & 0x0f) {
@@ -37,9 +37,10 @@ void WebSocketManager::HandleMessage(mg_connection* conn) {
     case 0x01:
         {
             const size_t data_len = conn->content_len;
-            const char* data = new char[data_len];
+            char* data = new char[data_len];
+            memcpy(data, conn->content, data_len);
             const Message msg(data, data_len);
-            strand_.post(boost::bind(&WebSocketManager::event_message, this, conn, msg));
+            env_->Post(boost::bind(&WebSocketManager::event_message, this, conn, msg));
         }
         break;
     case 0x02:
@@ -48,7 +49,7 @@ void WebSocketManager::HandleMessage(mg_connection* conn) {
     case 0x08:
         // denotes a connection close
         {
-            strand_.post(boost::bind(&WebSocketManager::event_closed, this, conn));
+            env_->Post(boost::bind(&WebSocketManager::event_closed, this, conn));
         }
         break;
     case 0x09:
@@ -65,74 +66,58 @@ void WebSocketManager::HandleMessage(mg_connection* conn) {
 }
 
 void WebSocketManager::DoNotify(const Message& msg) {
-    strand_.post(boost::bind(&WebSocketManager::trigger_notify, this, msg));
+    env_->Post(boost::bind(&WebSocketManager::trigger_notify, this, msg));
 }
 
-void WebSocketManager::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Function>& trigger) {
-    on_open_.Reset(isolate_, trigger);
+v8::Local<v8::Object> WebSocketManager::open_trigger(v8::Isolate* isolate) const {
+    return v8::Local<v8::Object>::New(isolate, on_open_);
+}
+void WebSocketManager::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+    on_open_.Reset(env_->isolate(), trigger);
 }
 
-v8::Local<v8::Function> WebSocketManager::message_trigger(v8::Isolate* isolate) const {
-    return v8::Local<v8::Function>::New(isolate, on_message_);
+v8::Local<v8::Object> WebSocketManager::message_trigger(v8::Isolate* isolate) const {
+    return v8::Local<v8::Object>::New(isolate, on_message_);
+}
+void WebSocketManager::set_message_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+    on_message_.Reset(env_->isolate(), trigger);
 }
 
-void WebSocketManager::set_message_trigger(v8::Isolate* isolate, v8::Handle<v8::Function>& trigger) {
-    on_message_.Reset(isolate_, trigger);
+v8::Local<v8::Object> WebSocketManager::closed_trigger(v8::Isolate* isolate) const {
+    return v8::Local<v8::Object>::New(isolate, on_closed_);
 }
-
-void WebSocketManager::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Function>& trigger) {
-    on_closed_.Reset(isolate_, trigger);
+void WebSocketManager::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+    on_closed_.Reset(env_->isolate(), trigger);
 }
 
 void WebSocketManager::event_open(mg_connection* conn) {
-    v8::Isolate* isolate = isolate_; 
+    v8::Isolate* isolate = env_->isolate(); 
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    v8::Local<v8::Object> websocket = WebSocketTemplate::NewInstance(isolate, conn);
-    websockets_[conn].Reset(isolate, websocket);
+    WebSocket websocket(env_, conn);
+    websockets_[conn] = websocket;
 
-    // TODO(ghilbut): fire event to script
+    v8::Local<v8::Object> obj = v8::Local<v8::Object>::New(isolate, on_open_);
+    if (!obj.IsEmpty() && obj->IsFunction() && obj->IsCallable()) {
+        v8::Local<v8::Value> params[1] = { websocket.self(isolate) };
+        obj->CallAsFunction(v8::Local<v8::Object>::New(isolate, caller_), 1, params);
+    }
 }
 
 void WebSocketManager::event_message(mg_connection* conn, const Message& msg) {
-    v8::Isolate* isolate = isolate_; 
-    v8::Isolate::Scope isolate_scope(isolate);
-    v8::HandleScope handle_scope(isolate);
-    
     WebSocketMap::iterator itr = websockets_.find(conn);
-    if (itr == websockets_.end()) {
-       return;
+    if (itr != websockets_.end()) {
+       (itr->second).FireMessage(msg);
     }
-
-    if (on_message_.IsEmpty()) {
-        return;
-    }
-
-    v8::Local<v8::Function> func = v8::Local<v8::Function>::New(isolate_, on_message_);
-    if (!func->IsCallable()) {
-        return;
-    }
-
-    v8::Handle<v8::Value> params[2];
-    params[0] = v8::Local<v8::Object>::New(isolate, itr->second);
-    params[1] = v8::String::NewFromUtf8(isolate_, conn->content, v8::String::kNormalString, conn->content_len);
-    v8::Local<v8::Object> object = v8::Local<v8::Object>::New(isolate_, caller_);
-    //func->Call(object, 2, params);
-    func->Call(v8::Null(isolate), 2, params);
 }
 
 void WebSocketManager::event_closed(mg_connection* conn) {
-    v8::Isolate* isolate = isolate_; 
-    v8::Isolate::Scope isolate_scope(isolate);
-    v8::HandleScope handle_scope(isolate);
-
     WebSocketMap::iterator itr = websockets_.find(conn);
     if (itr != websockets_.end()) {
-        websockets_.erase(conn);
+        (itr->second).FireClosed();
+        websockets_.erase(itr);
     }
-
-    // TODO(ghilbut): fire event to script
 }
 
 void WebSocketManager::trigger_notify(const Message& msg) {

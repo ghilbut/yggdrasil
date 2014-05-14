@@ -14,7 +14,7 @@ urlpatterns = [
 
 http.onrequest = function (request) {
 
-  for (var i = 0, len = urlpatterns.length; i < len; ++i) {
+  /*for (var i = 0, len = urlpatterns.length; i < len; ++i) {
      var pattern = urlpatterns[i];
 	 print(pattern[0].test);
 	 print(typeof(pattern[1]));
@@ -22,10 +22,10 @@ http.onrequest = function (request) {
      if (pattern[0].test(request.uri)) {
 	   return pattern[1](request);
 	 }
-  }
+  }*/
 
 	var r = request;
-	print(request);
+	/*print(request);
 	print(request.constructor);
 	print(request.constructor.prototype);
 	
@@ -47,12 +47,12 @@ http.onrequest = function (request) {
 		print(v);
 		print(hs[n]);
 		print('----------------------------------------');
-	}
+	}*/
 
     //var res = new http.Response();
 	//var res = new Response();
 	var res = new this.Response();
-	print(res);
+	/*print(res);
     print(res.statusCode);
     res.statusCode = 500;
     print(res.statusCode);
@@ -64,7 +64,7 @@ http.onrequest = function (request) {
     print(res.getHeader);
     print(res.getHeader('A'));
     res.removeHeader('A');
-    print(res.getHeader('A'));
+    print(res.getHeader('A'));*/
 
     print(res.data);
     res.data = 'A';
@@ -89,18 +89,42 @@ http.onrequest = function (request) {
     //return http.Response;
 };
 var sock_ = false;
-http.onmessage = function (sock, message) {
-	print(message);
-    //http.send(sock, message);
+http.onwebsocket = function (sock) {
+
     if (!sock_) {
         print('XXXXXXXXXXXX');
         sock_ = sock;
+
+        sock_.onmessage = function (message) {
+	        print(message);
+            //http.send(sock, message);
+            print('[1]' + message);
+            sock_.send('[SEND]' + message);
+            print(this === sock_);
+            print('[2]' + message);
+            http.notify('[NOTIFY]' + message);
+
+            if (message === 'GC') {
+                print('========= GC ===============');
+                gc();
+            }
+        };
+        sock_.onclosed = function () {
+	        print('closed');
+            sock_ = false;
+        };
+    } else {
+        //print('========= GC ===============');
+        //gc();    // has problem
+
+        sock.onmessage = function (message) {
+            if (message === 'GC') {
+                print('========= GC ===============');
+                //sock_ = sock;
+                //gc();
+            }
+        };
     }
-    print('[1]' + message);
-    sock_.send('[SEND]' + message);
-    print(sock === sock_);
-    print('[2]' + message);
-    http.notify('[NOTIFY]' + message);
 };
 http.onerror = function (error) {
 	print('error');

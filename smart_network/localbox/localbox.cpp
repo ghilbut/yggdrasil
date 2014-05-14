@@ -45,8 +45,8 @@ LocalBox::LocalBox(const char* rootpath)
     context_ = context;
 
     service0_ = new ServiceBroker(io_service_, rootpath, 81);
-    service1_ = new ServiceBroker(io_service_, rootpath, 82);
-    service2_ = new ServiceBroker(io_service_, rootpath, 83);
+    //service1_ = new ServiceBroker(io_service_, rootpath, 82);
+    //service2_ = new ServiceBroker(io_service_, rootpath, 83);
 }
 
 LocalBox::~LocalBox(void) {
@@ -62,6 +62,7 @@ LocalBox::~LocalBox(void) {
 }
 
 void LocalBox::RunShell(void) {
-    v8::HandleScope handle_scope(isolate_);
-    ::RunShell(context_);
+    //v8::HandleScope handle_scope(isolate_);
+    //::RunShell(context_);
+    service0_->RunShell();
 }
