@@ -1,8 +1,8 @@
 #ifndef HTTP_RESPONSE_IMPL_H_
 #define HTTP_RESPONSE_IMPL_H_
 
+#include "base/ref_implement.h"
 #include <v8.h>
-#include <boost/atomic.hpp>
 #include <map>
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@ namespace Http {
 
 class Request;
 
-class Response::Impl {
+class Response::Impl : public RefImplement {
 private:
     static void WeakCallback(const v8::WeakCallbackData<v8::Object, Response::Impl>& data);
     Impl(void);
@@ -22,8 +22,6 @@ private:
 
 public:
     static Impl* New(void);
-    void AddRef(void);
-    void Release(void);
 
     void MakeWeak(v8::Isolate* isolate, v8::Local<v8::Object> self);
 
@@ -43,8 +41,6 @@ public:
 
 
 private:
-    mutable boost::atomic_int ref_count_;
-
     typedef std::map<std::string, std::string> HeaderMap;
     int status_code_;
     HeaderMap headers_;

@@ -3,9 +3,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_channel.cpp" />
-    <ClCompile Include="http_request.cpp" />
-    <ClCompile Include="http_request_template.cpp" />
-    <ClCompile Include="http_response_template.cpp" />
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="http_server_template.cpp" />
     <ClCompile Include="http.cpp" />
@@ -15,19 +12,44 @@
     <ClCompile Include="localbox.cpp" />
     <ClCompile Include="template_factory.cpp" />
     <ClCompile Include="environ.cpp" />
-    <ClCompile Include="http_message_impl.cpp" />
-    <ClCompile Include="http_websocket_template.cpp" />
-    <ClCompile Include="http_websocket_manager.cpp" />
-    <ClCompile Include="http_websocket_impl.cpp" />
-    <ClCompile Include="http_response_impl.cpp" />
+    <ClCompile Include="frontend\http_object_template.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\http_request_manager.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="base\ref_implement.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="http_server_manager.cpp" />
+    <ClCompile Include="frontend\http_request_template.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\http_response_impl.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\http_response_template.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\http_websocket_impl.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\http_websocket_manager.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\http_websocket_template.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\http_message_impl.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\http_request.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="channel.h" />
-    <ClInclude Include="http_request.h" />
-    <ClInclude Include="http_request_template.h" />
-    <ClInclude Include="http_response.h" />
-    <ClInclude Include="http_response_template.h" />
     <ClInclude Include="http_server.h" />
     <ClInclude Include="http_server_template.h" />
     <ClInclude Include="http.h" />
@@ -38,13 +60,59 @@
     <ClInclude Include="localbox.h" />
     <ClInclude Include="template_factory.h" />
     <ClInclude Include="environ.h" />
-    <ClInclude Include="http_message.h" />
-    <ClInclude Include="http_forward.h" />
-    <ClInclude Include="http_message_impl.h" />
-    <ClInclude Include="http_websocket_template.h" />
-    <ClInclude Include="http_websocket.h" />
-    <ClInclude Include="http_websocket_manager.h" />
-    <ClInclude Include="http_websocket_impl.h" />
-    <ClInclude Include="http_response_impl.h" />
+    <ClInclude Include="frontend\http_object_template.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_request_manager.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="base\ref_implement.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="http_server_manager.h" />
+    <ClInclude Include="frontend\http_request.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_request_template.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_response.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_response_impl.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_response_template.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_websocket.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_websocket_impl.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_websocket_manager.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_websocket_template.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_forward.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_message.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_message_impl.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{db4305c3-821f-4525-8466-9b258b24d15e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="frontend">
+      <UniqueIdentifier>{4ef6ddbb-3959-4564-89c0-884cbbd60739}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

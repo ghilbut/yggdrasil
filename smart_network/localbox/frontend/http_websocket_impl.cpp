@@ -8,20 +8,16 @@
 
 namespace Http {
 
-
-
-
-
-
-
 WebSocket::WebSocket(void)
     : pimpl_(0) {
-
+    // nothing
 }
 
 WebSocket::WebSocket(Environ* env, struct mg_connection* conn)
     : pimpl_(Impl::New(env, conn)) {
-    // nothing
+    if (pimpl_) {
+        pimpl_->AddRef();
+    }
 }
 
 WebSocket::WebSocket(const WebSocket& other)
@@ -88,26 +84,21 @@ void WebSocket::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>&
     }
 }
 
-
-
-
-
-
-
-
 WebSocket::Impl::Impl(Environ* env, struct mg_connection* conn)
-    : ref_count_(1)
+    : RefImplement()
     , env_(env)
     , conn_(conn) {
 
     v8::Isolate* isolate = env_->isolate();
-    v8::Local<v8::FunctionTemplate> ft = WebSocketTemplate::Get(isolate);
+    v8::Isolate::Scope isolate_scope(isolate);
+    v8::HandleScope handle_scope(isolate);
+
+    v8::Local<v8::FunctionTemplate> ft = (env_->template_factory()).WebSocketTemplate(isolate);
     v8::Local<v8::Function> f = ft->GetFunction();
     v8::Local<v8::Object> self = f->NewInstance();
     self->SetAlignedPointerInInternalField(0, this);
     this->AddRef();
 
-    v8::HandleScope handle_scope(isolate);
     self_.Reset(isolate, self);
     //self_.MarkIndependent();
     //self_.SetWeak(this, &WebSocket::Impl::WeakCallback);
@@ -119,16 +110,6 @@ WebSocket::Impl::~Impl(void) {
 
 WebSocket::Impl* WebSocket::Impl::New(Environ* env, struct mg_connection* conn) {
     return new Impl(env, conn);
-}
-
-void WebSocket::Impl::AddRef(void) {
-    ++ref_count_;
-}
-
-void WebSocket::Impl::Release(void) {
-    if (--ref_count_ == 0) {
-        delete this;
-    }
 }
 
 void WebSocket::Impl::WeakCallback(const v8::WeakCallbackData<v8::Object, WebSocket::Impl>& data) {

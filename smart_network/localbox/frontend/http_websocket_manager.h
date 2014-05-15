@@ -3,7 +3,6 @@
 
 #include "http_websocket.h"
 #include <v8.h>
-#include <boost/asio.hpp>
 #include <map>
 
 

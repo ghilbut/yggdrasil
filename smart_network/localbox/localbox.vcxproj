@@ -50,7 +50,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.3;$(SolutionDir)..\third_party\v8-3.25.30\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.3;$(SolutionDir)..\third_party\v8-3.25.30\include;$(SolutionDir)..\localbox;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -69,7 +69,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.3;$(SolutionDir)..\third_party\v8-3.25.30\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\third_party\boost_1_55_0\include\boost-1_55;$(SolutionDir)..\third_party\mongoose-5.3;$(SolutionDir)..\third_party\v8-3.25.30\include;$(SolutionDir)..\localbox;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -82,18 +82,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="base\ref_implement.cpp" />
     <ClCompile Include="environ.cpp" />
+    <ClCompile Include="frontend\http_message_impl.cpp" />
+    <ClCompile Include="frontend\http_object_template.cpp" />
+    <ClCompile Include="frontend\http_request.cpp" />
+    <ClCompile Include="frontend\http_request_manager.cpp" />
+    <ClCompile Include="frontend\http_request_template.cpp" />
+    <ClCompile Include="frontend\http_response_impl.cpp" />
+    <ClCompile Include="frontend\http_response_template.cpp" />
+    <ClCompile Include="frontend\http_websocket_impl.cpp" />
+    <ClCompile Include="frontend\http_websocket_manager.cpp" />
+    <ClCompile Include="frontend\http_websocket_template.cpp" />
     <ClCompile Include="http.cpp" />
-    <ClCompile Include="http_message_impl.cpp" />
-    <ClCompile Include="http_request.cpp" />
-    <ClCompile Include="http_request_template.cpp" />
-    <ClCompile Include="http_response_impl.cpp" />
-    <ClCompile Include="http_response_template.cpp" />
     <ClCompile Include="http_server.cpp" />
+    <ClCompile Include="http_server_manager.cpp" />
     <ClCompile Include="http_server_template.cpp" />
-    <ClCompile Include="http_websocket_impl.cpp" />
-    <ClCompile Include="http_websocket_manager.cpp" />
-    <ClCompile Include="http_websocket_template.cpp" />
     <ClCompile Include="localbox.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_channel.cpp" />
@@ -103,23 +107,27 @@
     <ClCompile Include="template_factory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="base\ref_implement.h" />
     <ClInclude Include="channel.h" />
     <ClInclude Include="environ.h" />
+    <ClInclude Include="frontend\http_forward.h" />
+    <ClInclude Include="frontend\http_message.h" />
+    <ClInclude Include="frontend\http_message_impl.h" />
+    <ClInclude Include="frontend\http_object_template.h" />
+    <ClInclude Include="frontend\http_request.h" />
+    <ClInclude Include="frontend\http_request_manager.h" />
+    <ClInclude Include="frontend\http_request_template.h" />
+    <ClInclude Include="frontend\http_response.h" />
+    <ClInclude Include="frontend\http_response_impl.h" />
+    <ClInclude Include="frontend\http_response_template.h" />
+    <ClInclude Include="frontend\http_websocket.h" />
+    <ClInclude Include="frontend\http_websocket_impl.h" />
+    <ClInclude Include="frontend\http_websocket_manager.h" />
+    <ClInclude Include="frontend\http_websocket_template.h" />
     <ClInclude Include="http.h" />
-    <ClInclude Include="http_forward.h" />
-    <ClInclude Include="http_message.h" />
-    <ClInclude Include="http_message_impl.h" />
-    <ClInclude Include="http_request.h" />
-    <ClInclude Include="http_request_template.h" />
-    <ClInclude Include="http_response.h" />
-    <ClInclude Include="http_response_impl.h" />
-    <ClInclude Include="http_response_template.h" />
     <ClInclude Include="http_server.h" />
+    <ClInclude Include="http_server_manager.h" />
     <ClInclude Include="http_server_template.h" />
-    <ClInclude Include="http_websocket.h" />
-    <ClInclude Include="http_websocket_impl.h" />
-    <ClInclude Include="http_websocket_manager.h" />
-    <ClInclude Include="http_websocket_template.h" />
     <ClInclude Include="localbox.h" />
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="sample.h" />

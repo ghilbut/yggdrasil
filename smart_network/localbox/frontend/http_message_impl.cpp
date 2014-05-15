@@ -47,7 +47,7 @@ size_t Message::data_len(void) const {
 }
 
 Message::Impl::Impl(const char* data, size_t data_len)
-    : ref_count_(1)
+    : RefImplement(1)
     , data_(data) 
     , data_len_(data_len) {
     // nothing
@@ -56,16 +56,6 @@ Message::Impl::Impl(const char* data, size_t data_len)
 Message::Impl::~Impl(void) {
     if (data_) {
         delete[] data_;
-    }
-}
-
-void Message::Impl::AddRef(void) const {
-    ++ref_count_;
-}
-
-void Message::Impl::Release(void) const {
-    if (--ref_count_ == 0) {
-        delete this;
     }
 }
 

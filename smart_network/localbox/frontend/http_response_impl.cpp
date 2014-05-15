@@ -26,21 +26,21 @@ Response::~Response(void) {
 }
 
 void Response::Reset(Response::Impl* pimpl) {
-    if (pimpl_) {
-        pimpl_->Release();
-    }
     if (pimpl) {
         pimpl->AddRef();
+    }
+    if (pimpl_) {
+        pimpl_->Release();
     }
     pimpl_ = pimpl;
 }
 
 Response& Response::operator= (const Response& other) {
-    if (pimpl_) {
-        pimpl_->Release();
-    }
     if (other.pimpl_) {
         other.pimpl_->AddRef();
+    }
+    if (pimpl_) {
+        pimpl_->Release();
     }
     pimpl_ = other.pimpl_;
     return *this;
@@ -79,23 +79,13 @@ void Response::Send(struct mg_connection* conn) const {
 }
 
 Response::Impl::Impl(void) 
-    : status_code_(200)
-    , ref_count_(0) {
+    : RefImplement()
+    , status_code_(200) {
     // nothing
 }
 
 Response::Impl* Response::Impl::New(void) {
     return new Impl();
-}
-
-void Response::Impl::AddRef(void) {
-    ++ref_count_;
-}
-
-void Response::Impl::Release(void) {
-    if (--ref_count_ == 0) {
-        delete this;
-    }
 }
 
 void Response::Impl::WeakCallback(const v8::WeakCallbackData<v8::Object, Response::Impl>& data) {

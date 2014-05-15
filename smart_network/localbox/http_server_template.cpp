@@ -1,7 +1,7 @@
 #include "http_server.h"
 #include "http_server_template.h"
-#include "http_response_template.h"
-#include "http_message.h"
+#include "frontend/http_response_template.h"
+#include "frontend/http_message.h"
 #include "environ.h"
 
 
@@ -23,7 +23,6 @@ v8::Local<v8::FunctionTemplate> ServerTemplate::Get(Environ* env) {
     ot->Set(v8::String::NewFromUtf8(isolate, "notify"), v8::FunctionTemplate::New(isolate, ServerTemplate::Notify));
     ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onrequest"), ServerTemplate::GetEventRequest, ServerTemplate::SetEventRequest);
     ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onwebsocket"), ServerTemplate::GetEventWebSocket, ServerTemplate::SetEventWebSocket);
-    //ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onmessage"), ServerTemplate::GetEventMessage, ServerTemplate::SetEventMessage);
 
     TemplateFactory& tf = env->template_factory();
     ot->Set(v8::String::NewFromUtf8(isolate, "Response"), tf.ResponseTemplate(isolate));
@@ -88,34 +87,6 @@ void ServerTemplate::SetEventWebSocket(v8::Local<v8::String> property, v8::Local
     if (value->IsFunction()) {
         v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
         Unwrap(info)->set_open_trigger(info.GetIsolate(), func);
-    } else {
-        // TODO(ghilbut): throw js exception
-    }
-}
-/*
-void ServerTemplate::GetEventMessage(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
-    Server* s = Unwrap(info);
-    info.GetReturnValue().Set(s->message_trigger(info.GetIsolate()));
-}
-
-void ServerTemplate::SetEventMessage(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
-    if (value->IsFunction()) {
-        v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-        Unwrap(info)->set_message_trigger(info.GetIsolate(), func);
-    } else {
-        // TODO(ghilbut): throw js exception
-    }
-}
-*/
-void ServerTemplate::GetEventError(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
-    Server* s = Unwrap(info);
-    info.GetReturnValue().Set(s->error_trigger(info.GetIsolate()));
-}
-
-void ServerTemplate::SetEventError(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
-    if (value->IsFunction()) {
-        v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-        Unwrap(info)->set_error_trigger(info.GetIsolate(), func);
     } else {
         // TODO(ghilbut): throw js exception
     }

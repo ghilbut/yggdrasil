@@ -18,6 +18,7 @@ WebSocketManager::WebSocketManager(Environ* env, v8::Persistent<v8::Object>& cal
 }
 
 WebSocketManager::~WebSocketManager(void) {
+    // nothing
 }
 
 void WebSocketManager::HandleMessage(mg_connection* conn) {

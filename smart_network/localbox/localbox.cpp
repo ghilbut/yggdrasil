@@ -2,13 +2,20 @@
 #include "sample.h"
 #include "http.h"
 #include "environ.h"
+#include <mongoose.h>
 
+
+static int http_request_handler(struct mg_connection* conn, enum mg_event ev) {
+    LocalBox* s = static_cast<LocalBox*>(conn->server_param);
+    return s->HttpRequest(conn, ev);
+};
 
 LocalBox::LocalBox(const char* rootpath) 
     : work_(new boost::asio::io_service::work(io_service_))
     , thread_(boost::bind(&boost::asio::io_service::run, &io_service_))
     , isolate_(v8::Isolate::GetCurrent())
-    , handle_scope_(isolate_) {
+    , handle_scope_(isolate_)
+    , sm_(io_service_, http_request_handler, this) {
 
     isolate_->SetData(0, &io_service_);
 
@@ -45,8 +52,13 @@ LocalBox::LocalBox(const char* rootpath)
     context_ = context;
 
     service0_ = new ServiceBroker(io_service_, rootpath, 81);
-    //service1_ = new ServiceBroker(io_service_, rootpath, 82);
-    //service2_ = new ServiceBroker(io_service_, rootpath, 83);
+    service1_ = new ServiceBroker(io_service_, rootpath, 82);
+    service2_ = new ServiceBroker(io_service_, rootpath, 83);
+
+
+    services_[81] = service0_;
+    services_[82] = service1_;
+    services_[83] = service2_;
 }
 
 LocalBox::~LocalBox(void) {
@@ -66,3 +78,18 @@ void LocalBox::RunShell(void) {
     //::RunShell(context_);
     service0_->RunShell();
 }
+
+
+
+
+
+int LocalBox::HttpRequest(struct mg_connection* conn, enum mg_event ev) {
+    const int port = conn->local_port;
+    ServiceMap::iterator itr = services_.find(port);
+    if (itr == services_.end()) {
+        return MG_FALSE;
+    }
+
+    ServiceBroker* s = itr->second;
+    return s->HttpRequest(conn, ev);
+};

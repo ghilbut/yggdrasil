@@ -1,9 +1,9 @@
 #ifndef HTTP_WEBSOCKET_IMPL_H_
 #define HTTP_WEBSOCKET_IMPL_H_
 
+#include "base/ref_implement.h"
 #include "environ.h"
 #include <boost/asio.hpp>
-#include <boost/atomic.hpp>
 
 
 class Environ;
@@ -13,7 +13,7 @@ namespace Http {
 
 class Message;
 
-class WebSocket::Impl {
+class WebSocket::Impl : public RefImplement {
 private:
     static void WeakCallback(const v8::WeakCallbackData<v8::Object, Impl>& data);
 
@@ -22,8 +22,6 @@ private:
 
 public:
     static Impl* New(Environ* env, struct mg_connection* conn);
-    void AddRef(void);
-    void Release(void);
 
     // methods
     void DoSend(const Message& msg) const;
@@ -41,7 +39,6 @@ public:
 private:
     Environ* env_;
     struct mg_connection* conn_;
-    mutable boost::atomic_int ref_count_;
 
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Object> on_message_;

@@ -17,6 +17,7 @@ class Response {
 public:
     class Impl;
     Response(void);
+    Response(int status_code, const char* data, int data_len);
     Response(const Response& other);
     ~Response(void);
 

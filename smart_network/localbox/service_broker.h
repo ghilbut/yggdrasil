@@ -18,6 +18,11 @@ public:
 
     void RunShell(void);
 
+    int HttpRequest(struct mg_connection* conn, enum mg_event ev);
+    void HttpPause(void);
+    void HttpResume(void);
+
+
 private:
     class Impl;
     Impl* pimpl_;
