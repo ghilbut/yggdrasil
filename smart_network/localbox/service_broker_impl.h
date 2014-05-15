@@ -28,6 +28,10 @@ public:
     void HttpPause(void);
     void HttpResume(void);
 
+    v8::Local<v8::Object> request_trigger(v8::Isolate* isolate) const;
+    void set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger);
+    v8::Local<v8::Object> open_trigger(v8::Isolate* isolate) const;
+    void set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger);
 
 
 private:

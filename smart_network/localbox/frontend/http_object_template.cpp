@@ -18,35 +18,48 @@ v8::Local<v8::FunctionTemplate> ObjectTemplate::Get(v8::Isolate* isolate) {
 
     v8::Local<v8::FunctionTemplate> ft = v8::FunctionTemplate::New(isolate);
     ft->SetClassName(v8::String::NewFromUtf8(isolate, "Http"));
+    ft->Set(isolate, "pause"
+            , v8::FunctionTemplate::New(isolate, ObjectTemplate::Pause));
+    ft->Set(isolate, "resume"
+            , v8::FunctionTemplate::New(isolate, ObjectTemplate::Resume));
 
-    v8::Handle<v8::ObjectTemplate> ot = ft->InstanceTemplate();
+    v8::Local<v8::ObjectTemplate> ot = ft->InstanceTemplate();
     ot->SetInternalFieldCount(1);
-    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onrequest"), ObjectTemplate::GetEventRequest, ObjectTemplate::SetEventRequest);
-    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onwebsocket"), ObjectTemplate::GetEventWebSocket, ObjectTemplate::SetEventWebSocket);
-    ot->Set(isolate, "pause", v8::FunctionTemplate::New(isolate, ObjectTemplate::Pause));
-    ot->Set(isolate, "resume", v8::FunctionTemplate::New(isolate, ObjectTemplate::Resume));
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onrequest")
+                    , &ObjectTemplate::GetEventRequest
+                    , &ObjectTemplate::SetEventRequest);
+    ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onwebsocket")
+                    , &ObjectTemplate::GetEventWebSocket
+                    , &ObjectTemplate::SetEventWebSocket);
+    /*ot->Set(isolate, "pause"
+            , v8::FunctionTemplate::New(isolate, ObjectTemplate::Pause));
+    ot->Set(isolate, "resume"
+            , v8::FunctionTemplate::New(isolate, ObjectTemplate::Resume));*/
 
     return ft;
 }
 
 void ObjectTemplate::GetEventRequest(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
     ServiceBroker* s = Unwrap(info);
-    //info.GetReturnValue().Set(s->request_trigger(info.GetIsolate()));
+    info.GetReturnValue().Set(s->request_trigger(info.GetIsolate()));
 }
 
 void ObjectTemplate::SetEventRequest(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
-    v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-    //Unwrap(info)->set_request_trigger(info.GetIsolate(), func);
+    //v8::Local<v8::Object> trigger = v8::Local<v8::Object>::Cast(value);
+    //Unwrap(info)->set_request_trigger(info.GetIsolate(), trigger);
+    //Unwrap(info)->set_request_trigger(info.GetIsolate(), value->ToObject());
+    Unwrap(info)->set_request_trigger(info.GetIsolate(), v8::Object::New(info.GetIsolate()));
 }
 
 void ObjectTemplate::GetEventWebSocket(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
-    
+    ServiceBroker* s = Unwrap(info);
+    info.GetReturnValue().Set(s->open_trigger(info.GetIsolate()));
 }
 
 void ObjectTemplate::SetEventWebSocket(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
-    v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-    //Unwrap(info)->set_open_trigger(info.GetIsolate(), func);
-    
+    //v8::Local<v8::Object> trigger = v8::Local<v8::Object>::Cast(value);
+    //Unwrap(info)->set_open_trigger(info.GetIsolate(), trigger);
+    Unwrap(info)->set_open_trigger(info.GetIsolate(), value->ToObject());
 }
 
 void ObjectTemplate::Pause(const v8::FunctionCallbackInfo<v8::Value>& args) {

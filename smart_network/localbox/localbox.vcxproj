@@ -91,12 +91,11 @@
     <ClCompile Include="frontend\http_request_template.cpp" />
     <ClCompile Include="frontend\http_response_impl.cpp" />
     <ClCompile Include="frontend\http_response_template.cpp" />
+    <ClCompile Include="frontend\http_server.cpp" />
     <ClCompile Include="frontend\http_websocket_impl.cpp" />
     <ClCompile Include="frontend\http_websocket_manager.cpp" />
     <ClCompile Include="frontend\http_websocket_template.cpp" />
     <ClCompile Include="http.cpp" />
-    <ClCompile Include="http_server.cpp" />
-    <ClCompile Include="http_server_manager.cpp" />
     <ClCompile Include="http_server_template.cpp" />
     <ClCompile Include="localbox.cpp" />
     <ClCompile Include="main.cpp" />
@@ -108,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\ref_implement.h" />
+    <ClInclude Include="base\ref_object.h" />
     <ClInclude Include="channel.h" />
     <ClInclude Include="environ.h" />
     <ClInclude Include="frontend\http_forward.h" />
@@ -120,14 +120,12 @@
     <ClInclude Include="frontend\http_response.h" />
     <ClInclude Include="frontend\http_response_impl.h" />
     <ClInclude Include="frontend\http_response_template.h" />
+    <ClInclude Include="frontend\http_server.h" />
     <ClInclude Include="frontend\http_websocket.h" />
     <ClInclude Include="frontend\http_websocket_impl.h" />
     <ClInclude Include="frontend\http_websocket_manager.h" />
     <ClInclude Include="frontend\http_websocket_template.h" />
     <ClInclude Include="http.h" />
-    <ClInclude Include="http_server.h" />
-    <ClInclude Include="http_server_manager.h" />
-    <ClInclude Include="http_server_template.h" />
     <ClInclude Include="localbox.h" />
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="sample.h" />

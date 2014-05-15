@@ -3,8 +3,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_channel.cpp" />
-    <ClCompile Include="http_server.cpp" />
-    <ClCompile Include="http_server_template.cpp" />
     <ClCompile Include="http.cpp" />
     <ClCompile Include="service_broker_impl.cpp" />
     <ClCompile Include="sample.cpp" />
@@ -21,7 +19,6 @@
     <ClCompile Include="base\ref_implement.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="http_server_manager.cpp" />
     <ClCompile Include="frontend\http_request_template.cpp">
       <Filter>frontend</Filter>
     </ClCompile>
@@ -46,12 +43,14 @@
     <ClCompile Include="frontend\http_request.cpp">
       <Filter>frontend</Filter>
     </ClCompile>
+    <ClCompile Include="http_server_template.cpp" />
+    <ClCompile Include="frontend\http_server.cpp">
+      <Filter>frontend</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="channel.h" />
-    <ClInclude Include="http_server.h" />
-    <ClInclude Include="http_server_template.h" />
     <ClInclude Include="http.h" />
     <ClInclude Include="service_broker_impl.h" />
     <ClInclude Include="service_broker.h" />
@@ -69,7 +68,6 @@
     <ClInclude Include="base\ref_implement.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="http_server_manager.h" />
     <ClInclude Include="frontend\http_request.h">
       <Filter>frontend</Filter>
     </ClInclude>
@@ -104,6 +102,12 @@
       <Filter>frontend</Filter>
     </ClInclude>
     <ClInclude Include="frontend\http_message_impl.h">
+      <Filter>frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="base\ref_object.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="frontend\http_server.h">
       <Filter>frontend</Filter>
     </ClInclude>
   </ItemGroup>

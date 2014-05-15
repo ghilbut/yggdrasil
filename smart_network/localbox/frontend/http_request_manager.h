@@ -11,8 +11,6 @@ struct mg_connection;
 
 namespace Http {
 
-class Response;
-
 class RequestManager {
 public:
     RequestManager(Environ* env, v8::Persistent<v8::Object>& caller);

@@ -1,6 +1,7 @@
 #include "service_broker.h"
 #include "service_broker_impl.h"
 
+#include "frontend/http_object_template.h"
 #include "frontend/http_request.h"
 #include "storage.h"
 #include "sample.h"
@@ -33,6 +34,22 @@ void ServiceBroker::HttpPause(void) {
 
 void ServiceBroker::HttpResume(void) {
     pimpl_->HttpResume();
+}
+
+v8::Local<v8::Object> ServiceBroker::request_trigger(v8::Isolate* isolate) const {
+    return pimpl_->request_trigger(isolate);
+}
+
+void ServiceBroker::set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger) {
+    pimpl_->set_request_trigger(isolate, trigger);
+}
+
+v8::Local<v8::Object> ServiceBroker::open_trigger(v8::Isolate* isolate) const {
+    return pimpl_->open_trigger(isolate);
+}
+
+void ServiceBroker::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger) {
+    pimpl_->set_open_trigger(isolate, trigger);
 }
 
 ServiceBroker::Impl::Impl(boost::asio::io_service& io_service
@@ -70,28 +87,42 @@ ServiceBroker::Impl::Impl(boost::asio::io_service& io_service
 
     BindSample(context_);
 
-    context_->Global()->Set(
+
+
+
+
+    if (false) {
+        context_->Global()->Set(
+            v8::String::NewFromUtf8(isolate, "http")
+            , Http::ServerTemplate::NewInstance(&env_)
+            , Http::kAttribute);
+    } else {
+
+        //v8::Local<v8::FunctionTemplate> ft = (env_.template_factory()).HttpObjectTemplate(isolate);
+        v8::Local<v8::FunctionTemplate> ft = Http::ObjectTemplate::Get(isolate);
+        v8::Local<v8::Function> f = ft->GetFunction();
+        v8::Local<v8::Object> http = f->NewInstance();
+        http->SetAlignedPointerInInternalField(0, this);
+        //this->AddRef();
+
+        
+
+        //v8::HandleScope handle_scope(context_->GetIsolate());
+        //v8::Isolate::Scope isolate_scope(isolate);
+        //v8::HandleScope handle_scope(isolate);
+
+        context_->Global()->Set(
         v8::String::NewFromUtf8(isolate, "http")
-        , Http::ServerTemplate::NewInstance(&env_)
+        , http
         , Http::kAttribute);
 
 
+        //http_.Reset(isolate, http);
+        //self_.MarkIndependent();
+        //self_.SetWeak(this, &WebSocket::Impl::WeakCallback);
+    }
 
 
-
-    /*
-    v8::Local<v8::FunctionTemplate> ft = (env_.template_factory()).WebSocketTemplate(isolate);
-    v8::Local<v8::Function> f = ft->GetFunction();
-    v8::Local<v8::Object> http = f->NewInstance();
-    http->SetAlignedPointerInInternalField(0, this);
-    //this->AddRef();
-
-    http_.Reset(isolate, http);
-    //self_.MarkIndependent();
-    //self_.SetWeak(this, &WebSocket::Impl::WeakCallback);
-    */
-
-    
 
 
 
@@ -153,4 +184,22 @@ void ServiceBroker::Impl::HttpPause(void) {
 
 void ServiceBroker::Impl::HttpResume(void) {
     http_paused_ = true;
+}
+
+
+
+v8::Local<v8::Object> ServiceBroker::Impl::request_trigger(v8::Isolate* isolate) const {
+    return req_manager_.request_trigger(isolate);
+}
+
+void ServiceBroker::Impl::set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger) {
+    req_manager_.set_request_trigger(isolate, trigger);
+}
+
+v8::Local<v8::Object> ServiceBroker::Impl::open_trigger(v8::Isolate* isolate) const {
+    return ws_manager_.open_trigger(isolate);
+}
+
+void ServiceBroker::Impl::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+    ws_manager_.set_open_trigger(isolate, trigger);
 }

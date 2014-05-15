@@ -74,21 +74,21 @@ v8::Local<v8::Object> WebSocketManager::open_trigger(v8::Isolate* isolate) const
     return v8::Local<v8::Object>::New(isolate, on_open_);
 }
 void WebSocketManager::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
-    on_open_.Reset(env_->isolate(), trigger);
+    on_open_.Reset(isolate, trigger);
 }
 
 v8::Local<v8::Object> WebSocketManager::message_trigger(v8::Isolate* isolate) const {
     return v8::Local<v8::Object>::New(isolate, on_message_);
 }
 void WebSocketManager::set_message_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
-    on_message_.Reset(env_->isolate(), trigger);
+    on_message_.Reset(isolate, trigger);
 }
 
 v8::Local<v8::Object> WebSocketManager::closed_trigger(v8::Isolate* isolate) const {
     return v8::Local<v8::Object>::New(isolate, on_closed_);
 }
 void WebSocketManager::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
-    on_closed_.Reset(env_->isolate(), trigger);
+    on_closed_.Reset(isolate, trigger);
 }
 
 void WebSocketManager::event_open(mg_connection* conn) {

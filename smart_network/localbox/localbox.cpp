@@ -15,7 +15,8 @@ LocalBox::LocalBox(const char* rootpath)
     , thread_(boost::bind(&boost::asio::io_service::run, &io_service_))
     , isolate_(v8::Isolate::GetCurrent())
     , handle_scope_(isolate_)
-    , sm_(io_service_, http_request_handler, this) {
+    , alive_(false)
+    , stop_(false) {
 
     isolate_->SetData(0, &io_service_);
 
@@ -51,37 +52,55 @@ LocalBox::LocalBox(const char* rootpath)
 
     context_ = context;
 
-    service0_ = new ServiceBroker(io_service_, rootpath, 81);
-    service1_ = new ServiceBroker(io_service_, rootpath, 82);
-    service2_ = new ServiceBroker(io_service_, rootpath, 83);
 
+
+
+
+    server0_ = new Http::Server();
+    server0_->Create(this, http_request_handler, 81);
+    //server1_ = new Http::Server();
+    //server1_->Create(this, http_request_handler, 82);
+    //server2_ = new Http::Server();
+    //server2_->Create(this, http_request_handler, 83);
+
+    service0_ = new ServiceBroker(io_service_, rootpath, 81);
+    //service1_ = new ServiceBroker(io_service_, rootpath, 82);
+    //service2_ = new ServiceBroker(io_service_, rootpath, 83);
 
     services_[81] = service0_;
-    services_[82] = service1_;
-    services_[83] = service2_;
+    //services_[82] = service1_;
+    //services_[83] = service2_;
+
+    stop_ = false;
+    //thread2_.swap(boost::thread(boost::bind(&LocalBox::thread2_main, this)));
 }
 
 LocalBox::~LocalBox(void) {
+
+    stop_ = true;
+    if (thread2_.joinable()) {
+        thread2_.join();
+    }
+
     context_->Exit();
 
     delete work_;
     io_service_.stop();
     thread_.join();
 
-    delete service2_;
-    delete service1_;
+    //server2_->Destroy();
+    //delete server2_;
+    //server1_->Destroy();
+    //delete server1_;
+    server0_->Destroy();
+    delete server0_;
+
+
+
+    //delete service2_;
+    //delete service1_;
     delete service0_;
 }
-
-void LocalBox::RunShell(void) {
-    //v8::HandleScope handle_scope(isolate_);
-    //::RunShell(context_);
-    service0_->RunShell();
-}
-
-
-
-
 
 int LocalBox::HttpRequest(struct mg_connection* conn, enum mg_event ev) {
     const int port = conn->local_port;
@@ -93,3 +112,24 @@ int LocalBox::HttpRequest(struct mg_connection* conn, enum mg_event ev) {
     ServiceBroker* s = itr->second;
     return s->HttpRequest(conn, ev);
 };
+
+void LocalBox::RunShell(void) {
+    //v8::HandleScope handle_scope(isolate_);
+    //::RunShell(context_);
+    service0_->RunShell();
+}
+
+
+
+
+
+
+void LocalBox::thread2_main(void) {
+    alive_ = true;
+    while (!stop_) {
+        server0_->Poll(10);
+        server1_->Poll(10);
+        server2_->Poll(10);
+    }
+    alive_ = false;
+}

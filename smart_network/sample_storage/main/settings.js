@@ -129,7 +129,7 @@ http.onwebsocket = function (sock) {
 http.onerror = function (error) {
 	print('error');
 };
-print(http.listen());
+print(http.resume());
 
 
 print(http)

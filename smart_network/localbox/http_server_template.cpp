@@ -1,7 +1,7 @@
-#include "http_server.h"
 #include "http_server_template.h"
-#include "frontend/http_response_template.h"
 #include "frontend/http_message.h"
+#include "frontend/http_response_template.h"
+#include "frontend/http_server.h"
 #include "environ.h"
 
 
@@ -41,10 +41,10 @@ void ServerTemplate::Constructor(const v8::FunctionCallbackInfo<v8::Value>& args
     }
 
     Environ* env = static_cast<Environ*>(isolate->GetData(0));
-    Server* server = new Server(env);
+   // Server* server = new Server(env);
    
     v8::Local<v8::Object> object = args.Holder();
-    server->MakeWeak(isolate, object);
+    //server->MakeWeak(isolate, object);
     args.GetReturnValue().Set(object);
 }
 
@@ -66,13 +66,13 @@ Server* ServerTemplate::Unwrap(T _t) {
 
 void ServerTemplate::GetEventRequest(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
     Server* s = Unwrap(info);
-    info.GetReturnValue().Set(s->request_trigger(info.GetIsolate()));
+    //info.GetReturnValue().Set(s->request_trigger(info.GetIsolate()));
 }
 
 void ServerTemplate::SetEventRequest(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
     if (value->IsFunction()) {
         v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-        Unwrap(info)->set_request_trigger(info.GetIsolate(), func);
+        //Unwrap(info)->set_request_trigger(info.GetIsolate(), func);
     } else {
         // TODO(ghilbut): throw js exception
     }
@@ -80,13 +80,13 @@ void ServerTemplate::SetEventRequest(v8::Local<v8::String> property, v8::Local<v
 
 void ServerTemplate::GetEventWebSocket(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
     Server* s = Unwrap(info);
-    info.GetReturnValue().Set(s->open_trigger(info.GetIsolate()));
+    //info.GetReturnValue().Set(s->open_trigger(info.GetIsolate()));
 }
 
 void ServerTemplate::SetEventWebSocket(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
     if (value->IsFunction()) {
         v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-        Unwrap(info)->set_open_trigger(info.GetIsolate(), func);
+       // Unwrap(info)->set_open_trigger(info.GetIsolate(), func);
     } else {
         // TODO(ghilbut): throw js exception
     }
@@ -100,7 +100,8 @@ void ServerTemplate::Listen(const v8::FunctionCallbackInfo<v8::Value>& args) {
     v8::Context::Scope context_scope(context);
 
     Server* s = Unwrap(args);
-    bool result = s->DoListen();
+    //bool result = s->DoListen();
+    bool result = true;
     args.GetReturnValue().Set(v8::Boolean::New(isolate, result));
 }
 
@@ -112,7 +113,7 @@ void ServerTemplate::Close(const v8::FunctionCallbackInfo<v8::Value>& args) {
     v8::Context::Scope context_scope(context);
 
     Server* s = Unwrap(args);
-    s->DoClose();
+    //s->DoClose();
 }
 
 void ServerTemplate::Notify(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -139,7 +140,7 @@ void ServerTemplate::Notify(const v8::FunctionCallbackInfo<v8::Value>& args) {
     Message msg(data, data_len);
 
     Server* s = Unwrap(args);
-    s->DoNotify(msg);
+    //s->DoNotify(msg);
 }
 
 }  // namespace Http

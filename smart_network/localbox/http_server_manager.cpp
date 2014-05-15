@@ -4,10 +4,7 @@
 
 
 HttpServerManager::HttpServerManager(boost::asio::io_service& io_service, mg_handler_t handler, void* opaque)
-    : io_service_(io_service)
-    , request_handler_(handler)
-    , opaque_(opaque)
-    , thread_(boost::bind(&HttpServerManager::thread_main, this)) {
+    : thread_(boost::bind(&HttpServerManager::thread_main, this)) {
 
 }
 
