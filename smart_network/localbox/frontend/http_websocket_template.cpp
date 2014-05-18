@@ -1,12 +1,19 @@
-#include "http_websocket.h"
-#include "http_websocket_impl.h"
 #include "http_websocket_template.h"
 #include "http_message.h"
 
 
 namespace Http {
 
-v8::Local<v8::FunctionTemplate> WebSocketTemplate::Get(v8::Isolate* isolate) {
+template<typename T>
+static WebSocket::Impl* Unwrap(T _t) {
+    v8::Local<v8::Object> object = _t.Holder();
+    //v8::Handle<v8::External> wrap = v8::Handle<v8::External>::Cast(object->GetInternalField(0));
+    //void* ptr = wrap->Value();
+    //return static_cast<Server*>(ptr);
+    return static_cast<WebSocket::Impl*>(object->GetAlignedPointerFromInternalField(0));
+}
+
+v8::Local<v8::FunctionTemplate> WebSocketTemplate::New(v8::Isolate* isolate) {
 
     v8::Local<v8::FunctionTemplate> ft = v8::FunctionTemplate::New(isolate);
     ft->SetClassName(v8::String::NewFromUtf8(isolate, "WebSocket"));
@@ -18,15 +25,6 @@ v8::Local<v8::FunctionTemplate> WebSocketTemplate::Get(v8::Isolate* isolate) {
     ot->Set(isolate, "send", v8::FunctionTemplate::New(isolate, WebSocketTemplate::Send));
 
     return ft;
-}
-
-template<typename T>
-static WebSocket::Impl* Unwrap(T _t) {
-    v8::Local<v8::Object> object = _t.Holder();
-    //v8::Handle<v8::External> wrap = v8::Handle<v8::External>::Cast(object->GetInternalField(0));
-    //void* ptr = wrap->Value();
-    //return static_cast<Server*>(ptr);
-    return static_cast<WebSocket::Impl*>(object->GetAlignedPointerFromInternalField(0));
 }
 
 void WebSocketTemplate::GetEventMessage(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {

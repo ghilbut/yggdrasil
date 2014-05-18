@@ -1,9 +1,10 @@
 #include "http_request_manager.h"
 
-#include "environ.h"
 #include "http_request.h"
 #include "http_request_template.h"
+#include "http_response_template.h"
 #include "http_response_impl.h"
+#include "basebox/environ.h"
 #include <mongoose.h>
 
 
@@ -42,6 +43,8 @@ void RequestManager::event_request(struct mg_connection *conn, boost::function<v
     v8::Isolate::Scope isolatescope(isolate);
     v8::HandleScope handle_scope(isolate);
 
+    TemplateFactory& tf = env_->template_factory();
+
     v8::Local<v8::Object> obj = v8::Local<v8::Object>::New(isolate, on_request_);
     if (obj.IsEmpty() || !obj->IsFunction() || !obj->IsCallable()) {
         // TODO(ghilbut): error handling
@@ -53,16 +56,16 @@ void RequestManager::event_request(struct mg_connection *conn, boost::function<v
 
     v8::Handle<v8::Value> params[1];
     Request* req = new Request(conn);
-    params[0] = RequestTemplate::NewInstance(isolate, req);
+    //params[0] = RequestTemplate::NewInstance(isolate, req);
+    //params[0] = RequestTemplate::NewInstance(isolate, req);
+    params[0] = tf.NewHttpRequest(isolate, req);
     v8::Local<v8::Object> caller = v8::Local<v8::Object>::New(isolate, caller_);
     v8::Local<v8::Value> retval = obj->CallAsFunction(caller, 1, params);
 
     if (retval->IsObject()) {
+        v8::Local<v8::FunctionTemplate> rt = tf.HttpResponseTemplate(isolate);
         v8::Local<v8::Object> obj = retval->ToObject();
-
-        TemplateFactory& tf = env_->template_factory();
-        v8::Local<v8::FunctionTemplate> rt = tf.ResponseTemplate(isolate);
-        if (obj->GetConstructor() == rt->GetFunction()) {
+        if (rt->GetFunction() == obj->GetConstructor()) {
             Response res;
             res.Reset(static_cast<Response::Impl*>(obj->GetAlignedPointerFromInternalField(0)));
             ret_setter(res);

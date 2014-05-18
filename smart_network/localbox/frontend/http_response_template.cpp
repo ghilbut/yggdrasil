@@ -6,7 +6,13 @@
 
 namespace Http {
 
-v8::Local<v8::FunctionTemplate> ResponseTemplate::Get(v8::Isolate* isolate) {
+template<typename T>
+static Response::Impl* Unwrap(T _t) {
+    v8::Local<v8::Object> object = _t.Holder();
+    return static_cast<Response::Impl*>(object->GetAlignedPointerFromInternalField(0));
+}
+
+v8::Local<v8::FunctionTemplate> ResponseTemplate::New(v8::Isolate* isolate) {
 
     v8::Local<v8::FunctionTemplate> ft = v8::FunctionTemplate::New(isolate, Constructor);
     ft->SetClassName(v8::String::NewFromUtf8(isolate, "Response"));
@@ -14,9 +20,9 @@ v8::Local<v8::FunctionTemplate> ResponseTemplate::Get(v8::Isolate* isolate) {
     v8::Local<v8::ObjectTemplate> ot = ft->InstanceTemplate();
     ot->SetInternalFieldCount(1);
     ot->SetAccessor(v8::String::NewFromUtf8(isolate, "statusCode"), GetStatusCode, SetStatusCode);
-    ot->Set(isolate, "getHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::GetHeader));
-    ot->Set(isolate, "setHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::SetHeader));
-    ot->Set(isolate, "removeHeader", v8::FunctionTemplate::New(isolate, ResponseTemplate::RemoveHeader));
+    ot->Set(isolate, "getHeader", v8::FunctionTemplate::New(isolate, GetHeader));
+    ot->Set(isolate, "setHeader", v8::FunctionTemplate::New(isolate, SetHeader));
+    ot->Set(isolate, "removeHeader", v8::FunctionTemplate::New(isolate, RemoveHeader));
     ot->SetAccessor(v8::String::NewFromUtf8(isolate, "data"), GetData, SetData);
 
     return ft;
@@ -39,12 +45,6 @@ void ResponseTemplate::Constructor(const v8::FunctionCallbackInfo<v8::Value>& ar
     response->MakeWeak(isolate, object);
     args.GetReturnValue().Set(object);
     response->Release();
-}
-
-template<typename T>
-static Response::Impl* Unwrap(T _t) {
-    v8::Local<v8::Object> object = _t.Holder();
-    return static_cast<Response::Impl*>(object->GetAlignedPointerFromInternalField(0));
 }
 
 void ResponseTemplate::GetStatusCode(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {

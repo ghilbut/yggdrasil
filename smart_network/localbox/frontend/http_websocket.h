@@ -1,8 +1,7 @@
 #ifndef HTTP_WEBSOCKET_H_
 #define HTTP_WEBSOCKET_H_
 
-#include "environ.h"
-#include <boost/asio.hpp>
+#include <v8.h>
 
 
 class Environ;
@@ -35,7 +34,6 @@ public:
 
 
 public:
-    //friend WebSocketTemplate;
     class Impl;
     Impl* pimpl_;
 };

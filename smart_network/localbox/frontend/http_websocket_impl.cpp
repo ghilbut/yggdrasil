@@ -2,8 +2,8 @@
 #include "http_websocket_impl.h"
 #include "http_websocket_template.h"
 #include "http_message.h"
+#include "basebox/environ.h"
 #include <mongoose.h>
-#include <boost/bind.hpp>
 
 
 namespace Http {
@@ -93,10 +93,8 @@ WebSocket::Impl::Impl(Environ* env, struct mg_connection* conn)
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    v8::Local<v8::FunctionTemplate> ft = (env_->template_factory()).WebSocketTemplate(isolate);
-    v8::Local<v8::Function> f = ft->GetFunction();
-    v8::Local<v8::Object> self = f->NewInstance();
-    self->SetAlignedPointerInInternalField(0, this);
+    TemplateFactory& tf = env_->template_factory();
+    v8::Local<v8::Object> self = tf.NewHttpWebSocket(isolate, this);
     this->AddRef();
 
     self_.Reset(isolate, self);

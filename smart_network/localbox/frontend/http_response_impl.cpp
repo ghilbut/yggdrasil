@@ -146,7 +146,11 @@ void Response::Impl::Send(struct mg_connection* conn) const {
         HeaderMap::const_iterator itr = headers_.begin();
         HeaderMap::const_iterator end = headers_.end();
         for (; itr != end; ++itr) {
-            mg_send_header(conn, (itr->first).c_str(), (itr->second).c_str());
+            const std::string& name = itr->first;
+            const std::string& val = itr->second;
+            if (!name.empty() && !val.empty()) {
+                mg_send_header(conn, name.c_str(), val.c_str());
+            }
         }
     }
 

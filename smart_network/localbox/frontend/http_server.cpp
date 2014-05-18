@@ -5,8 +5,7 @@
 namespace Http {
 
 Server::Server(void)
-    : server_(0)
-    , paused_(true) {
+    : server_(0) {
    // nothing
 }
 
@@ -25,29 +24,21 @@ bool Server::Create(void* server_param, mg_handler_t handler, int port) {
     sprintf(sport, "%d", port);
     const char* error_msg = mg_set_option(server_, "listening_port", sport);
     if (error_msg) {
-        mg_destroy_server(&server_);
+        Destroy();
         return false;
     }
 
-    paused_ = false;
     return true;
 }
 
 void Server::Destroy(void) {
-    paused_ = true;
-    mg_destroy_server(&server_);
-}
-
-void Server::Pause(void) {
-    paused_ = true;
-}
-
-void Server::Resume(void) {
-    paused_ = false;
+    mg_server* s = server_;
+    server_ = 0;
+    mg_destroy_server(&s);
 }
 
 int Server::Poll(int milliseconds) {
-    if (!paused_) {
+    if (server_ != 0) {
         return mg_poll_server(server_, milliseconds);
     }
     return 0;

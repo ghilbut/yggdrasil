@@ -1,4 +1,3 @@
-#include "service_broker.h"
 #include "service_broker_impl.h"
 
 #include "frontend/http_object_template.h"
@@ -28,12 +27,8 @@ int ServiceBroker::HttpRequest(struct mg_connection* conn, enum mg_event ev) {
     return pimpl_->HttpRequest(conn, ev);
 }
 
-void ServiceBroker::HttpPause(void) {
-    pimpl_->HttpPause();
-}
-
-void ServiceBroker::HttpResume(void) {
-    pimpl_->HttpResume();
+void ServiceBroker::HttpNotify(const Http::Message& msg) {
+    pimpl_->HttpNotify(msg);
 }
 
 v8::Local<v8::Object> ServiceBroker::request_trigger(v8::Isolate* isolate) const {
@@ -57,7 +52,6 @@ ServiceBroker::Impl::Impl(boost::asio::io_service& io_service
                           , int port)
     : env_(io_service, basepath, port)
     , storage_(env_.storage())
-    , http_paused_(false)
     , req_manager_(&env_, http_)
     , ws_manager_(&env_, http_) {
 
@@ -65,7 +59,7 @@ ServiceBroker::Impl::Impl(boost::asio::io_service& io_service
     //v8::Isolate::Scope isolate_scope(isolate);
     //v8::HandleScope handle_scope(isolate);
 
-    
+
 
 
     v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
@@ -91,36 +85,23 @@ ServiceBroker::Impl::Impl(boost::asio::io_service& io_service
 
 
 
-    if (false) {
-        context_->Global()->Set(
-            v8::String::NewFromUtf8(isolate, "http")
-            , Http::ServerTemplate::NewInstance(&env_)
-            , Http::kAttribute);
-    } else {
+    //v8::Local<v8::Object> http = Http::ObjectTemplate::NewInstance(isolate, this);
+    const v8::PropertyAttribute kAttribute = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
+    TemplateFactory& tf = env_.template_factory();
 
-        //v8::Local<v8::FunctionTemplate> ft = (env_.template_factory()).HttpObjectTemplate(isolate);
-        v8::Local<v8::FunctionTemplate> ft = Http::ObjectTemplate::Get(isolate);
-        v8::Local<v8::Function> f = ft->GetFunction();
-        v8::Local<v8::Object> http = f->NewInstance();
-        http->SetAlignedPointerInInternalField(0, this);
-        //this->AddRef();
-
-        
-
-        //v8::HandleScope handle_scope(context_->GetIsolate());
-        //v8::Isolate::Scope isolate_scope(isolate);
-        //v8::HandleScope handle_scope(isolate);
-
-        context_->Global()->Set(
+    v8::Local<v8::Object> http = tf.NewHttpObject(isolate, this);
+    http_.Reset(isolate, http);
+    context_->Global()->Set(
         v8::String::NewFromUtf8(isolate, "http")
         , http
-        , Http::kAttribute);
+        , kAttribute);
 
-
-        //http_.Reset(isolate, http);
-        //self_.MarkIndependent();
-        //self_.SetWeak(this, &WebSocket::Impl::WeakCallback);
-    }
+    v8::Local<v8::Object> device = tf.NewDevice(isolate, this);
+    device_.Reset(isolate, device);
+    context_->Global()->Set(
+        v8::String::NewFromUtf8(isolate, "device")
+        , device
+        , kAttribute);
 
 
 
@@ -157,10 +138,6 @@ void ServiceBroker::Impl::RunShell(void) {
 
 int ServiceBroker::Impl::HttpRequest(struct mg_connection* conn, enum mg_event ev) {
 
-    if (http_paused_) {
-        return MG_FALSE;
-    }
-
     if (ev == MG_REQUEST) {
         if (conn->is_websocket == 0) {
             Http::Response res = req_manager_.HandleRequest(conn);
@@ -178,15 +155,9 @@ int ServiceBroker::Impl::HttpRequest(struct mg_connection* conn, enum mg_event e
     return MG_FALSE;
 }
 
-void ServiceBroker::Impl::HttpPause(void) {
-    http_paused_ = false;
+void ServiceBroker::Impl::HttpNotify(const Http::Message& msg) {
+    ws_manager_.DoNotify(msg);
 }
-
-void ServiceBroker::Impl::HttpResume(void) {
-    http_paused_ = true;
-}
-
-
 
 v8::Local<v8::Object> ServiceBroker::Impl::request_trigger(v8::Isolate* isolate) const {
     return req_manager_.request_trigger(isolate);

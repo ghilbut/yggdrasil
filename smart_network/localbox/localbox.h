@@ -1,7 +1,7 @@
 #ifndef LOCALBOX_H_
 #define LOCALBOX_H_
 
-#include "service_broker.h"
+#include "basebox/service_broker.h"
 #include "frontend/http_server.h"
 #include <v8.h>
 #include <boost/asio.hpp>
@@ -10,8 +10,8 @@
 #include <map>
 
 
-struct mg_connection;
 enum mg_event;
+struct mg_connection;
 
 class LocalBox {
 public:
@@ -57,6 +57,10 @@ private:
 
     typedef std::map<int, ServiceBroker*> ServiceMap;
     ServiceMap services_;
+
+
+
+    std::string rootpath_;
 };
 
 #endif  // LOCALBOX_H_

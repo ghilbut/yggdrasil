@@ -2,7 +2,6 @@
 #define HTTP_WEBSOCKET_IMPL_H_
 
 #include "base/ref_implement.h"
-#include "environ.h"
 #include <boost/asio.hpp>
 
 

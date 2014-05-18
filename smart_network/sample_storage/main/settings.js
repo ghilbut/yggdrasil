@@ -129,9 +129,12 @@ http.onwebsocket = function (sock) {
 http.onerror = function (error) {
 	print('error');
 };
-print(http.resume());
-
 
 print(http)
 print(http.constructor);
 print(http.constructor.prototpye);
+
+print('############################################');
+print(device);
+print(device.constructor);
+print(device.constructor.prototpye);

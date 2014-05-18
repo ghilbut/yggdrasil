@@ -1,6 +1,7 @@
 #ifndef SERVICE_BROKER_H_
 #define SERVICE_BROKER_H_
 
+#include "frontend/http_message.h"
 #include <v8.h>
 #include <boost/asio.hpp>
 #include <string>
@@ -19,8 +20,7 @@ public:
     void RunShell(void);
 
     int HttpRequest(struct mg_connection* conn, enum mg_event ev);
-    void HttpPause(void);
-    void HttpResume(void);
+    void HttpNotify(const Http::Message& msg);
 
     v8::Local<v8::Object> request_trigger(v8::Isolate* isolate) const;
     void set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger);
@@ -28,8 +28,8 @@ public:
     void set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger);
 
 
-private:
     class Impl;
+private:
     Impl* pimpl_;
 };
 
