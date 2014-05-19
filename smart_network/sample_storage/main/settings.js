@@ -138,3 +138,7 @@ print('############################################');
 print(device);
 print(device.constructor);
 print(device.constructor.prototpye);
+
+print(File);
+print(File.constructor);
+print(File.constructor.prototpye);

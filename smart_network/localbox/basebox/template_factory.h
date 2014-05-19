@@ -27,6 +27,7 @@ public:
     v8::Local<v8::FunctionTemplate> ChannelTemplate(v8::Isolate* isolate) const;
     v8::Local<v8::Object> NewChannel(v8::Isolate* isolate, void* opaque) const;
 
+
 private:
     v8::Persistent<v8::ObjectTemplate> http_req_header_;
     v8::Persistent<v8::FunctionTemplate> http_request_;

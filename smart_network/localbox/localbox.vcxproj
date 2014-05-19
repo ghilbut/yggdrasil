@@ -91,6 +91,7 @@
     <ClCompile Include="base\ref_implement.cpp" />
     <ClCompile Include="base_object\channel_template.cpp" />
     <ClCompile Include="base_object\device_template.cpp" />
+    <ClCompile Include="base_object\file_object.cpp" />
     <ClCompile Include="base_object\service_template.cpp" />
     <ClCompile Include="frontend\http_message_impl.cpp" />
     <ClCompile Include="frontend\http_object_template.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="base\ref_object.h" />
     <ClInclude Include="base_object\channel_template.h" />
     <ClInclude Include="base_object\device_template.h" />
+    <ClInclude Include="base_object\file_object.h" />
     <ClInclude Include="base_object\service_template.h" />
     <ClInclude Include="frontend\http_forward.h" />
     <ClInclude Include="frontend\http_message.h" />

@@ -1,5 +1,6 @@
 #include "service_broker_impl.h"
 
+#include "base_object/file_object.h"
 #include "frontend/http_object_template.h"
 #include "frontend/http_request.h"
 #include "storage.h"
@@ -71,6 +72,20 @@ ServiceBroker::Impl::Impl(boost::asio::io_service& io_service
 
 
 
+
+
+    const v8::PropertyAttribute kAttribute = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
+    TemplateFactory& tf = env_.template_factory();
+
+    //v8::Local<v8::Object> file = tf.FileTemplate(isolate);
+    //global->Set(v8::String::NewFromUtf8(isolate, "File"), tf.FileTemplate(isolate));
+    //global->Set(isolate, "File", v8::FunctionTemplate::New(isolate, FileTemplate::Constructor));
+    global->Set(isolate, "File", FileTemplate::New(isolate));
+
+
+
+
+
     isolate->SetData(0, &env_);
 
     context_ = v8::Context::New(isolate, NULL, global);
@@ -85,10 +100,6 @@ ServiceBroker::Impl::Impl(boost::asio::io_service& io_service
 
 
 
-    //v8::Local<v8::Object> http = Http::ObjectTemplate::NewInstance(isolate, this);
-    const v8::PropertyAttribute kAttribute = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-    TemplateFactory& tf = env_.template_factory();
-
     v8::Local<v8::Object> http = tf.NewHttpObject(isolate, this);
     http_.Reset(isolate, http);
     context_->Global()->Set(
@@ -102,6 +113,8 @@ ServiceBroker::Impl::Impl(boost::asio::io_service& io_service
         v8::String::NewFromUtf8(isolate, "device")
         , device
         , kAttribute);
+
+    
 
 
 

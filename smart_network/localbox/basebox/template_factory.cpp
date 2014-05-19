@@ -10,6 +10,8 @@
 #include "base_object/service_template.h"
 #include "base_object/channel_template.h"
 
+#include "base_object/file_object.h"
+
 
 static v8::Local<v8::Object> NewObject(v8::Isolate* isolate, void* opaque
                                        , v8::Local<v8::FunctionTemplate>& ft) {
@@ -40,6 +42,9 @@ TemplateFactory::TemplateFactory(v8::Isolate* isolate) {
     service_.Reset(isolate, device);
     v8::Local<v8::FunctionTemplate> channel = ChannelTemplate::New(isolate);
     channel_.Reset(isolate, channel);
+
+    //
+    v8::Local<v8::FunctionTemplate> file_ = FileTemplate::New(isolate);
 }
 
 v8::Local<v8::FunctionTemplate> TemplateFactory::HttpRequestTemplate(v8::Isolate* isolate) const {
