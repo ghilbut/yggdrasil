@@ -2,7 +2,7 @@
 #include "http_websocket_impl.h"
 #include "http_websocket_template.h"
 #include "http_message.h"
-#include "basebox/device_host.h"
+#include "basebox/device.h"
 #include "basebox/template_factory.h"
 #include <mongoose.h>
 

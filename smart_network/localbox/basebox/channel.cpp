@@ -1,11 +1,11 @@
 #include "channel.h"
 #include "channel_ref.h"
 
-#include "device_host.h"
+#include "device.h"
 #include "template_factory.h"
 
 
-Channel::Channel(DeviceHost& device)
+Channel::Channel(Device& device)
     : RefImplement()
     , device_(device) {
     
@@ -36,7 +36,7 @@ ChannelRef::ChannelRef(void)
     // nothing
 }
 
-ChannelRef::ChannelRef(DeviceHost& device)
+ChannelRef::ChannelRef(Device& device)
     : impl_(new Channel(device)) {
     impl_->AddRef();
 }

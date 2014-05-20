@@ -1,6 +1,6 @@
 #include "localbox.h"
 #include "sample.h"
-#include "basebox/device_context.h"
+#include "basebox/device_ref.h"
 
 
 static int http_request_handler(struct mg_connection* conn, enum mg_event ev) {
@@ -50,11 +50,11 @@ LocalBox::LocalBox(const char* rootpath)
 
 
     
+    IOServiceRef io_service;
+    DeviceRef device(io_service, rootpath);
 
-
-
-    service0_ = new ServiceBroker(io_service_, rootpath);
-    service1_ = new ServiceBroker(io_service_, rootpath);
+    service0_ = new ServiceBroker(device);
+    service1_ = new ServiceBroker(device);
     //service2_ = new ServiceBroker(io_service_, rootpath);
 
     servers_.Create(81, boost::bind(&ServiceBroker::HttpRequest, service0_, _1, _2));

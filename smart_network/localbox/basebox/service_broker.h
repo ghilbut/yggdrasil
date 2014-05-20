@@ -9,12 +9,11 @@
 
 
 class Storage;
-class IOServiceRef;
+class DeviceRef;
 
 class ServiceBroker {
 public:
-    ServiceBroker(IOServiceRef& io_service
-                  , const char* basepath);
+    ServiceBroker(const DeviceRef& device_ref);
     ~ServiceBroker(void);
 
     void RunShell(void);

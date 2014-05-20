@@ -2,13 +2,13 @@
 #define CHANNEL_REF_H_
 
 
-class DeviceHost;
+class Device;
 class Channel;
 
 class ChannelRef {
 public:
     ChannelRef(void);
-    explicit ChannelRef(DeviceHost& device);
+    explicit ChannelRef(Device& device);
     explicit ChannelRef(const ChannelRef& other);
     ~ChannelRef(void);
 

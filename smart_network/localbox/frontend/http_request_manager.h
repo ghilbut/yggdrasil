@@ -2,7 +2,7 @@
 #define FRONT_END_HTTP_REQUEST_MANAGER_H_
 
 #include "http_response.h"
-#include "basebox/device_host_ref.h"
+#include "basebox/device_ref.h"
 #include <v8.h>
 #include <boost/thread.hpp>
 

@@ -3,7 +3,7 @@
 
 #include "service_broker.h"
 
-#include "basebox/device_host_ref.h"
+#include "basebox/device_ref.h"
 #include "frontend/http_request_manager.h"
 #include "frontend/http_websocket_manager.h"
 #include <v8.h>
@@ -15,8 +15,7 @@ class Storage;
 
 class ServiceBroker::Impl {
 public:
-    Impl(IOServiceRef& io_service
-         , const char* basepath);
+    Impl(const DeviceRef& device_ref);
     ~Impl(void);
 
     void RunShell(void);
@@ -34,7 +33,6 @@ public:
 
 
 private:
-    //DeviceHost device_host_;
     DeviceRef device_ref_;
 
     const Storage& storage_;

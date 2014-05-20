@@ -3,7 +3,7 @@
 #include "http_websocket_template.h"
 #include "http_message.h"
 
-#include "basebox/device_host.h"
+#include "basebox/device.h"
 #include "http_message.h"
 #include <mongoose.h>
 #include <boost/bind.hpp>

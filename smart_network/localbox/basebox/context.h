@@ -1,5 +1,5 @@
-#ifndef DEVICE_CONTEXT_H_
-#define DEVICE_CONTEXT_H_
+#ifndef CONTEXT_H_
+#define CONTEXT_H_
 
 #include "storage.h"
 #include "template_factory.h"
@@ -8,19 +8,14 @@
 #include <v8.h>
 
 
-class DeviceContext {
+class Context {
 public:
-    DeviceContext(const IOServiceRef& io_service
+    Context(const IOServiceRef& io_service
                   , const char* basepath);
-    ~DeviceContext(void);
+    ~Context(void);
 
     v8::Isolate* isolate(void) const;
     v8::Handle<v8::Context> context(void) const;
-
-
-
-    TemplateFactory& template_factory(void) const;
-    Storage& storage(void) const;
 
     template <typename F>
     inline void Post(const F& handler) {
@@ -34,14 +29,6 @@ private:
     v8::Isolate* isolate_;
     v8::Handle<v8::Context> context_;
     IOServiceRef io_service_;
-
-    mutable TemplateFactory template_factory_;
-
-
-    
-
-
-    mutable Storage storage_;
 };
 
-#endif  // DEVICE_CONTEXT_H_
+#endif  // CONTEXT_H_

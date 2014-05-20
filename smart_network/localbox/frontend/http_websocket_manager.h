@@ -2,7 +2,7 @@
 #define HTTP_WEBSOCKET_MANAGER_H_
 
 #include "http_websocket.h"
-#include "basebox/device_host_ref.h"
+#include "basebox/device_ref.h"
 #include <v8.h>
 #include <map>
 

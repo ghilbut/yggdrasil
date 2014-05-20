@@ -1,11 +1,11 @@
 #include "service.h"
 #include "service_ref.h"
 
-#include "device_host.h"
+#include "device.h"
 #include "template_factory.h"
 
 
-Service::Service(DeviceHost& device)
+Service::Service(Device& device)
     : RefImplement()
     , device_(device) {
     
@@ -31,7 +31,7 @@ ServiceRef::ServiceRef(void)
     // nothing
 }
 
-ServiceRef::ServiceRef(DeviceHost& device)
+ServiceRef::ServiceRef(Device& device)
     : impl_(new Service(device)) {
     impl_->AddRef();
 }

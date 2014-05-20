@@ -1,7 +1,7 @@
 #ifndef HTTP_WEBSOCKET_H_
 #define HTTP_WEBSOCKET_H_
 
-#include "basebox/device_host_ref.h"
+#include "basebox/device_ref.h"
 #include <v8.h>
 
 

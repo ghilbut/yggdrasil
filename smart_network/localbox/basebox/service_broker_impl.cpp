@@ -8,13 +8,12 @@
 #include "http.h"
 #include "template_factory.h"
 #include "http_server_template.h"
-#include "basebox/device_host.h"
+#include "basebox/device.h"
 #include <mongoose.h>
 
 
-ServiceBroker::ServiceBroker(IOServiceRef& io_service
-                             , const char* basepath)
-    : pimpl_(new ServiceBroker::Impl(io_service, basepath)) {
+ServiceBroker::ServiceBroker(const DeviceRef& device_ref)
+    : pimpl_(new ServiceBroker::Impl(device_ref)) {
     // nothing
 }
 
@@ -49,9 +48,8 @@ void ServiceBroker::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object
     pimpl_->set_open_trigger(isolate, trigger);
 }
 
-ServiceBroker::Impl::Impl(IOServiceRef& io_service
-                          , const char* basepath)
-    : device_ref_(io_service, basepath) //device_host_(io_service, basepath)
+ServiceBroker::Impl::Impl(const DeviceRef& device_ref)
+    : device_ref_(device_ref)
     , storage_(device_ref_->storage())
     , req_manager_(device_ref_, http_)
     , ws_manager_(device_ref_, http_) {
@@ -100,6 +98,8 @@ ServiceBroker::Impl::Impl(IOServiceRef& io_service
         true)) { //false)) {
             //return -1;
     }
+
+    //device_ref_->FireServiceLoaded(v8::Local<v8::Object>::New(isolate, self_));
 }
 
 ServiceBroker::Impl::~Impl(void) {

@@ -142,3 +142,8 @@ print(device.constructor.prototpye);
 print(File);
 print(File.constructor);
 print(File.constructor.prototpye);
+
+device.onload = function (service) {
+  print('======== device.onload ========');
+  print(service);
+};

@@ -70,10 +70,10 @@
     <ClCompile Include="base\io_service.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="basebox\device_context.cpp">
+    <ClCompile Include="basebox\context.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
-    <ClCompile Include="basebox\device_host.cpp">
+    <ClCompile Include="basebox\device.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,13 +173,13 @@
     <ClInclude Include="base\io_service_ref.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="basebox\device_context.h">
+    <ClInclude Include="basebox\context.h">
       <Filter>basebox</Filter>
     </ClInclude>
-    <ClInclude Include="basebox\device_host.h">
+    <ClInclude Include="basebox\device.h">
       <Filter>basebox</Filter>
     </ClInclude>
-    <ClInclude Include="basebox\device_host_ref.h">
+    <ClInclude Include="basebox\device_ref.h">
       <Filter>basebox</Filter>
     </ClInclude>
   </ItemGroup>

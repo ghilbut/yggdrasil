@@ -4,7 +4,7 @@
 #include "http_request_template.h"
 #include "http_response_template.h"
 #include "http_response_impl.h"
-#include "basebox/device_host.h"
+#include "basebox/device.h"
 #include "basebox/template_factory.h"
 #include <mongoose.h>
 

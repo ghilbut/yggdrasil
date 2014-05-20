@@ -1,8 +1,8 @@
-#ifndef DEVICE_HOST_REF_H_
-#define DEVICE_HOST_REF_H_
+#ifndef DEVICE_REF_H_
+#define DEVICE_REF_H_
 
 
-class DeviceHost;
+class Device;
 class IOServiceRef;
 
 class DeviceRef {
@@ -12,17 +12,17 @@ public:
     explicit DeviceRef(const DeviceRef& other);
     ~DeviceRef(void);
 
-    void Reset(DeviceHost* device);
+    void Reset(Device* device);
 
     DeviceRef& operator= (const DeviceRef& other);
     bool operator== (const DeviceRef& other) const;
     bool operator!= (const DeviceRef& other) const;
 
-    DeviceHost* operator-> (void) const;
+    Device* operator-> (void) const;
 
 
 private:
-    DeviceHost* impl_;
+    Device* impl_;
 };
 
-#endif  // DEVICE_HOST_REF_H_
+#endif  // DEVICE_REF_H_
