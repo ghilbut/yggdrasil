@@ -4,25 +4,32 @@
 #include "environ.h"
 
 
-Device::Device(Environ& env)
+/*DeviceHost::DeviceHost(IOServiceRef io_service, const char* basepath)
     : RefImplement()
-    , env_(env) {
+    , context_(io_service, basepath)
+    , template_factory_(context_.isolate()) {
+        // nothing
+}*/
+
+DeviceHost::DeviceHost(DeviceContext& context)
+    : RefImplement()
+    , context_(context) {
     
-    v8::Isolate* isolate = env_.isolate();
+    v8::Isolate* isolate = context_.isolate();
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    TemplateFactory& tf = env_.template_factory();
+    TemplateFactory& tf = context_.template_factory();
     self_.Reset(isolate, tf.NewDevice(isolate, this));
     this->AddRef();
 }
 
-Device::~Device(void) {
+DeviceHost::~DeviceHost(void) {
     // nothing
 }
 
-void Device::FireServiceLoaded() {
-    v8::Isolate* isolate = env_.isolate(); 
+void DeviceHost::FireServiceLoaded() {
+    v8::Isolate* isolate = context_.isolate(); 
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
@@ -35,8 +42,8 @@ void Device::FireServiceLoaded() {
     }
 }
 
-void Device::FireChannelOpend() {
-    v8::Isolate* isolate = env_.isolate(); 
+void DeviceHost::FireChannelOpend() {
+    v8::Isolate* isolate = context_.isolate(); 
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
@@ -49,23 +56,32 @@ void Device::FireChannelOpend() {
     }
 }
 
-v8::Local<v8::Object> Device::self(v8::Isolate* isolate) const {
+v8::Isolate* DeviceHost::isolate(void) const {
+    return context_.isolate();
+}
+
+TemplateFactory& DeviceHost::template_factory(void) const {
+    //return template_factory_;
+    return context_.template_factory();
+}
+
+v8::Local<v8::Object> DeviceHost::self(v8::Isolate* isolate) const {
     return v8::Local<v8::Object>::New(isolate, self_);
 }
 
-v8::Local<v8::Object> Device::service_load_trigger(v8::Isolate* isolate) const {
+v8::Local<v8::Object> DeviceHost::service_load_trigger(v8::Isolate* isolate) const {
     return v8::Local<v8::Object>::New(isolate, on_service_load_);
 }
 
-void Device::set_service_load_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+void DeviceHost::set_service_load_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
     on_service_load_.Reset(isolate, trigger);
 }
 
-v8::Local<v8::Object> Device::channel_open_trigger(v8::Isolate* isolate) const {
+v8::Local<v8::Object> DeviceHost::channel_open_trigger(v8::Isolate* isolate) const {
     return v8::Local<v8::Object>::New(isolate, on_channel_open_);
 }
 
-void Device::set_channel_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+void DeviceHost::set_channel_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
     on_channel_open_.Reset(isolate, trigger);
 }
 
@@ -78,8 +94,8 @@ DeviceRef::DeviceRef(void)
     // nothing
 }
 
-DeviceRef::DeviceRef(Environ& env)
-    : impl_(new Device(env)) {
+DeviceRef::DeviceRef(DeviceContext& context)
+    : impl_(new DeviceHost(context)) {
     impl_->AddRef();
 }
 
@@ -94,7 +110,7 @@ DeviceRef::~DeviceRef(void) {
     }
 }
 
-void DeviceRef::Reset(Device* device) {
+void DeviceRef::Reset(DeviceHost* device) {
     if (device) {
         device->AddRef();
     }
@@ -117,6 +133,6 @@ bool DeviceRef::operator!= (const DeviceRef& other) const {
     return (impl_ != other.impl_);
 }
 
-Device* DeviceRef::operator-> (void) const {
+DeviceHost* DeviceRef::operator-> (void) const {
     return impl_;
 }

@@ -4,15 +4,15 @@
 #include "environ.h"
 
 
-Channel::Channel(Environ& env)
+Channel::Channel(DeviceContext& context)
     : RefImplement()
-    , env_(env) {
+    , context_(context) {
     
-    v8::Isolate* isolate = env_.isolate();
+    v8::Isolate* isolate = context_.isolate();
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    TemplateFactory& tf = env_.template_factory();
+    TemplateFactory& tf = context_.template_factory();
     self_.Reset(isolate, tf.NewChannel(isolate, this));
     this->AddRef();
 }
@@ -35,8 +35,8 @@ ChannelRef::ChannelRef(void)
     // nothing
 }
 
-ChannelRef::ChannelRef(Environ& env)
-    : impl_(new Channel(env)) {
+ChannelRef::ChannelRef(DeviceContext& context)
+    : impl_(new Channel(context)) {
     impl_->AddRef();
 }
 

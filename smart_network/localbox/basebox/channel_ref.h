@@ -2,13 +2,13 @@
 #define CHANNEL_REF_H_
 
 
-class Environ;
+class DeviceContext;
 class Channel;
 
 class ChannelRef {
 public:
     ChannelRef(void);
-    explicit ChannelRef(Environ& env);
+    explicit ChannelRef(DeviceContext& context);
     explicit ChannelRef(const ChannelRef& other);
     ~ChannelRef(void);
 

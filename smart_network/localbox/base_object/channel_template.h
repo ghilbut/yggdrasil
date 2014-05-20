@@ -9,6 +9,11 @@ public:
     static v8::Local<v8::FunctionTemplate> New(v8::Isolate* isolate);
 
 private:
+    static void GetEventOpen(v8::Local<v8::String> property
+        , const v8::PropertyCallbackInfo<v8::Value>& info);
+    static void SetEventOpen(v8::Local<v8::String> property
+        , v8::Local<v8::Value> value
+        , const v8::PropertyCallbackInfo<void>& info);
     static void GetEventRecv(v8::Local<v8::String> property
         , const v8::PropertyCallbackInfo<v8::Value>& info);
     static void SetEventRecv(v8::Local<v8::String> property

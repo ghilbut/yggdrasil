@@ -13,8 +13,8 @@ WebSocket::WebSocket(void)
     // nothing
 }
 
-WebSocket::WebSocket(Environ* env, struct mg_connection* conn)
-    : pimpl_(Impl::New(env, conn)) {
+WebSocket::WebSocket(DeviceContext* context, struct mg_connection* conn)
+    : pimpl_(Impl::New(context, conn)) {
     if (pimpl_) {
         pimpl_->AddRef();
     }
@@ -84,16 +84,16 @@ void WebSocket::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>&
     }
 }
 
-WebSocket::Impl::Impl(Environ* env, struct mg_connection* conn)
+WebSocket::Impl::Impl(DeviceContext* context, struct mg_connection* conn)
     : RefImplement()
-    , env_(env)
+    , context_(context)
     , conn_(conn) {
 
-    v8::Isolate* isolate = env_->isolate();
+    v8::Isolate* isolate = context_->isolate();
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    TemplateFactory& tf = env_->template_factory();
+    TemplateFactory& tf = context_->template_factory();
     v8::Local<v8::Object> self = tf.NewHttpWebSocket(isolate, this);
     this->AddRef();
 
@@ -106,8 +106,8 @@ WebSocket::Impl::~Impl(void) {
     // nothing
 }
 
-WebSocket::Impl* WebSocket::Impl::New(Environ* env, struct mg_connection* conn) {
-    return new Impl(env, conn);
+WebSocket::Impl* WebSocket::Impl::New(DeviceContext* context, struct mg_connection* conn) {
+    return new Impl(context, conn);
 }
 
 void WebSocket::Impl::WeakCallback(const v8::WeakCallbackData<v8::Object, WebSocket::Impl>& data) {
@@ -121,7 +121,7 @@ void WebSocket::Impl::DoSend(const Message& msg) const {
 }
 
 void WebSocket::Impl::FireMessage(const Message& msg) const {
-    v8::Isolate* isolate = env_->isolate(); 
+    v8::Isolate* isolate = context_->isolate(); 
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
@@ -135,7 +135,7 @@ void WebSocket::Impl::FireMessage(const Message& msg) const {
 }
 
 void WebSocket::Impl::FireClosed(void) {
-    v8::Isolate* isolate = env_->isolate(); 
+    v8::Isolate* isolate = context_->isolate(); 
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
@@ -156,14 +156,14 @@ v8::Local<v8::Object> WebSocket::Impl::message_trigger(v8::Isolate* isolate) con
     return v8::Local<v8::Object>::New(isolate, on_message_);
 }
 void WebSocket::Impl::set_message_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
-    on_message_.Reset(env_->isolate(), trigger);
+    on_message_.Reset(context_->isolate(), trigger);
 }
 
 v8::Local<v8::Object> WebSocket::Impl::closed_trigger(v8::Isolate* isolate) const {
     return v8::Local<v8::Object>::New(isolate, on_closed_);
 }
 void WebSocket::Impl::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
-    on_closed_.Reset(env_->isolate(), trigger);
+    on_closed_.Reset(context_->isolate(), trigger);
 }
 
 }  // namespace Http

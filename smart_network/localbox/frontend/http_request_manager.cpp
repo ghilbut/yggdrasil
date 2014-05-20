@@ -10,8 +10,8 @@
 
 namespace Http {
 
-RequestManager::RequestManager(Environ* env, v8::Persistent<v8::Object>& caller) 
-    : env_(env)
+RequestManager::RequestManager(DeviceContext* context, v8::Persistent<v8::Object>& caller) 
+    : context_(context)
     , caller_(caller) {
     // nothing
 }
@@ -25,7 +25,7 @@ Response RequestManager::HandleRequest(struct mg_connection *conn) {
 
     void (boost::promise<Response>::*setter)(const Response&) = &boost::promise<Response>::set_value;
     boost::function<void(const Response&)> promise_setter = boost::bind(setter, &promise, _1);
-    env_->Post(boost::bind(&RequestManager::event_request, this, conn, promise_setter));
+    context_->Post(boost::bind(&RequestManager::event_request, this, conn, promise_setter));
 
     return promise.get_future().get();
 }
@@ -39,11 +39,11 @@ void RequestManager::set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Ob
 }
 
 void RequestManager::event_request(struct mg_connection *conn, boost::function<void(const Response&)> ret_setter) {
-    v8::Isolate* isolate = env_->isolate();
+    v8::Isolate* isolate = context_->isolate();
     v8::Isolate::Scope isolatescope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    TemplateFactory& tf = env_->template_factory();
+    TemplateFactory& tf = context_->template_factory();
 
     v8::Local<v8::Object> obj = v8::Local<v8::Object>::New(isolate, on_request_);
     if (obj.IsEmpty() || !obj->IsFunction() || !obj->IsCallable()) {

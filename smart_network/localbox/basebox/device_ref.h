@@ -2,27 +2,27 @@
 #define DEVICE_REF_H_
 
 
-class Environ;
-class Device;
+class DeviceContext;
+class DeviceHost;
 
 class DeviceRef {
 public:
     DeviceRef(void);
-    explicit DeviceRef(Environ& env);
+    explicit DeviceRef(DeviceContext& context);
     explicit DeviceRef(const DeviceRef& other);
     ~DeviceRef(void);
 
-    void Reset(Device* device);
+    void Reset(DeviceHost* device);
 
     DeviceRef& operator= (const DeviceRef& other);
     bool operator== (const DeviceRef& other) const;
     bool operator!= (const DeviceRef& other) const;
 
-    Device* operator-> (void) const;
+    DeviceHost* operator-> (void) const;
 
 
 private:
-    Device* impl_;
+    DeviceHost* impl_;
 };
 
 #endif  // DEVICE_REF_H_

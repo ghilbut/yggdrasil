@@ -9,12 +9,12 @@
 
 
 class Storage;
+class IOServiceRef;
 
 class ServiceBroker {
 public:
-    ServiceBroker(boost::asio::io_service& io_service
-                  , const char* basepath
-                  , int port);
+    ServiceBroker(IOServiceRef& io_service
+                  , const char* basepath);
     ~ServiceBroker(void);
 
     void RunShell(void);

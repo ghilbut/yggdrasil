@@ -6,14 +6,14 @@
 #include <boost/thread.hpp>
 
 
-class Environ;
+class DeviceContext;
 struct mg_connection;
 
 namespace Http {
 
 class RequestManager {
 public:
-    RequestManager(Environ* env, v8::Persistent<v8::Object>& caller);
+    RequestManager(DeviceContext* context, v8::Persistent<v8::Object>& caller);
     ~RequestManager(void);
 
     Response HandleRequest(struct mg_connection *conn);
@@ -26,7 +26,7 @@ private:
 
 
 private:
-    Environ* env_;
+    DeviceContext* context_;
 
     v8::Persistent<v8::Object>& caller_;
     v8::Persistent<v8::Object> on_request_;

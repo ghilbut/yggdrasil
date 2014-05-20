@@ -5,16 +5,16 @@
 #include <v8.h>
 
 
-class Environ;
+class DeviceContext;
 
 class Service : public RefImplement {
 public:
-    Service(Environ& env);
+    Service(DeviceContext& context);
     ~Service(void);
 
 
 private:
-    Environ& env_;
+    DeviceContext& context_;
     v8::Persistent<v8::Object> self_;
 };
 

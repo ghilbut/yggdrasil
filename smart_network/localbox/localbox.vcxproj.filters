@@ -72,6 +72,10 @@
     <ClCompile Include="base_object\file_object.cpp">
       <Filter>base_object</Filter>
     </ClCompile>
+    <ClCompile Include="server_manager.cpp" />
+    <ClCompile Include="base\io_service.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
@@ -170,6 +174,13 @@
     </ClInclude>
     <ClInclude Include="base_object\file_object.h">
       <Filter>base_object</Filter>
+    </ClInclude>
+    <ClInclude Include="server_manager.h" />
+    <ClInclude Include="base\io_service.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\io_service_ref.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

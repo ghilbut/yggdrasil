@@ -1,40 +1,47 @@
-#ifndef ENVIRON_H_
-#define ENVIRON_H_
+#ifndef DEVICE_CONTEXT_H_
+#define DEVICE_CONTEXT_H_
 
 #include "storage.h"
 #include "template_factory.h"
+#include "base/io_service.h"
+#include "base/io_service_ref.h"
 #include <v8.h>
-#include <boost/asio.hpp>
 
 
-class Environ {
+class DeviceContext {
 public:
-    Environ(boost::asio::io_service& io_service
-        , const char* basepath
-        , int port);
-    ~Environ(void);
+    DeviceContext(IOServiceRef& io_service
+                  , const char* basepath);
+    ~DeviceContext(void);
 
-    boost::asio::io_service& io_service(void) const;
     v8::Isolate* isolate(void) const;
+    v8::Handle<v8::Context> context(void) const;
+
+
+
     TemplateFactory& template_factory(void) const;
     Storage& storage(void) const;
-    int port(void) const;
 
     template <typename F>
-    inline void Post(const F& handler) {
-        strand_.post(handler);
+    void Post(const F& handler) {
+        io_service_->Post(handler);
     }
 
-private:
-    boost::asio::io_service& io_service_;
-    boost::asio::strand strand_;
 
+private:
+    class Wrapper;
+    Wrapper* wrap_;
     v8::Isolate* isolate_;
-    v8::Isolate::Scope isolate_scope_;
-    v8::HandleScope handle_scope_;
+    v8::Handle<v8::Context> context_;
+    IOServiceRef io_service_;
+
     mutable TemplateFactory template_factory_;
+
+
+    
+
+
     mutable Storage storage_;
-    const int port_;
 };
 
-#endif  // ENVIRON_H_
+#endif  // DEVICE_CONTEXT_H_

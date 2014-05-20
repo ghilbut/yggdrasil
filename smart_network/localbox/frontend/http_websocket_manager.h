@@ -16,7 +16,7 @@ class WebSocket;
 
 class WebSocketManager {
 public:
-    WebSocketManager(Environ* env, v8::Persistent<v8::Object>& caller);
+    WebSocketManager(DeviceContext* context, v8::Persistent<v8::Object>& caller);
     ~WebSocketManager(void);
 
     void HandleMessage(mg_connection* conn);
@@ -37,7 +37,7 @@ private:
 
 
 private:
-    Environ* env_;
+    DeviceContext* context_;
 
     v8::Persistent<v8::Object>& caller_;
     v8::Persistent<v8::Object> on_open_;

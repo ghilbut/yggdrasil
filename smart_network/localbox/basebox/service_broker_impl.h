@@ -15,9 +15,8 @@ class Storage;
 
 class ServiceBroker::Impl {
 public:
-    Impl(boost::asio::io_service& io_service
-         , const char* basepath
-         , int port);
+    Impl(IOServiceRef& io_service
+         , const char* basepath);
     ~Impl(void);
 
     void RunShell(void);
@@ -35,12 +34,9 @@ public:
 
 
 private:
-    Environ env_;
+    DeviceContext context_;
 
     const Storage& storage_;
-    v8::Handle<v8::Context> context_;
-
-
 
     Http::RequestManager req_manager_;
     Http::WebSocketManager ws_manager_;

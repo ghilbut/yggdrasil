@@ -1,40 +1,78 @@
 #include "environ.h"
 
+#include "base_object/file_object.h"
+#include "sample.h"
 
-Environ::Environ(boost::asio::io_service& io_service
-                 , const char* basepath
-                 , int port)
-    : io_service_(io_service)
-    , strand_(io_service_)
-    , isolate_(v8::Isolate::New())
+
+class DeviceContext::Wrapper{
+public:
+    Wrapper(void);
+    ~Wrapper(void) {}
+
+    v8::Isolate* isolate_;
+    v8::Isolate::Scope isolate_scope_;
+    v8::HandleScope handle_scope_;
+};
+
+DeviceContext::Wrapper::Wrapper(void)
+    : isolate_(v8::Isolate::New())
     , isolate_scope_(isolate_)
-    , handle_scope_(isolate_)
-    , template_factory_(isolate_)
-    , storage_(basepath)
-    , port_(port) {
+    , handle_scope_(isolate_) {
     // nothing
 }
 
-Environ::~Environ(void) {
+
+
+DeviceContext::DeviceContext(IOServiceRef& io_service
+                             , const char* basepath)
+    : wrap_(new Wrapper())
+    , isolate_(wrap_->isolate_)    
+    , template_factory_(isolate_)
+    , io_service_(io_service)
+    , storage_(basepath) {
+    
+
+
+
+    v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate_);
+    global->Set(v8::String::NewFromUtf8(isolate_, "print"), v8::FunctionTemplate::New(isolate_, Print));
+    global->Set(v8::String::NewFromUtf8(isolate_, "read"), v8::FunctionTemplate::New(isolate_, Read));
+    global->Set(v8::String::NewFromUtf8(isolate_, "load"), v8::FunctionTemplate::New(isolate_, Load));
+    global->Set(v8::String::NewFromUtf8(isolate_, "quit"), v8::FunctionTemplate::New(isolate_, Quit));
+    global->Set(v8::String::NewFromUtf8(isolate_, "version"), v8::FunctionTemplate::New(isolate_, Version));
+
+    global->Set(isolate_, "File", FileTemplate::New(isolate_));
+
+    //isolate->SetData(0, &env_);
+
+    context_ = v8::Context::New(isolate_, NULL, global);
+
+    context_->Enter();
+}
+
+DeviceContext::~DeviceContext(void) {
+    context_->Exit();
+    delete wrap_;
     isolate_->Dispose();
 }
 
-boost::asio::io_service& Environ::io_service(void) const {
-    return io_service_;
-}
-
-v8::Isolate* Environ::isolate(void) const {
+v8::Isolate* DeviceContext::isolate(void) const {
     return isolate_;
 }
 
-TemplateFactory& Environ::template_factory(void) const {
+v8::Handle<v8::Context> DeviceContext::context(void) const {
+    return context_;
+}
+
+TemplateFactory& DeviceContext::template_factory(void) const {
     return template_factory_;
 }
 
-Storage& Environ::storage(void) const {
+Storage& DeviceContext::storage(void) const {
     return storage_;
 }
 
-int Environ::port(void) const {
-    return port_;
-}
+/*template <typename F>
+void DeviceContext::Post(const F& handler) {
+    io_service_->Post(handler);
+}*/

@@ -22,6 +22,9 @@ v8::Local<v8::FunctionTemplate> ChannelTemplate::New(v8::Isolate* isolate) {
 
         v8::Local<v8::ObjectTemplate> ot = ft->InstanceTemplate();
         ot->SetInternalFieldCount(1);
+        ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onopen")
+            , &ChannelTemplate::GetEventOpen
+            , &ChannelTemplate::SetEventOpen);
         ot->SetAccessor(v8::String::NewFromUtf8(isolate, "onrecv")
             , &ChannelTemplate::GetEventRecv
             , &ChannelTemplate::SetEventRecv);
@@ -32,6 +35,15 @@ v8::Local<v8::FunctionTemplate> ChannelTemplate::New(v8::Isolate* isolate) {
             , v8::FunctionTemplate::New(isolate, &ChannelTemplate::Send));
 
         return ft;
+}
+
+void ChannelTemplate::GetEventOpen(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
+    //ServiceBroker::Impl* s = Unwrap(info);
+    //info.GetReturnValue().Set(s->request_trigger(info.GetIsolate()));
+}
+
+void ChannelTemplate::SetEventOpen(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
+    //Unwrap(info)->set_request_trigger(info.GetIsolate(), value->ToObject());
 }
 
 void ChannelTemplate::GetEventRecv(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {

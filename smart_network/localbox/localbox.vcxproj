@@ -88,6 +88,7 @@
     <ClCompile Include="basebox\service.cpp" />
     <ClCompile Include="basebox\service_broker_impl.cpp" />
     <ClCompile Include="basebox\template_factory.cpp" />
+    <ClCompile Include="base\io_service.cpp" />
     <ClCompile Include="base\ref_implement.cpp" />
     <ClCompile Include="base_object\channel_template.cpp" />
     <ClCompile Include="base_object\device_template.cpp" />
@@ -108,6 +109,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_channel.cpp" />
     <ClCompile Include="sample.cpp" />
+    <ClCompile Include="server_manager.cpp" />
     <ClCompile Include="storage.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +123,8 @@
     <ClInclude Include="basebox\service_broker_impl.h" />
     <ClInclude Include="basebox\service_ref.h" />
     <ClInclude Include="basebox\template_factory.h" />
+    <ClInclude Include="base\io_service.h" />
+    <ClInclude Include="base\io_service_ref.h" />
     <ClInclude Include="base\ref_implement.h" />
     <ClInclude Include="base\ref_object.h" />
     <ClInclude Include="base_object\channel_template.h" />
@@ -145,6 +149,7 @@
     <ClInclude Include="localbox.h" />
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="sample.h" />
+    <ClInclude Include="server_manager.h" />
     <ClInclude Include="storage.h" />
   </ItemGroup>
   <ItemGroup>

@@ -6,18 +6,18 @@
 
 
 template<typename T>
-static Device* Unwrap(T _t) {
+static DeviceHost* Unwrap(T _t) {
     v8::Local<v8::Object> object = _t.Holder();
     //v8::Handle<v8::External> wrap = v8::Handle<v8::External>::Cast(object->GetInternalField(0));
     //void* ptr = wrap->Value();
     //return static_cast<ServiceBroker*>(ptr);
-    return static_cast<Device*>(object->GetAlignedPointerFromInternalField(0));
+    return static_cast<DeviceHost*>(object->GetAlignedPointerFromInternalField(0));
 }
 
 v8::Local<v8::FunctionTemplate> DeviceTemplate::New(v8::Isolate* isolate) {
 
         v8::Local<v8::FunctionTemplate> ft = v8::FunctionTemplate::New(isolate);
-        ft->SetClassName(v8::String::NewFromUtf8(isolate, "Device"));
+        ft->SetClassName(v8::String::NewFromUtf8(isolate, "DeviceHost"));
 
         v8::Local<v8::ObjectTemplate> ot = ft->InstanceTemplate();
         ot->SetInternalFieldCount(1);
@@ -34,7 +34,7 @@ v8::Local<v8::FunctionTemplate> DeviceTemplate::New(v8::Isolate* isolate) {
 }
 
 void DeviceTemplate::GetEventServiceLoaded(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
-    //Device* d = Unwrap(info);
+    //DeviceHost* d = Unwrap(info);
     //info.GetReturnValue().Set(d->request_trigger(info.GetIsolate()));
 }
 

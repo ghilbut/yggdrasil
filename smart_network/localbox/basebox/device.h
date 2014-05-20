@@ -2,18 +2,24 @@
 #define DEVICE_H_
 
 #include "base/ref_implement.h"
+#include "base/io_service_ref.h"
 #include <v8.h>
 
 
-class Environ;
+class DeviceContext;
+class TemplateFactory;
 
-class Device : public RefImplement {
+class DeviceHost : public RefImplement {
 public:
-    Device(Environ& env);
-    ~Device(void);
+    //DeviceHost(IOServiceRef io_service, const char* basepath);
+    DeviceHost(DeviceContext& context);
+    ~DeviceHost(void);
 
     void FireServiceLoaded();
     void FireChannelOpend();
+
+    v8::Isolate* isolate(void) const;
+    TemplateFactory& template_factory(void) const;
 
 
 public: // for javascript template
@@ -25,10 +31,12 @@ public: // for javascript template
 
 
 private:
-    Environ& env_;
+    DeviceContext& context_;
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Object> on_service_load_;
     v8::Persistent<v8::Object> on_channel_open_;
+
+    //mutable TemplateFactory template_factory_;
 };
 
 #endif  // DEVICE_H_

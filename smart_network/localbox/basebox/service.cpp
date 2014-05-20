@@ -4,15 +4,15 @@
 #include "environ.h"
 
 
-Service::Service(Environ& env)
+Service::Service(DeviceContext& context)
     : RefImplement()
-    , env_(env) {
+    , context_(context) {
     
-    v8::Isolate* isolate = env_.isolate();
+    v8::Isolate* isolate = context_.isolate();
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    TemplateFactory& tf = env_.template_factory();
+    TemplateFactory& tf = context_.template_factory();
     self_.Reset(isolate, tf.NewDevice(isolate, this));
     this->AddRef();
 }
@@ -30,8 +30,8 @@ ServiceRef::ServiceRef(void)
     // nothing
 }
 
-ServiceRef::ServiceRef(Environ& env)
-    : impl_(new Service(env)) {
+ServiceRef::ServiceRef(DeviceContext& context)
+    : impl_(new Service(context)) {
     impl_->AddRef();
 }
 

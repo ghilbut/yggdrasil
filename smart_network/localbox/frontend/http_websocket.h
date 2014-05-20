@@ -4,8 +4,8 @@
 #include <v8.h>
 
 
-class Environ;
 struct mg_connection;
+class DeviceContext;
 
 namespace Http {
 
@@ -14,7 +14,7 @@ class Message;
 class WebSocket {
 public:
     WebSocket(void);
-    WebSocket(Environ* env, struct mg_connection* conn);
+    WebSocket(DeviceContext* context, struct mg_connection* conn);
     WebSocket(const WebSocket& other);
     ~WebSocket(void);
 
