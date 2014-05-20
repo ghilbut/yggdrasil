@@ -1,11 +1,11 @@
 #ifndef HTTP_WEBSOCKET_H_
 #define HTTP_WEBSOCKET_H_
 
+#include "basebox/device_host_ref.h"
 #include <v8.h>
 
 
 struct mg_connection;
-class DeviceContext;
 
 namespace Http {
 
@@ -14,7 +14,7 @@ class Message;
 class WebSocket {
 public:
     WebSocket(void);
-    WebSocket(DeviceContext* context, struct mg_connection* conn);
+    WebSocket(const DeviceRef& device, struct mg_connection* conn);
     WebSocket(const WebSocket& other);
     ~WebSocket(void);
 

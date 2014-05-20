@@ -5,11 +5,11 @@
 #include <v8.h>
 
 
-class DeviceContext;
+class DeviceHost;
 
 class Channel : public RefImplement {
 public:
-    Channel(DeviceContext& context);
+    Channel(DeviceHost& device);
     ~Channel(void);
 
     void FireServiceLoaded();
@@ -19,7 +19,7 @@ public:
 
 
 private:
-    DeviceContext& context_;
+    DeviceHost& device_;
     v8::Persistent<v8::Object> self_;
 };
 

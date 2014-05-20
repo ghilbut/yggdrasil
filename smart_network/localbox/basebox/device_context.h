@@ -10,7 +10,7 @@
 
 class DeviceContext {
 public:
-    DeviceContext(IOServiceRef& io_service
+    DeviceContext(const IOServiceRef& io_service
                   , const char* basepath);
     ~DeviceContext(void);
 
@@ -23,7 +23,7 @@ public:
     Storage& storage(void) const;
 
     template <typename F>
-    void Post(const F& handler) {
+    inline void Post(const F& handler) {
         io_service_->Post(handler);
     }
 

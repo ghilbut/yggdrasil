@@ -1,18 +1,19 @@
 #include "service.h"
 #include "service_ref.h"
 
-#include "environ.h"
+#include "device_host.h"
+#include "template_factory.h"
 
 
-Service::Service(DeviceContext& context)
+Service::Service(DeviceHost& device)
     : RefImplement()
-    , context_(context) {
+    , device_(device) {
     
-    v8::Isolate* isolate = context_.isolate();
+    v8::Isolate* isolate = device_.isolate();
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    TemplateFactory& tf = context_.template_factory();
+    TemplateFactory& tf = device_.template_factory();
     self_.Reset(isolate, tf.NewDevice(isolate, this));
     this->AddRef();
 }
@@ -30,8 +31,8 @@ ServiceRef::ServiceRef(void)
     // nothing
 }
 
-ServiceRef::ServiceRef(DeviceContext& context)
-    : impl_(new Service(context)) {
+ServiceRef::ServiceRef(DeviceHost& device)
+    : impl_(new Service(device)) {
     impl_->AddRef();
 }
 

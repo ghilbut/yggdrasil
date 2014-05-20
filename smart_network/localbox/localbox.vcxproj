@@ -83,8 +83,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="basebox\channel.cpp" />
-    <ClCompile Include="basebox\device.cpp" />
-    <ClCompile Include="basebox\environ.cpp" />
+    <ClCompile Include="basebox\device_context.cpp" />
+    <ClCompile Include="basebox\device_host.cpp" />
     <ClCompile Include="basebox\service.cpp" />
     <ClCompile Include="basebox\service_broker_impl.cpp" />
     <ClCompile Include="basebox\template_factory.cpp" />
@@ -115,9 +115,9 @@
   <ItemGroup>
     <ClInclude Include="basebox\channel.h" />
     <ClInclude Include="basebox\channel_ref.h" />
-    <ClInclude Include="basebox\device.h" />
-    <ClInclude Include="basebox\device_ref.h" />
-    <ClInclude Include="basebox\environ.h" />
+    <ClInclude Include="basebox\device_context.h" />
+    <ClInclude Include="basebox\device_host.h" />
+    <ClInclude Include="basebox\device_host_ref.h" />
     <ClInclude Include="basebox\service.h" />
     <ClInclude Include="basebox\service_broker.h" />
     <ClInclude Include="basebox\service_broker_impl.h" />

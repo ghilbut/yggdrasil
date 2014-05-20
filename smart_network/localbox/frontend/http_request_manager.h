@@ -2,18 +2,18 @@
 #define FRONT_END_HTTP_REQUEST_MANAGER_H_
 
 #include "http_response.h"
+#include "basebox/device_host_ref.h"
 #include <v8.h>
 #include <boost/thread.hpp>
 
 
-class DeviceContext;
 struct mg_connection;
 
 namespace Http {
 
 class RequestManager {
 public:
-    RequestManager(DeviceContext* context, v8::Persistent<v8::Object>& caller);
+    RequestManager(const DeviceRef& device, v8::Persistent<v8::Object>& caller);
     ~RequestManager(void);
 
     Response HandleRequest(struct mg_connection *conn);
@@ -26,7 +26,7 @@ private:
 
 
 private:
-    DeviceContext* context_;
+    DeviceRef device_;
 
     v8::Persistent<v8::Object>& caller_;
     v8::Persistent<v8::Object> on_request_;

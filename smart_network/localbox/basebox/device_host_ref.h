@@ -1,14 +1,14 @@
-#ifndef DEVICE_REF_H_
-#define DEVICE_REF_H_
+#ifndef DEVICE_HOST_REF_H_
+#define DEVICE_HOST_REF_H_
 
 
-class DeviceContext;
 class DeviceHost;
+class IOServiceRef;
 
 class DeviceRef {
 public:
     DeviceRef(void);
-    explicit DeviceRef(DeviceContext& context);
+    DeviceRef(const IOServiceRef& io_service, const char* basepath);
     explicit DeviceRef(const DeviceRef& other);
     ~DeviceRef(void);
 
@@ -25,4 +25,4 @@ private:
     DeviceHost* impl_;
 };
 
-#endif  // DEVICE_REF_H_
+#endif  // DEVICE_HOST_REF_H_

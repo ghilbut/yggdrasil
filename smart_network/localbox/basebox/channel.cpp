@@ -1,18 +1,19 @@
 #include "channel.h"
 #include "channel_ref.h"
 
-#include "environ.h"
+#include "device_host.h"
+#include "template_factory.h"
 
 
-Channel::Channel(DeviceContext& context)
+Channel::Channel(DeviceHost& device)
     : RefImplement()
-    , context_(context) {
+    , device_(device) {
     
-    v8::Isolate* isolate = context_.isolate();
+    v8::Isolate* isolate = device_.isolate();
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    TemplateFactory& tf = context_.template_factory();
+    TemplateFactory& tf = device_.template_factory();
     self_.Reset(isolate, tf.NewChannel(isolate, this));
     this->AddRef();
 }
@@ -35,8 +36,8 @@ ChannelRef::ChannelRef(void)
     // nothing
 }
 
-ChannelRef::ChannelRef(DeviceContext& context)
-    : impl_(new Channel(context)) {
+ChannelRef::ChannelRef(DeviceHost& device)
+    : impl_(new Channel(device)) {
     impl_->AddRef();
 }
 

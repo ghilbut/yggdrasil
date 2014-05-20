@@ -1,6 +1,6 @@
 #include "device_template.h"
 
-#include "basebox/device.h"
+#include "basebox/device_host.h"
 //#include "basebox/service_broker.h"
 //#include "basebox/service_broker_impl.h"
 

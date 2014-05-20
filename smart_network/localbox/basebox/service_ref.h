@@ -2,13 +2,13 @@
 #define SERVICE_REF_H_
 
 
-class DeviceContext;
+class DeviceHost;
 class Service;
 
 class ServiceRef {
 public:
     ServiceRef(void);
-    explicit ServiceRef(DeviceContext& context);
+    explicit ServiceRef(DeviceHost& device);
     explicit ServiceRef(const ServiceRef& other);
     ~ServiceRef(void);
 

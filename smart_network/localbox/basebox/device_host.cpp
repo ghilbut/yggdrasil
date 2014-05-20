@@ -1,26 +1,17 @@
-#include "device.h"
-#include "device_ref.h"
+#include "device_host.h"
+#include "device_host_ref.h"
 
-#include "environ.h"
+#include "device_context.h"
+#include "base_object/device_template.h"
 
 
-/*DeviceHost::DeviceHost(IOServiceRef io_service, const char* basepath)
+DeviceHost::DeviceHost(const IOServiceRef& io_service, const char* basepath)
     : RefImplement()
-    , context_(io_service, basepath)
-    , template_factory_(context_.isolate()) {
-        // nothing
-}*/
+    , context_(io_service, basepath) {
+    //, template_factory_(context_.isolate()) {
 
-DeviceHost::DeviceHost(DeviceContext& context)
-    : RefImplement()
-    , context_(context) {
-    
     v8::Isolate* isolate = context_.isolate();
-    v8::Isolate::Scope isolate_scope(isolate);
-    v8::HandleScope handle_scope(isolate);
-
-    TemplateFactory& tf = context_.template_factory();
-    self_.Reset(isolate, tf.NewDevice(isolate, this));
+    self_.Reset(isolate, context_.template_factory().NewDevice(isolate, this));
     this->AddRef();
 }
 
@@ -56,13 +47,26 @@ void DeviceHost::FireChannelOpend() {
     }
 }
 
+/*template <typename F>
+void DeviceHost::Post(const F& handler) {
+    context_.Post(handler);
+}*/
+
 v8::Isolate* DeviceHost::isolate(void) const {
     return context_.isolate();
+}
+
+v8::Handle<v8::Context> DeviceHost::context(void) const {
+    return context_.context();
 }
 
 TemplateFactory& DeviceHost::template_factory(void) const {
     //return template_factory_;
     return context_.template_factory();
+}
+
+Storage& DeviceHost::storage(void) const {
+    return context_.storage();
 }
 
 v8::Local<v8::Object> DeviceHost::self(v8::Isolate* isolate) const {
@@ -94,8 +98,8 @@ DeviceRef::DeviceRef(void)
     // nothing
 }
 
-DeviceRef::DeviceRef(DeviceContext& context)
-    : impl_(new DeviceHost(context)) {
+DeviceRef::DeviceRef(const IOServiceRef& io_service, const char* basepath) 
+    : impl_(new DeviceHost(io_service, basepath)) {
     impl_->AddRef();
 }
 

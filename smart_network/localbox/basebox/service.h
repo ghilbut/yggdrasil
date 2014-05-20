@@ -5,16 +5,16 @@
 #include <v8.h>
 
 
-class DeviceContext;
+class DeviceHost;
 
 class Service : public RefImplement {
 public:
-    Service(DeviceContext& context);
+    Service(DeviceHost& device);
     ~Service(void);
 
 
 private:
-    DeviceContext& context_;
+    DeviceHost& device_;
     v8::Persistent<v8::Object> self_;
 };
 

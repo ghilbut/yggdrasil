@@ -1,4 +1,4 @@
-#include "environ.h"
+#include "device_context.h"
 
 #include "base_object/file_object.h"
 #include "sample.h"
@@ -23,7 +23,7 @@ DeviceContext::Wrapper::Wrapper(void)
 
 
 
-DeviceContext::DeviceContext(IOServiceRef& io_service
+DeviceContext::DeviceContext(const IOServiceRef& io_service
                              , const char* basepath)
     : wrap_(new Wrapper())
     , isolate_(wrap_->isolate_)    
@@ -71,8 +71,3 @@ TemplateFactory& DeviceContext::template_factory(void) const {
 Storage& DeviceContext::storage(void) const {
     return storage_;
 }
-
-/*template <typename F>
-void DeviceContext::Post(const F& handler) {
-    io_service_->Post(handler);
-}*/

@@ -2,11 +2,11 @@
 #define HTTP_WEBSOCKET_MANAGER_H_
 
 #include "http_websocket.h"
+#include "basebox/device_host_ref.h"
 #include <v8.h>
 #include <map>
 
 
-class Environ;
 struct mg_connection;
 
 namespace Http {
@@ -16,7 +16,7 @@ class WebSocket;
 
 class WebSocketManager {
 public:
-    WebSocketManager(DeviceContext* context, v8::Persistent<v8::Object>& caller);
+    WebSocketManager(const DeviceRef& device, v8::Persistent<v8::Object>& caller);
     ~WebSocketManager(void);
 
     void HandleMessage(mg_connection* conn);
@@ -37,7 +37,7 @@ private:
 
 
 private:
-    DeviceContext* context_;
+    DeviceRef device_;
 
     v8::Persistent<v8::Object>& caller_;
     v8::Persistent<v8::Object> on_open_;

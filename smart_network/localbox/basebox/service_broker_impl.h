@@ -3,7 +3,7 @@
 
 #include "service_broker.h"
 
-#include "basebox/environ.h"
+#include "basebox/device_host_ref.h"
 #include "frontend/http_request_manager.h"
 #include "frontend/http_websocket_manager.h"
 #include <v8.h>
@@ -34,7 +34,8 @@ public:
 
 
 private:
-    DeviceContext context_;
+    //DeviceHost device_host_;
+    DeviceRef device_ref_;
 
     const Storage& storage_;
 

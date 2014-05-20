@@ -48,13 +48,7 @@
     <ClCompile Include="basebox\template_factory.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
-    <ClCompile Include="basebox\environ.cpp">
-      <Filter>basebox</Filter>
-    </ClCompile>
     <ClCompile Include="basebox\service_broker_impl.cpp">
-      <Filter>basebox</Filter>
-    </ClCompile>
-    <ClCompile Include="basebox\device.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
     <ClCompile Include="basebox\service.cpp">
@@ -75,6 +69,12 @@
     <ClCompile Include="server_manager.cpp" />
     <ClCompile Include="base\io_service.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="basebox\device_context.cpp">
+      <Filter>basebox</Filter>
+    </ClCompile>
+    <ClCompile Include="basebox\device_host.cpp">
+      <Filter>basebox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,9 +136,6 @@
     <ClInclude Include="base_object\service_template.h">
       <Filter>base_object</Filter>
     </ClInclude>
-    <ClInclude Include="basebox\environ.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
     <ClInclude Include="basebox\template_factory.h">
       <Filter>basebox</Filter>
     </ClInclude>
@@ -146,12 +143,6 @@
       <Filter>basebox</Filter>
     </ClInclude>
     <ClInclude Include="basebox\service_broker_impl.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
-    <ClInclude Include="basebox\device.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
-    <ClInclude Include="basebox\device_ref.h">
       <Filter>basebox</Filter>
     </ClInclude>
     <ClInclude Include="basebox\service.h">
@@ -181,6 +172,15 @@
     </ClInclude>
     <ClInclude Include="base\io_service_ref.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\device_context.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\device_host.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\device_host_ref.h">
+      <Filter>basebox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

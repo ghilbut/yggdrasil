@@ -5,7 +5,6 @@
 #include <boost/asio.hpp>
 
 
-class Environ;
 struct mg_connection;
 
 namespace Http {
@@ -16,11 +15,11 @@ class WebSocket::Impl : public RefImplement {
 private:
     static void WeakCallback(const v8::WeakCallbackData<v8::Object, Impl>& data);
 
-    Impl(DeviceContext* context, struct mg_connection* conn);
+    Impl(const DeviceRef& device, struct mg_connection* conn);
     ~Impl(void);
 
 public:
-    static Impl* New(DeviceContext* context, struct mg_connection* conn);
+    static Impl* New(const DeviceRef& device, struct mg_connection* conn);
 
     // methods
     void DoSend(const Message& msg) const;
@@ -36,7 +35,7 @@ public:
 
 
 private:
-    DeviceContext* context_;
+    DeviceRef device_;
     struct mg_connection* conn_;
 
     v8::Persistent<v8::Object> self_;

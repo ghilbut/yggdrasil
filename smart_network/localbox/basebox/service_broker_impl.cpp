@@ -7,6 +7,8 @@
 #include "sample.h"
 #include "http.h"
 #include "template_factory.h"
+#include "http_server_template.h"
+#include "basebox/device_host.h"
 #include <mongoose.h>
 
 
@@ -49,12 +51,12 @@ void ServiceBroker::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object
 
 ServiceBroker::Impl::Impl(IOServiceRef& io_service
                           , const char* basepath)
-    : context_(io_service, basepath)
-    , storage_(context_.storage())
-    , req_manager_(&context_, http_)
-    , ws_manager_(&context_, http_) {
+    : device_ref_(io_service, basepath) //device_host_(io_service, basepath)
+    , storage_(device_ref_->storage())
+    , req_manager_(device_ref_, http_)
+    , ws_manager_(device_ref_, http_) {
 
-    v8::Local<v8::Context> context = context_.context();
+    v8::Local<v8::Context> context = device_ref_->context();
     v8::Isolate* isolate = context->GetIsolate();
 
 
@@ -65,7 +67,7 @@ ServiceBroker::Impl::Impl(IOServiceRef& io_service
 
 
     const v8::PropertyAttribute kAttribute = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-    TemplateFactory& tf = context_.template_factory();
+    TemplateFactory& tf = device_ref_->template_factory();
 
     v8::Local<v8::Object> http = tf.NewHttpObject(isolate, this);
     http_.Reset(isolate, http);
@@ -105,8 +107,8 @@ ServiceBroker::Impl::~Impl(void) {
 }
 
 void ServiceBroker::Impl::RunShell(void) {
-    v8::HandleScope handle_scope(context_.isolate());
-    ::RunShell(context_.context());
+    v8::HandleScope handle_scope(device_ref_->isolate());
+    ::RunShell(device_ref_->context());
 }
 
 
