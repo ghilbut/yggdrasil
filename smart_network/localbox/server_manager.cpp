@@ -61,11 +61,11 @@ void ServerManager::thread_main(void) {
     alive_ = true;
     while (!stop_) {
 
+        mutex_.lock();
         if (!updates_.empty()) {
-            mutex_.lock();
             servers_.insert(updates_.begin(), updates_.end());
-            mutex_.unlock();
         }
+        mutex_.unlock();
 
         ServerMap::const_iterator itr = servers_.begin();
         ServerMap::const_iterator end = servers_.end();

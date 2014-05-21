@@ -3,7 +3,7 @@
 
 #include "server_manager.h"
 #include "base/io_service_ref.h"
-#include "basebox/service_broker.h"
+#include "basebox/service_ref.h"
 #include "frontend/http_server.h"
 #include <v8.h>
 #include <boost/asio.hpp>
@@ -15,6 +15,7 @@
 
 enum mg_event;
 struct mg_connection;
+class Service;
 
 class LocalBox {
 public:
@@ -39,9 +40,9 @@ private:
     IOServiceRef io_service_;
     ServerManager servers_;
 
-    ServiceBroker* service0_;
-    ServiceBroker* service1_;
-    ServiceBroker* service2_;
+    ServiceRef service0_;
+    ServiceRef service1_;
+    ServiceRef service2_;
 
 
     std::string rootpath_;    

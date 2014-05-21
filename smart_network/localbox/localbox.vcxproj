@@ -86,7 +86,6 @@
     <ClCompile Include="basebox\context.cpp" />
     <ClCompile Include="basebox\device.cpp" />
     <ClCompile Include="basebox\service.cpp" />
-    <ClCompile Include="basebox\service_broker_impl.cpp" />
     <ClCompile Include="basebox\template_factory.cpp" />
     <ClCompile Include="base\io_service.cpp" />
     <ClCompile Include="base\ref_implement.cpp" />
@@ -119,8 +118,6 @@
     <ClInclude Include="basebox\device.h" />
     <ClInclude Include="basebox\device_ref.h" />
     <ClInclude Include="basebox\service.h" />
-    <ClInclude Include="basebox\service_broker.h" />
-    <ClInclude Include="basebox\service_broker_impl.h" />
     <ClInclude Include="basebox\service_ref.h" />
     <ClInclude Include="basebox\template_factory.h" />
     <ClInclude Include="base\io_service.h" />
