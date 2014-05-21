@@ -48,12 +48,6 @@
     <ClCompile Include="basebox\template_factory.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
-    <ClCompile Include="basebox\service_broker_impl.cpp">
-      <Filter>basebox</Filter>
-    </ClCompile>
-    <ClCompile Include="basebox\service.cpp">
-      <Filter>basebox</Filter>
-    </ClCompile>
     <ClCompile Include="base_object\device_template.cpp">
       <Filter>base_object</Filter>
     </ClCompile>
@@ -74,6 +68,9 @@
       <Filter>basebox</Filter>
     </ClCompile>
     <ClCompile Include="basebox\device.cpp">
+      <Filter>basebox</Filter>
+    </ClCompile>
+    <ClCompile Include="basebox\service.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
   </ItemGroup>
@@ -139,15 +136,6 @@
     <ClInclude Include="basebox\template_factory.h">
       <Filter>basebox</Filter>
     </ClInclude>
-    <ClInclude Include="basebox\service_broker.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
-    <ClInclude Include="basebox\service_broker_impl.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
-    <ClInclude Include="basebox\service.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
     <ClInclude Include="basebox\service_ref.h">
       <Filter>basebox</Filter>
     </ClInclude>
@@ -180,6 +168,9 @@
       <Filter>basebox</Filter>
     </ClInclude>
     <ClInclude Include="basebox\device_ref.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\service.h">
       <Filter>basebox</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,16 +2,17 @@
 #define SERVICE_REF_H_
 
 
-class Device;
+class DeviceRef;
 class Service;
 
 class ServiceRef {
 public:
     ServiceRef(void);
-    explicit ServiceRef(Device& device);
+    explicit ServiceRef(const DeviceRef& device);
     explicit ServiceRef(const ServiceRef& other);
     ~ServiceRef(void);
 
+    Service* Get(void) const;
     void Reset(Service* service);
 
     ServiceRef& operator= (const ServiceRef& other);

@@ -1,6 +1,7 @@
 #include "localbox.h"
 #include "sample.h"
 #include "basebox/device_ref.h"
+#include "basebox/service.h"
 
 
 static int http_request_handler(struct mg_connection* conn, enum mg_event ev) {
@@ -50,27 +51,25 @@ LocalBox::LocalBox(const char* rootpath)
 
 
     
-    IOServiceRef io_service;
-    DeviceRef device(io_service, rootpath);
+    //IOServiceRef io_service;
+    DeviceRef device(io_service_, rootpath);
 
-    service0_ = new ServiceBroker(device);
-    service1_ = new ServiceBroker(device);
-    //service2_ = new ServiceBroker(io_service_, rootpath);
+    service0_ = ServiceRef(device);
+    service1_ = ServiceRef(device);
+    service2_ = ServiceRef(device);
 
-    servers_.Create(81, boost::bind(&ServiceBroker::HttpRequest, service0_, _1, _2));
-    servers_.Create(82, boost::bind(&ServiceBroker::HttpRequest, service1_, _1, _2));
+    servers_.Create(81, boost::bind(&Service::HttpRequest, service0_.Get(), _1, _2));
+    servers_.Create(82, boost::bind(&Service::HttpRequest, service1_.Get(), _1, _2));
+    servers_.Create(83, boost::bind(&Service::HttpRequest, service2_.Get(), _1, _2));
 }
 
 LocalBox::~LocalBox(void) {
 
     context_->Exit();
 
+    servers_.Destroy(83);
     servers_.Destroy(82);
     servers_.Destroy(81);
-
-    //delete service2_;
-    delete service1_;
-    delete service0_;
 }
 
 void LocalBox::RunShell(void) {
