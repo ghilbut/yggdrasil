@@ -14,8 +14,8 @@ WebSocket::WebSocket(void)
     // nothing
 }
 
-WebSocket::WebSocket(const DeviceRef& device, struct mg_connection* conn)
-    : pimpl_(Impl::New(device, conn)) {
+WebSocket::WebSocket(const DeviceRef& device, v8::Persistent<v8::Object>& service, struct mg_connection* conn)
+    : pimpl_(Impl::New(device, service, conn)) {
     if (pimpl_) {
         pimpl_->AddRef();
     }
@@ -85,10 +85,11 @@ void WebSocket::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>&
     }
 }
 
-WebSocket::Impl::Impl(const DeviceRef& device, struct mg_connection* conn)
+WebSocket::Impl::Impl(const DeviceRef& device, v8::Persistent<v8::Object>& service, struct mg_connection* conn)
     : RefImplement()
     , device_(device)
-    , conn_(conn) {
+    , conn_(conn)
+    , service_(service) {
 
     v8::Isolate* isolate = device_->isolate();
     v8::Isolate::Scope isolate_scope(isolate);
@@ -96,6 +97,7 @@ WebSocket::Impl::Impl(const DeviceRef& device, struct mg_connection* conn)
 
     TemplateFactory& tf = device_->template_factory();
     v8::Local<v8::Object> self = tf.NewHttpWebSocket(isolate, this);
+    self->Set(v8::String::NewFromUtf8(isolate, "service"), v8::Local<v8::Object>::New(isolate, service));
     this->AddRef();
 
     self_.Reset(isolate, self);
@@ -107,8 +109,8 @@ WebSocket::Impl::~Impl(void) {
     // nothing
 }
 
-WebSocket::Impl* WebSocket::Impl::New(const DeviceRef& device, struct mg_connection* conn) {
-    return new Impl(device, conn);
+WebSocket::Impl* WebSocket::Impl::New(const DeviceRef& device, v8::Persistent<v8::Object>& service, struct mg_connection* conn) {
+    return new Impl(device, service, conn);
 }
 
 void WebSocket::Impl::WeakCallback(const v8::WeakCallbackData<v8::Object, WebSocket::Impl>& data) {

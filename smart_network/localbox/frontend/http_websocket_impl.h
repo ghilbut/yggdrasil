@@ -15,11 +15,11 @@ class WebSocket::Impl : public RefImplement {
 private:
     static void WeakCallback(const v8::WeakCallbackData<v8::Object, Impl>& data);
 
-    Impl(const DeviceRef& device, struct mg_connection* conn);
+    Impl(const DeviceRef& device, v8::Persistent<v8::Object>& service, struct mg_connection* conn);
     ~Impl(void);
 
 public:
-    static Impl* New(const DeviceRef& device, struct mg_connection* conn);
+    static Impl* New(const DeviceRef& device, v8::Persistent<v8::Object>& service, struct mg_connection* conn);
 
     // methods
     void DoSend(const Message& msg) const;
@@ -41,6 +41,7 @@ private:
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Object> on_message_;
     v8::Persistent<v8::Object> on_closed_;
+    v8::Persistent<v8::Object>& service_;
 };
 
 }  // namespace Http

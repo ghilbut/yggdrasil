@@ -23,8 +23,7 @@ Context::Wrapper::Wrapper(void)
 
 
 
-Context::Context(const IOServiceRef& io_service
-                             , const char* basepath)
+Context::Context(const IOServiceRef& io_service, const char* basepath)
     : wrap_(new Wrapper())
     , isolate_(wrap_->isolate_)
     , io_service_(io_service) {

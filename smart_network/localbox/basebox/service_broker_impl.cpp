@@ -49,12 +49,12 @@ void ServiceBroker::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object
 }
 
 ServiceBroker::Impl::Impl(const DeviceRef& device_ref)
-    : device_ref_(device_ref)
-    , storage_(device_ref_->storage())
-    , req_manager_(device_ref_, http_)
-    , ws_manager_(device_ref_, http_) {
+    : device_(device_ref)
+    , storage_(device_->storage())
+    , req_manager_(device_, http_)
+    , ws_manager_(device_, self_, http_) {
 
-    v8::Local<v8::Context> context = device_ref_->context();
+    v8::Local<v8::Context> context = device_->context();
     v8::Isolate* isolate = context->GetIsolate();
 
 
@@ -65,23 +65,14 @@ ServiceBroker::Impl::Impl(const DeviceRef& device_ref)
 
 
     const v8::PropertyAttribute kAttribute = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-    TemplateFactory& tf = device_ref_->template_factory();
+    TemplateFactory& tf = device_->template_factory();
 
-    v8::Local<v8::Object> http = tf.NewHttpObject(isolate, this);
+    /*v8::Local<v8::Object> http = tf.NewHttpObject(isolate, this);
     http_.Reset(isolate, http);
     context->Global()->Set(
         v8::String::NewFromUtf8(isolate, "http")
         , http
-        , kAttribute);
-
-    v8::Local<v8::Object> device = tf.NewDevice(isolate, this);
-    device_.Reset(isolate, device);
-    context->Global()->Set(
-        v8::String::NewFromUtf8(isolate, "device")
-        , device
-        , kAttribute);
-
-    
+        , kAttribute);*/
 
 
 
@@ -99,7 +90,20 @@ ServiceBroker::Impl::Impl(const DeviceRef& device_ref)
             //return -1;
     }
 
-    //device_ref_->FireServiceLoaded(v8::Local<v8::Object>::New(isolate, self_));
+
+    v8::Local<v8::Object> self = tf.NewService(isolate, this);
+    
+
+    v8::Local<v8::Object> http = tf.NewHttpObject(isolate, this);
+    http_.Reset(isolate, http);
+    self->Set(
+        v8::String::NewFromUtf8(isolate, "http")
+        , http
+        , kAttribute);
+    http->Set(v8::String::NewFromUtf8(isolate, "service"), self, kAttribute);
+
+    device_->FireServiceLoad(self);
+    self_.Reset(isolate, self);
 }
 
 ServiceBroker::Impl::~Impl(void) {
@@ -107,8 +111,8 @@ ServiceBroker::Impl::~Impl(void) {
 }
 
 void ServiceBroker::Impl::RunShell(void) {
-    v8::HandleScope handle_scope(device_ref_->isolate());
-    ::RunShell(device_ref_->context());
+    v8::HandleScope handle_scope(device_->isolate());
+    ::RunShell(device_->context());
 }
 
 

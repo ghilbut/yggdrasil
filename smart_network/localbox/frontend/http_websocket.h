@@ -14,7 +14,7 @@ class Message;
 class WebSocket {
 public:
     WebSocket(void);
-    WebSocket(const DeviceRef& device, struct mg_connection* conn);
+    WebSocket(const DeviceRef& device, v8::Persistent<v8::Object>& service, struct mg_connection* conn);
     WebSocket(const WebSocket& other);
     ~WebSocket(void);
 

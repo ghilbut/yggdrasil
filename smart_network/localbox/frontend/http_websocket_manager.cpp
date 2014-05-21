@@ -11,8 +11,9 @@
 
 namespace Http {
 
-WebSocketManager::WebSocketManager(const DeviceRef& device, v8::Persistent<v8::Object>& caller) 
+WebSocketManager::WebSocketManager(const DeviceRef& device, v8::Persistent<v8::Object>& service, v8::Persistent<v8::Object>& caller) 
     : device_(device)
+    , service_(service)
     , caller_(caller) {
     // nothing
 }
@@ -96,7 +97,7 @@ void WebSocketManager::event_open(mg_connection* conn) {
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
 
-    WebSocket websocket(device_, conn);
+    WebSocket websocket(device_, service_, conn);
     websockets_[conn] = websocket;
 
     v8::Local<v8::Object> obj = v8::Local<v8::Object>::New(isolate, on_open_);

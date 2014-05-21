@@ -16,7 +16,7 @@ class WebSocket;
 
 class WebSocketManager {
 public:
-    WebSocketManager(const DeviceRef& device, v8::Persistent<v8::Object>& caller);
+    WebSocketManager(const DeviceRef& device, v8::Persistent<v8::Object>& service, v8::Persistent<v8::Object>& caller);
     ~WebSocketManager(void);
 
     void HandleMessage(mg_connection* conn);
@@ -38,6 +38,7 @@ private:
 
 private:
     DeviceRef device_;
+    v8::Persistent<v8::Object>& service_;
 
     v8::Persistent<v8::Object>& caller_;
     v8::Persistent<v8::Object> on_open_;

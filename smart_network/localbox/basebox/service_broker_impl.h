@@ -33,17 +33,15 @@ public:
 
 
 private:
-    DeviceRef device_ref_;
+    DeviceRef device_;
 
     const Storage& storage_;
 
     Http::RequestManager req_manager_;
     Http::WebSocketManager ws_manager_;
     
+    v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Object> http_;
-
-
-    v8::Persistent<v8::Object> device_;
 };
 
 #endif  // SERVICE_BROKER_IMPL_H_

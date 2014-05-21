@@ -16,7 +16,8 @@ public:
     Device(const IOServiceRef& io_service, const char* basepath);
     ~Device(void);
 
-    void FireServiceLoaded(v8::Local<v8::Object> service);
+    void FireServiceLoad(v8::Local<v8::Object> service);
+    void FireClosed(v8::Local<v8::Object> service);
 
     template <typename F>
     inline void Post(const F& handler) {
@@ -33,6 +34,8 @@ public: // for javascript template
     v8::Local<v8::Object> self(v8::Isolate* isolate) const;
     v8::Local<v8::Object> service_load_trigger(v8::Isolate* isolate) const;
     void set_service_load_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger);
+    v8::Local<v8::Object> closed_trigger(v8::Isolate* isolate) const;
+    void set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger);
 
 
 private:
@@ -42,6 +45,7 @@ private:
 
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Object> on_service_load_;
+    v8::Persistent<v8::Object> on_closed_;
 };
 
 #endif  // DEVICE_H_

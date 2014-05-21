@@ -1,6 +1,7 @@
 #include "device.h"
 #include "device_ref.h"
 
+#include "sample.h"
 #include "context.h"
 #include "base_object/device_template.h"
 
@@ -19,13 +20,28 @@ Device::Device(const IOServiceRef& io_service, const char* basepath)
     this->AddRef();
 
     context->Global()->Set(v8::String::NewFromUtf8(isolate, "device"), device);
+
+
+
+
+    v8::Handle<v8::String> source = ReadFile(isolate, storage_.settings());
+    if (source.IsEmpty()) {
+        //return -1;
+    }
+    if (!ExecuteString(isolate,
+        source,
+        v8::String::NewFromUtf8(isolate, storage_.settings()),
+        true, //false,
+        true)) { //false)) {
+            //return -1;
+    }
 }
 
 Device::~Device(void) {
     // nothing
 }
 
-void Device::FireServiceLoaded(v8::Local<v8::Object> service) {
+void Device::FireServiceLoad(v8::Local<v8::Object> service) {
     v8::Isolate* isolate = context_.isolate(); 
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
@@ -65,6 +81,14 @@ v8::Local<v8::Object> Device::service_load_trigger(v8::Isolate* isolate) const {
 
 void Device::set_service_load_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
     on_service_load_.Reset(isolate, trigger);
+}
+
+v8::Local<v8::Object> Device::closed_trigger(v8::Isolate* isolate) const {
+    return v8::Local<v8::Object>::New(isolate, on_closed_);
+}
+
+void Device::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+    on_closed_.Reset(isolate, trigger);
 }
 
 
