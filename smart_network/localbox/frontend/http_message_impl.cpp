@@ -47,10 +47,10 @@ size_t Message::data_len(void) const {
 }
 
 Message::Impl::Impl(const char* data, size_t data_len)
-    : RefImplement(1)
+    : RefObject()
     , data_(data) 
     , data_len_(data_len) {
-    // nothing
+    AddRef();
 }
 
 Message::Impl::~Impl(void) {

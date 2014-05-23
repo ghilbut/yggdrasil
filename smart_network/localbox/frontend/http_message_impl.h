@@ -1,13 +1,13 @@
 #ifndef HTTP_MESSAGE_IMPL_H_
 #define HTTP_MESSAGE_IMPL_H_
 
-#include "base/ref_implement.h"
+#include "base/ref_object.h"
 
 
 namespace Http {
 
 
-class Message::Impl : public RefImplement {
+class Message::Impl : public RefObject {
 public:
     Impl(void);
     Impl(const char* data, size_t data_len);

@@ -12,9 +12,6 @@
     <ClCompile Include="frontend\http_request_manager.cpp">
       <Filter>frontend</Filter>
     </ClCompile>
-    <ClCompile Include="base\ref_implement.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="frontend\http_request_template.cpp">
       <Filter>frontend</Filter>
     </ClCompile>
@@ -112,6 +109,9 @@
     <ClCompile Include="backend\network_manager.cpp">
       <Filter>backend</Filter>
     </ClCompile>
+    <ClCompile Include="base\ref_object.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
@@ -123,9 +123,6 @@
     </ClInclude>
     <ClInclude Include="frontend\http_request_manager.h">
       <Filter>frontend</Filter>
-    </ClInclude>
-    <ClInclude Include="base\ref_implement.h">
-      <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="frontend\http_request.h">
       <Filter>frontend</Filter>
@@ -265,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="backend\network_adapter.h">
       <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="base\ref_object.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

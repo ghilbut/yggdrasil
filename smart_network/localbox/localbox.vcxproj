@@ -100,7 +100,7 @@
     <ClCompile Include="basebox\service_manager.cpp" />
     <ClCompile Include="basebox\template_factory.cpp" />
     <ClCompile Include="base\io_service.cpp" />
-    <ClCompile Include="base\ref_implement.cpp" />
+    <ClCompile Include="base\ref_object.cpp" />
     <ClCompile Include="base\utility.cpp" />
     <ClCompile Include="base_object\channel_template.cpp" />
     <ClCompile Include="base_object\device_template.cpp" />
@@ -153,7 +153,7 @@
     <ClInclude Include="base\io_service.h" />
     <ClInclude Include="base\io_service_ref.h" />
     <ClInclude Include="base\reference.h" />
-    <ClInclude Include="base\ref_implement.h" />
+    <ClInclude Include="base\ref_object.h" />
     <ClInclude Include="base\utility.h" />
     <ClInclude Include="base_object\channel_template.h" />
     <ClInclude Include="base_object\device_template.h" />

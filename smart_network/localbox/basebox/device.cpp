@@ -7,7 +7,7 @@
 
 
 Device::Device(const IOServiceRef& io_service, const char* basepath)
-    : RefImplement()
+    : RefObject()
     , context_(io_service, basepath)
     , template_factory_(context_.isolate())
     , storage_(basepath) {

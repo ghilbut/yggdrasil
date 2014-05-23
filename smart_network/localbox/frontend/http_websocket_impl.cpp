@@ -86,7 +86,7 @@ void WebSocket::set_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>&
 }
 
 WebSocket::Impl::Impl(const DeviceRef& device, v8::Persistent<v8::Object>& service, struct mg_connection* conn)
-    : RefImplement()
+    : RefObject()
     , device_(device)
     , conn_(conn)
     , service_(service) {

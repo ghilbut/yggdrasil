@@ -79,7 +79,7 @@ void Response::Send(struct mg_connection* conn) const {
 }
 
 Response::Impl::Impl(void) 
-    : RefImplement()
+    : RefObject()
     , status_code_(200) {
     // nothing
 }

@@ -1,11 +1,11 @@
 #ifndef ROOT_STORAGE_H_
 #define ROOT_STORAGE_H_
 
-#include "base/ref_implement.h"
+#include "base/ref_object.h"
 #include <string>
 
 
-class RootStorage : public RefImplement {
+class RootStorage : public RefObject {
 public:
     RootStorage(const std::string& root);
     ~RootStorage(void);

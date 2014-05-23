@@ -4,7 +4,7 @@
 #include "basebox/device_ref.h"
 #include "frontend/http_request_manager.h"
 #include "frontend/http_websocket_manager.h"
-#include "base/ref_implement.h"
+#include "base/ref_object.h"
 #include <v8.h>
 
 
@@ -12,7 +12,7 @@ enum mg_event;
 struct mg_connection;
 class Storage;
 
-class Service : public RefImplement {
+class Service : public RefObject {
 public:
     Service(const DeviceRef& device_ref);
     ~Service(void);

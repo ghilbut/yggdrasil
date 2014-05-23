@@ -6,7 +6,7 @@
 
 
 Channel::Channel(Device& device)
-    : RefImplement()
+    : RefObject()
     , device_(device) {
     
     v8::Isolate* isolate = device_.isolate();

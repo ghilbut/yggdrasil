@@ -1,7 +1,7 @@
 #ifndef HTTP_WEBSOCKET_IMPL_H_
 #define HTTP_WEBSOCKET_IMPL_H_
 
-#include "base/ref_implement.h"
+#include "base/ref_object.h"
 #include <boost/asio.hpp>
 
 
@@ -11,7 +11,7 @@ namespace Http {
 
 class Message;
 
-class WebSocket::Impl : public RefImplement {
+class WebSocket::Impl : public RefObject {
 private:
     static void WeakCallback(const v8::WeakCallbackData<v8::Object, Impl>& data);
 

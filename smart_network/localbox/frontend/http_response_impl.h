@@ -1,7 +1,7 @@
 #ifndef HTTP_RESPONSE_IMPL_H_
 #define HTTP_RESPONSE_IMPL_H_
 
-#include "base/ref_implement.h"
+#include "base/ref_object.h"
 #include <v8.h>
 #include <map>
 #include <string>
@@ -14,7 +14,7 @@ namespace Http {
 
 class Request;
 
-class Response::Impl : public RefImplement {
+class Response::Impl : public RefObject {
 private:
     static void WeakCallback(const v8::WeakCallbackData<v8::Object, Response::Impl>& data);
     Impl(void);

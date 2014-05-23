@@ -49,6 +49,10 @@ public:
         return (t_ == 0);
     }
 
+    T* Get(void) const {
+        return t_;
+    }
+
     void Reset(T* t) {
         if (t) {
             t->AddRef();
@@ -60,6 +64,31 @@ public:
     }
 
 protected:
+    T* t_;
+};
+
+
+
+template<typename T>
+class Weak {
+public:
+    explicit Weak(const Reference<T>& r)
+        : t_(r.Get()) {
+        if (t_) {
+            t_->AddWeak();
+        }
+    }
+
+    virtual ~Weak(void) {
+        t_->ReleaseWeak();
+    }
+
+    Reference<T>& Lock(void) {
+        return Reference<T>(t_);
+    }
+
+
+private:
     T* t_;
 };
 

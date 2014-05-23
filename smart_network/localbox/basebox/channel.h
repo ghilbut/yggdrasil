@@ -1,13 +1,13 @@
 #ifndef CHANNEL_H_
 #define CHANNEL_H_
 
-#include "base/ref_implement.h"
+#include "base/ref_object.h"
 #include <v8.h>
 
 
 class Device;
 
-class Channel : public RefImplement {
+class Channel : public RefObject {
 public:
     Channel(Device& device);
     ~Channel(void);

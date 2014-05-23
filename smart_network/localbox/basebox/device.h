@@ -1,7 +1,7 @@
 #ifndef DEVICE_H_
 #define DEVICE_H_
 
-#include "base/ref_implement.h"
+#include "base/ref_object.h"
 #include "base/io_service_ref.h"
 #include "basebox/context.h"
 #include <v8.h>
@@ -11,7 +11,7 @@ class Storage;
 class DeviceContext;
 class TemplateFactory;
 
-class Device : public RefImplement {
+class Device : public RefObject {
 public:
     Device(const IOServiceRef& io_service, const char* basepath);
     ~Device(void);

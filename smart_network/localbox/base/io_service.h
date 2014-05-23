@@ -1,12 +1,12 @@
 #ifndef IO_SERVICE_H_
 #define IO_SERVICE_H_
 
-#include "ref_implement.h"
+#include "ref_object.h"
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 
 
-class IOService : public RefImplement {
+class IOService : public RefObject {
 public:
     IOService(void);
     ~IOService(void);
