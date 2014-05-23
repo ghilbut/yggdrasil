@@ -9,16 +9,17 @@ class DeviceRef {
 public:
     DeviceRef(void);
     DeviceRef(const IOServiceRef& io_service, const char* basepath);
-    explicit DeviceRef(const DeviceRef& other);
+    DeviceRef(const DeviceRef& other);
     ~DeviceRef(void);
-
-    void Reset(Device* device);
 
     DeviceRef& operator= (const DeviceRef& other);
     bool operator== (const DeviceRef& other) const;
     bool operator!= (const DeviceRef& other) const;
 
     Device* operator-> (void) const;
+
+    void Reset(Device* device);
+    bool IsNull(void) const;
 
 
 private:

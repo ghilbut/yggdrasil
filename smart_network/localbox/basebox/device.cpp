@@ -114,16 +114,6 @@ DeviceRef::~DeviceRef(void) {
     }
 }
 
-void DeviceRef::Reset(Device* device) {
-    if (device) {
-        device->AddRef();
-    }
-    if (impl_) {
-        impl_->Release();
-    }
-    impl_ = device;
-}
-
 DeviceRef& DeviceRef::operator= (const DeviceRef& other) {
     Reset(other.impl_);
     return *this;
@@ -139,4 +129,18 @@ bool DeviceRef::operator!= (const DeviceRef& other) const {
 
 Device* DeviceRef::operator-> (void) const {
     return impl_;
+}
+
+void DeviceRef::Reset(Device* device) {
+    if (device) {
+        device->AddRef();
+    }
+    if (impl_) {
+        impl_->Release();
+    }
+    impl_ = device;
+}
+
+bool DeviceRef::IsNull(void) const {
+    return (impl_ == 0);
 }

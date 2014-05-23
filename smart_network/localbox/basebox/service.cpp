@@ -107,20 +107,6 @@ ServiceRef::~ServiceRef(void) {
     }
 }
 
-Service* ServiceRef::Get(void) const {
-    return impl_;
-}
-
-void ServiceRef::Reset(Service* service) {
-    if (service) {
-        service->AddRef();
-    }
-    if (impl_) {
-        impl_->Release();
-    }
-    impl_ = service;
-}
-
 ServiceRef& ServiceRef::operator= (const ServiceRef& other) {
     Reset(other.impl_);
     return *this;
@@ -136,4 +122,22 @@ bool ServiceRef::operator!= (const ServiceRef& other) const {
 
 Service* ServiceRef::operator-> (void) const {
     return impl_;
+}
+
+Service* ServiceRef::Get(void) const {
+    return impl_;
+}
+
+void ServiceRef::Reset(Service* service) {
+    if (service) {
+        service->AddRef();
+    }
+    if (impl_) {
+        impl_->Release();
+    }
+    impl_ = service;
+}
+
+bool ServiceRef::IsNull(void) const {
+    return (impl_ == 0);
 }

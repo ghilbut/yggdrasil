@@ -1,6 +1,6 @@
 #include "http_request.h"
 #include "channel.h"
-#include <mongoose/mongoose.h>
+#include <mongoose.h>
 #include <json/json.h>
 
 

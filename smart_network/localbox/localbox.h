@@ -3,8 +3,10 @@
 
 #include "server_manager.h"
 #include "base/io_service_ref.h"
+#include "basebox/root_storage.h"
 #include "basebox/service_ref.h"
 #include "frontend/http_server.h"
+#include "backend/channel_delegate.h"
 #include <v8.h>
 #include <boost/asio.hpp>
 #include <boost/atomic.hpp>
@@ -15,9 +17,10 @@
 
 enum mg_event;
 struct mg_connection;
-class Service;
+class ServiceManager;
+class NetworkManager;
 
-class LocalBox {
+class LocalBox : public ChannelDelegate {
 public:
     LocalBox(const char* rootpath);
     ~LocalBox(void);
@@ -28,7 +31,11 @@ public:
 
 
 
-    void thread2_main(void);
+    // ChannelDelegate
+    virtual void OnConnected(const std::string& json, Channel* channel);
+    virtual void OnResponse(const std::string& json);
+    virtual void OnEvent(const std::string& text);
+    virtual void OnDisconnected(void);
 
 
 
@@ -45,7 +52,10 @@ private:
     ServiceRef service2_;
 
 
-    std::string rootpath_;    
+
+    RootStorage storage_;
+    ServiceManager* service_manager_;
+    NetworkManager* net_manager_;
 };
 
 #endif  // LOCALBOX_H_

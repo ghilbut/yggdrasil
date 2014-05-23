@@ -11,6 +11,8 @@ public:
     IOService(void);
     ~IOService(void);
 
+    boost::asio::io_service& IO(void);
+
     template <typename F>
     inline void Post(const F& handler) {
         strand_.post(handler);

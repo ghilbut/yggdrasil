@@ -16,6 +16,11 @@ IOService::~IOService(void) {
     thread_.join();
 }
 
+boost::asio::io_service& IOService::IO(void) {
+    return io_service_;
+}
+
+
 
 IOServiceRef::IOServiceRef(void)
     : impl_(new IOService()) {

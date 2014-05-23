@@ -1,6 +1,8 @@
 #include "localbox.h"
 #include <v8.h>
 
+#include <boost/filesystem.hpp>
+
 
 int main(const int argc, const char* argv[]) {
 

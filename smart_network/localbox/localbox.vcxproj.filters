@@ -73,6 +73,45 @@
     <ClCompile Include="basebox\service.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
+    <ClCompile Include="basebox\device_manager.cpp">
+      <Filter>basebox</Filter>
+    </ClCompile>
+    <ClCompile Include="basebox\root_storage.cpp">
+      <Filter>basebox</Filter>
+    </ClCompile>
+    <ClCompile Include="basebox\service_desc.cpp">
+      <Filter>basebox</Filter>
+    </ClCompile>
+    <ClCompile Include="basebox\service_manager.cpp">
+      <Filter>basebox</Filter>
+    </ClCompile>
+    <ClCompile Include="basebox\device_desc.cpp">
+      <Filter>basebox</Filter>
+    </ClCompile>
+    <ClCompile Include="base\utility.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\ssdp_ethernet_sender.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\ssdp_listener.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\ssdp_scheduler.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\tcp_adapter.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\tcp_channel.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\chat_message.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\network_manager.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
@@ -124,9 +163,6 @@
     <ClInclude Include="frontend\http_message_impl.h">
       <Filter>frontend</Filter>
     </ClInclude>
-    <ClInclude Include="base\ref_object.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="frontend\http_server.h">
       <Filter>frontend</Filter>
     </ClInclude>
@@ -173,6 +209,63 @@
     <ClInclude Include="basebox\service.h">
       <Filter>basebox</Filter>
     </ClInclude>
+    <ClInclude Include="basebox\device_manager.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\root_storage.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\service_desc.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\service_manager.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\device_desc.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="base\utility.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\reference.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="basebox\root_storage_ref.h">
+      <Filter>basebox</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\network_manager.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\ssdp_ethernet_sender.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\ssdp_listener.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\ssdp_scheduler.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\tcp_adapter.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\tcp_channel.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\boost_lib_fwd.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\channel.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\channel_delegate.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\chat_message.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\network_adapter.h">
+      <Filter>backend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -186,6 +279,9 @@
     </Filter>
     <Filter Include="basebox">
       <UniqueIdentifier>{fb29eb0e-071d-4fe9-8d09-74d1f9ec6991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="backend">
+      <UniqueIdentifier>{277b012d-ff44-4bb1-a85a-0d5df70c820b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
