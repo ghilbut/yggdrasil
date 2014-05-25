@@ -7,6 +7,10 @@
 
 class RootStorage : public RefObject {
 public:
+    static RootStorage* New(const std::string& basepath);
+    void Dispose(void);
+
+//private:
     RootStorage(const std::string& root);
     ~RootStorage(void);
 

@@ -3,6 +3,20 @@
 #include <boost/filesystem.hpp>
 
 
+RootStorage* RootStorage::New(const std::string& basepath) {
+
+    boost::filesystem::path common   = boost::filesystem::absolute("common", basepath);
+    boost::filesystem::path main     = boost::filesystem::absolute("main", basepath);
+    boost::filesystem::path devices  = boost::filesystem::absolute("devices", basepath);
+    boost::filesystem::path services = boost::filesystem::absolute("services", basepath);
+
+    RootStorage* retval = new RootStorage(basepath);
+    return retval;
+}
+
+void RootStorage::Dispose(void) {
+}
+
 RootStorage::RootStorage(const std::string& root)
     : root_(boost::filesystem::canonical(root).generic_string())
     , common_(boost::filesystem::canonical("common", root).generic_string())

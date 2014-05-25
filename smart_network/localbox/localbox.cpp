@@ -62,7 +62,6 @@ LocalBox::LocalBox(const char* rootpath)
 
 
 
-
     DeviceRef device(io_service_, rootpath);
 
     service0_ = ServiceRef(device);
@@ -78,6 +77,7 @@ LocalBox::LocalBox(const char* rootpath)
 
 
     
+
 
 
 
@@ -101,6 +101,14 @@ LocalBox::~LocalBox(void) {
     servers_.Destroy(83);
     servers_.Destroy(82);
     servers_.Destroy(81);
+
+    if (service_manager_) {
+        delete service_manager_;
+    }
+    if (net_manager_) {
+        net_manager_->Stop();
+        delete net_manager_;
+    }
 }
 
 void LocalBox::RunShell(void) {
