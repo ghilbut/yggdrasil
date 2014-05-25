@@ -4,13 +4,25 @@
 #include "sample.h"
 #include "context.h"
 #include "base_object/device_template.h"
+#include <json/json.h>
+#include <fstream>
 
 
-Device::Device(const IOServiceRef& io_service, const char* basepath)
+Device::Device(const IOServiceRef& io_service
+        , const boost::filesystem::path root
+        , const boost::filesystem::path script_root
+        , const boost::filesystem::path static_root
+        , const boost::filesystem::path tempate_root
+        , const boost::filesystem::path document_root)
     : RefObject()
-    , context_(io_service, basepath)
+    , context_(io_service, root_.string().c_str())
     , template_factory_(context_.isolate())
-    , storage_(basepath) {
+    , storage_(root_.string().c_str())
+    , root_(root)
+    , script_root_(script_root) 
+    , static_root_(static_root)
+    , tempate_root_(tempate_root)
+    , document_root_(document_root) {
 
     v8::Isolate* isolate = context_.isolate();
     v8::Local<v8::Context> context = context_.context();
@@ -99,7 +111,88 @@ DeviceRef::DeviceRef(void)
 }
 
 DeviceRef::DeviceRef(const IOServiceRef& io_service, const char* basepath) 
-    : impl_(new Device(io_service, basepath)) {
+    : impl_(0) {
+
+    boost::filesystem::path rootpath(basepath);
+    boost::filesystem::path settings = rootpath / "settings.json";
+
+
+    boost::filesystem::path script_root;
+    boost::filesystem::path static_root;
+    boost::filesystem::path template_root;
+    boost::filesystem::path document_root;
+
+    if (!boost::filesystem::exists(settings)) {
+        
+        std::ifstream fin(settings.string());
+        if (!fin.is_open()) {
+            // TODO(ghilbut): error handling
+            return;
+        }
+
+        Json::Value val;
+        Json::Value root;
+        Json::Reader reader;
+        if (!reader.parse(fin, root) || !root.isObject()) {
+            // TODO(ghilbut): error handling
+            return;
+        }
+
+        val = root.get("SCRIPT_ROOT", Json::Value(Json::nullValue));
+        if (!val.isString()) {
+            // TODO(ghilbut): error handling
+            return;
+        }
+        script_root = rootpath / val.asString();
+        if (!boost::filesystem::exists(script_root)
+            || !boost::filesystem::is_directory(script_root)) {
+           // TODO(ghilbut): error handling
+            return;
+        }
+
+        val = root.get("STATIC_ROOT", Json::Value(Json::nullValue));
+        if (!val.isString()) {
+            // TODO(ghilbut): error handling
+            return;
+        }
+        static_root = rootpath / val.asString();
+        if (!boost::filesystem::exists(static_root)
+            || !boost::filesystem::is_directory(static_root)) {
+           // TODO(ghilbut): error handling
+            return;
+        }
+
+        val = root.get("TEMPLATE_ROOT", Json::Value(Json::nullValue));
+        if (!val.isString()) {
+            // TODO(ghilbut): error handling
+            return;
+        }
+        template_root = rootpath / val.asString();
+        if (!boost::filesystem::exists(template_root)
+            || !boost::filesystem::is_directory(template_root)) {
+           // TODO(ghilbut): error handling
+            return;
+        }
+
+        val = root.get("DOCUMENT_ROOT", Json::Value(Json::nullValue));
+        if (!val.isString()) {
+            // TODO(ghilbut): error handling
+            return;
+        }
+        document_root = rootpath / val.asString();
+        if (!boost::filesystem::exists(document_root)
+            || !boost::filesystem::is_directory(document_root)) {
+           // TODO(ghilbut): error handling
+            return;
+        }
+    }
+
+    impl_ = new Device(io_service
+                       , rootpath
+                       , script_root
+                       , static_root
+                       , template_root
+                       , document_root);
     impl_->AddRef();
 }
 

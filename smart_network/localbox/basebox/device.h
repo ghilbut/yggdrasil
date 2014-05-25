@@ -5,6 +5,7 @@
 #include "base/io_service_ref.h"
 #include "basebox/context.h"
 #include <v8.h>
+#include <boost/filesystem.hpp>
 
 
 class Storage;
@@ -13,7 +14,12 @@ class TemplateFactory;
 
 class Device : public RefObject {
 public:
-    Device(const IOServiceRef& io_service, const char* basepath);
+    Device(const IOServiceRef& io_service
+        , const boost::filesystem::path root
+        , const boost::filesystem::path script_root
+        , const boost::filesystem::path static_root
+        , const boost::filesystem::path tempate_root
+        , const boost::filesystem::path document_root);
     ~Device(void);
 
     void FireServiceLoad(v8::Local<v8::Object> service);
@@ -46,6 +52,16 @@ private:
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Object> on_service_load_;
     v8::Persistent<v8::Object> on_closed_;
+
+
+
+
+    
+    boost::filesystem::path root_;
+    boost::filesystem::path script_root_;
+    boost::filesystem::path static_root_;
+    boost::filesystem::path tempate_root_;
+    boost::filesystem::path document_root_;
 };
 
 #endif  // DEVICE_H_
