@@ -28,6 +28,7 @@ bool Server::Create(void* server_param, mg_handler_t handler, int port) {
         return false;
     }
 
+    port_ = port;
     return true;
 }
 
@@ -42,6 +43,10 @@ int Server::Poll(int milliseconds) {
         return mg_poll_server(server_, milliseconds);
     }
     return 0;
+}
+
+int Server::port(void) const {
+    return port_;
 }
 
 }  // namespace Http

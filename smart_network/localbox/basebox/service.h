@@ -11,16 +11,19 @@
 enum mg_event;
 struct mg_connection;
 class Storage;
+class ServiceDesc;
 
 class Service : public RefObject {
 public:
-    Service(const DeviceRef& device_ref);
+    Service(const DeviceRef& device_ref, ServiceDesc* desc);
     ~Service(void);
 
     void RunShell(void);
 
     int HttpRequest(struct mg_connection* conn, enum mg_event ev);
     void HttpNotify(const Http::Message& msg);
+
+    const char* id(void) const;
 
     v8::Local<v8::Object> request_trigger(v8::Isolate* isolate) const;
     void set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger);
@@ -30,8 +33,8 @@ public:
 
 private:
     DeviceRef device_;
-
-    const Storage& storage_;
+    ServiceDesc* desc_;
+    //const Storage& storage_;
 
     Http::RequestManager req_manager_;
     Http::WebSocketManager ws_manager_;

@@ -1,5 +1,0 @@
-{
-  "id":"whisen",
-  "name":"Whisen",
-  "model":"FQ23LANW2NW"
-}

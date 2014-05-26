@@ -8,20 +8,22 @@
 #include <string>
 
 
-class RootStorage;
+class ServiceManagerDelegate;
 
 class ServiceManager {
 public:
-    ServiceManager(const IOServiceRef& io_service, const RootStorage& storage);
+    ServiceManager(DeviceManager& device_manager, ServiceManagerDelegate& delegate, const std::string& service_root);
     ~ServiceManager(void);
+
+    ServiceRef& operator[] (const std::string& id);
 
 
 private:
     typedef std::map<std::string, ServiceRef> ServiceMap;
     ServiceMap services_;
 
-    IOServiceRef io_service_;
-    DeviceManager device_manager_;
+    DeviceManager& device_manager_;
+    ServiceManagerDelegate& delegate_;
 };
 
 #endif  // SERVICE_MANAGER_H_

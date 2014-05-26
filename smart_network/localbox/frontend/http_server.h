@@ -16,8 +16,11 @@ public:
     void Destroy(void);
     int Poll(int milliseconds);
 
+    int port(void) const;
+
 private:
     boost::atomic<mg_server*> server_;
+    int port_;
 };
 
 }  // namespace Http

@@ -3,7 +3,8 @@
 
 #include "server_manager.h"
 #include "base/io_service_ref.h"
-#include "basebox/root_storage.h"
+//#include "basebox/root_storage.h"
+#include "basebox/service_manager_delegate.h"
 #include "basebox/service_ref.h"
 #include "frontend/http_server.h"
 #include "backend/channel_delegate.h"
@@ -17,10 +18,12 @@
 
 enum mg_event;
 struct mg_connection;
+class DeviceManager;
 class ServiceManager;
 class NetworkManager;
 
-class LocalBox : public ChannelDelegate {
+class LocalBox : public ChannelDelegate
+                 , public ServiceManagerDelegate {
 public:
     LocalBox(const char* rootpath);
     ~LocalBox(void);
@@ -31,12 +34,15 @@ public:
 
 
 
+    // ServiceManagerDelegate
+    virtual void OnServiceOpen(const ServiceRef& service);
+    virtual void OnServiceClosed(const ServiceRef& service);
+
     // ChannelDelegate
     virtual void OnConnected(const std::string& json, Channel* channel);
     virtual void OnResponse(const std::string& json);
     virtual void OnEvent(const std::string& text);
     virtual void OnDisconnected(void);
-
 
 
 private:
@@ -47,13 +53,7 @@ private:
     IOServiceRef io_service_;
     ServerManager servers_;
 
-    ServiceRef service0_;
-    ServiceRef service1_;
-    ServiceRef service2_;
-
-
-
-    RootStorage storage_;
+    DeviceManager* device_manager_;
     ServiceManager* service_manager_;
     NetworkManager* net_manager_;
 };

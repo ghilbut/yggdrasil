@@ -8,18 +8,20 @@
 #include <boost/filesystem.hpp>
 
 
-class Storage;
+struct mg_connection;
 class DeviceContext;
 class TemplateFactory;
 
 class Device : public RefObject {
 public:
     Device(const IOServiceRef& io_service
-        , const boost::filesystem::path root
-        , const boost::filesystem::path script_root
-        , const boost::filesystem::path static_root
-        , const boost::filesystem::path tempate_root
-        , const boost::filesystem::path document_root);
+        , const std::string& id
+        , const std::string& root
+        , const std::string& script_root
+        , const std::string& static_url
+        , const std::string& static_root
+        , const std::string& template_root
+        , const std::string& document_root);
     ~Device(void);
 
     void FireServiceLoad(v8::Local<v8::Object> service);
@@ -30,10 +32,16 @@ public:
         context_.Post(handler);
     }
 
+    bool IsStaticURI(const std::string& uri) const;
+    int SendStaticFile(mg_connection* conn) const;
+
     v8::Isolate* isolate(void) const;
     v8::Handle<v8::Context> context(void) const;
     TemplateFactory& template_factory(void) const;
-    Storage& storage(void) const;
+
+    const char* id(void) const;
+    const char* name(void) const;
+    const char* model(void) const;
 
 
 public: // for javascript template
@@ -47,7 +55,6 @@ public: // for javascript template
 private:
     Context context_;
     mutable TemplateFactory template_factory_;
-    mutable Storage storage_;
 
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Object> on_service_load_;
@@ -57,11 +64,16 @@ private:
 
 
     
-    boost::filesystem::path root_;
-    boost::filesystem::path script_root_;
-    boost::filesystem::path static_root_;
-    boost::filesystem::path tempate_root_;
-    boost::filesystem::path document_root_;
+    const std::string id_;
+    const std::string name_;
+    const std::string model_;
+
+    const std::string root_;
+    const std::string script_root_;
+    const std::string static_url_;
+    const std::string static_root_;
+    const std::string template_root_;
+    const std::string document_root_;
 };
 
 #endif  // DEVICE_H_

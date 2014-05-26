@@ -1,7 +1,7 @@
 #include "localbox.h"
 #include "sample.h"
-#include "basebox/device_ref.h"
 #include "basebox/service.h"
+#include "basebox/service_ref.h"
 #include "basebox/service_manager.h"
 #include "base/io_service.h"
 #include "backend/network_manager.h"
@@ -16,8 +16,7 @@ static int http_request_handler(struct mg_connection* conn, enum mg_event ev) {
 
 LocalBox::LocalBox(const char* rootpath) 
     : isolate_(v8::Isolate::GetCurrent())
-    , handle_scope_(isolate_)
-    , storage_(rootpath) {
+    , handle_scope_(isolate_) {
 
     //isolate_->SetData(0, &io_service_);
 
@@ -55,55 +54,40 @@ LocalBox::LocalBox(const char* rootpath)
 
 
 
-
     
-    
+    boost::filesystem::path device_root(rootpath);
+    device_root /= "devices";
+    if (!boost::filesystem::exists(device_root)) {
+        // TODO(ghilbut): error handling
+    }
+
+    boost::filesystem::path service_root(rootpath);
+    service_root /= "services";
+    if (!boost::filesystem::exists(service_root)) {
+        // TODO(ghilbut): error handling
+    }
 
 
 
-
-    DeviceRef device(io_service_, rootpath);
-
-    service0_ = ServiceRef(device);
-    service1_ = ServiceRef(device);
-    service2_ = ServiceRef(device);
-
-    servers_.Create(81, boost::bind(&Service::HttpRequest, service0_.Get(), _1, _2));
-    servers_.Create(82, boost::bind(&Service::HttpRequest, service1_.Get(), _1, _2));
-    servers_.Create(83, boost::bind(&Service::HttpRequest, service2_.Get(), _1, _2));
-
-
-
-
-
-    
-
-
-
-
-    service_manager_ = new ServiceManager(io_service_, storage_);
 
     net_manager_ = new NetworkManager(io_service_->IO());
-
     NetworkAdapter::Ptr eth_adapter(new TcpAdapter(io_service_->IO(), this, 8070));
     net_manager_->Register("ethernet", eth_adapter);
     net_manager_->Start();
 
-    net_manager_->RegisterSsdpTarget("ethernet", "a");
-    net_manager_->RegisterSsdpTarget("ethernet", "b");
-    net_manager_->RegisterSsdpTarget("ethernet", "c");
+    device_manager_ = new DeviceManager(io_service_, device_root.string());
+    service_manager_ = new ServiceManager(*device_manager_, *this, service_root.string());
 }
 
 LocalBox::~LocalBox(void) {
 
     context_->Exit();
 
-    servers_.Destroy(83);
-    servers_.Destroy(82);
-    servers_.Destroy(81);
-
     if (service_manager_) {
         delete service_manager_;
+    }
+    if (device_manager_) {
+        delete device_manager_;
     }
     if (net_manager_) {
         net_manager_->Stop();
@@ -112,15 +96,26 @@ LocalBox::~LocalBox(void) {
 }
 
 void LocalBox::RunShell(void) {
-    //v8::HandleScope handle_scope(isolate_);
-    //::RunShell(context_);
-    service0_->RunShell();
-    //service1_->RunShell();
+
+    ServiceRef s = (*service_manager_)["a"];
+    if (!s.IsNull()) {
+        s->RunShell();
+    }
 }
 
 
 
 
+
+void LocalBox::OnServiceOpen(const ServiceRef& service) {
+    const char* id = service->id();
+    servers_.Create(id, boost::bind(&Service::HttpRequest, service.Get(), _1, _2));
+    net_manager_->RegisterSsdpTarget("ethernet", id);
+}
+
+void LocalBox::OnServiceClosed(const ServiceRef& service) {
+    servers_.Destroy(service->id());
+}
 
 void LocalBox::OnConnected(const std::string& json, Channel* channel) {
 
@@ -137,7 +132,7 @@ void LocalBox::OnConnected(const std::string& json, Channel* channel) {
 
     /*ServiceBroker* s = service_factory_[id];
     // TODO(ghilbut):
-    // I'm worryed about channel's life sycle
+    // I'm worryed about channel's life cycle
     {
         // TODO(ghilbut):
         // if service proxy created here bind handlers
@@ -145,12 +140,12 @@ void LocalBox::OnConnected(const std::string& json, Channel* channel) {
         // s->BindCommonPathHandler(boost::bind(&CtrlPoint::handle_get_common_path, this, _1, _2));
         // s->BindDisconnectedHandler(boost::bind(&CtrlPoint::handle_disconnected, this, _1));
     }
-    s->BindChannel(channel);
+    s->BindChannel(channel);*/
 
-    connecting_list_.insert(id);
-    net_manager_.UnregisterSsdpTarget("ethernet", id);
+    //connecting_list_.insert(id);
+    net_manager_->UnregisterSsdpTarget("ethernet", id);
 
-    {
+    /*{
         Json::Value root(Json::objectValue);
         root["event"] = "ServiceAdded";
         root["id"] = id;

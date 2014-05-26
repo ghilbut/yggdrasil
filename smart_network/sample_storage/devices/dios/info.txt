@@ -1,5 +1,0 @@
-{
-  "id":"dios",
-  "name":"Dios",
-  "model":"V9100"
-}

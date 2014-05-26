@@ -13,7 +13,8 @@ static int http_request_handler(struct mg_connection* conn, enum mg_event ev) {
 ServerManager::ServerManager(void)
     : thread_(boost::bind(&ServerManager::thread_main, this))
     , alive_(false)
-    , stop_(false) {
+    , stop_(false)
+    , next_port_(81) {
 
 }
 
@@ -21,25 +22,19 @@ ServerManager::~ServerManager(void) {
 
 }
 
-void ServerManager::Create(int port, RequestHandle handler) {
-    if (updates_.find(port) != updates_.end()) {
-        // TODO(ghilbut): need a policy
-        return;
-    }
-    if (servers_.find(port) != servers_.end()) {
-        // TODO(ghilbut): need a policy
-        return;
-    }
+void ServerManager::Create(const std::string& service_id, RequestHandle handler) {
+
+    const int port = next_port_++;
     mutex_.lock();
     Http::Server* s = new Http::Server();
     s->Create(this, http_request_handler, port);
-    updates_[port] = s;
+    updates_[service_id] = s;
     request_handles_[port] = handler;
     mutex_.unlock();
 }
 
-void ServerManager::Destroy(int port) {
-    ServerMap::const_iterator itr = servers_.find(port);
+void ServerManager::Destroy(const std::string& service_id) {
+    ServerMap::const_iterator itr = servers_.find(service_id);
     if (itr != servers_.end()) {
         // TODO(ghilbut): reg to updates
         mutex_.lock();

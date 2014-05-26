@@ -1,0 +1,11 @@
+{
+  "id":"dios",
+  "name":"Dios",
+  "model":"V9100",
+
+  "SCRIPT_ROOT": "scripts/",
+  "STATIC_URL": "/static/",
+  "STATIC_ROOT": "static/",
+  "TEMPLATE_ROOT": "templates/",
+  "DOCUMENT_ROOT": "documents/"
+}

@@ -1,0 +1,11 @@
+{
+  "id":"whisen",
+  "name":"Whisen",
+  "model":"FQ23LANW2NW",
+
+  "SCRIPT_ROOT": "scripts/",
+  "STATIC_URL": "/static/",
+  "STATIC_ROOT": "static/",
+  "TEMPLATE_ROOT": "templates/",
+  "DOCUMENT_ROOT": "documents/"
+}

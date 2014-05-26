@@ -3,6 +3,12 @@
   "name":"Tromm",
   "model":"FR4960MT2TZ",
 
+  "SCRIPT_ROOT": "scripts/",
+  "STATIC_URL": "/static/",
+  "STATIC_ROOT": "static/",
+  "TEMPLATE_ROOT": "templates/",
+  "DOCUMENT_ROOT": "documents/",
+  
   "querys": {
   	"get/status": {
   		"isPowerOn": { "type": "boolean", "default": false },

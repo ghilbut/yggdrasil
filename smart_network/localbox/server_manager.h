@@ -15,8 +15,8 @@ public:
     ~ServerManager(void);
 
     typedef boost::function<int (struct mg_connection*, enum mg_event)> RequestHandle;
-    void Create(int port, RequestHandle handler);
-    void Destroy(int port);
+    void Create(const std::string& service_id, RequestHandle handler);
+    void Destroy(const std::string& service_id);
 
     int HandleRequest(mg_connection* conn, mg_event ev);
 
@@ -31,7 +31,9 @@ private:
     boost::atomic_bool alive_;
     boost::atomic_bool stop_;
 
-    typedef std::map<int, Http::Server*> ServerMap;
+    int next_port_;
+
+    typedef std::map<std::string, Http::Server*> ServerMap;
     typedef std::map<int, RequestHandle> RequestHandleMap;
     ServerMap updates_;
     ServerMap servers_;

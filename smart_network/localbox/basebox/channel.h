@@ -13,7 +13,7 @@ public:
     ~Channel(void);
 
     void FireServiceLoaded();
-    void FireChannelOpend();
+    void FireChannelOpened();
 
     v8::Local<v8::Object> self(v8::Isolate* isolate) const;
 

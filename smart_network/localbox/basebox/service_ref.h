@@ -3,13 +3,14 @@
 
 
 class DeviceRef;
+class ServiceDesc;
 class Service;
 
 class ServiceRef {
 public:
     ServiceRef(void);
-    explicit ServiceRef(const DeviceRef& device);
-    explicit ServiceRef(const ServiceRef& other);
+    ServiceRef(const DeviceRef& device, ServiceDesc* desc);
+    ServiceRef(const ServiceRef& other);
     ~ServiceRef(void);
 
     ServiceRef& operator= (const ServiceRef& other);

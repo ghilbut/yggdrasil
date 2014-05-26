@@ -1,6 +1,7 @@
 #include "service.h"
 #include "service_ref.h"
 
+#include "service_desc.h"
 #include "frontend/http_object_template.h"
 #include "frontend/http_request.h"
 #include "sample.h"
@@ -10,9 +11,10 @@
 
 
 
-Service::Service(const DeviceRef& device_ref)
+Service::Service(const DeviceRef& device_ref, ServiceDesc* desc)
     : device_(device_ref)
-    , storage_(device_->storage())
+    , desc_(desc)
+    //, storage_(device_->storage())
     , req_manager_(device_, http_)
     , ws_manager_(device_, self_, http_) {
 
@@ -35,7 +37,7 @@ Service::Service(const DeviceRef& device_ref)
 }
 
 Service::~Service(void) {
-    // nothing
+    ServiceDesc::Delete(desc_);
 }
 
 void Service::RunShell(void) {
@@ -49,6 +51,10 @@ int Service::HttpRequest(struct mg_connection* conn, enum mg_event ev) {
 
     if (ev == MG_REQUEST) {
         if (conn->is_websocket == 0) {
+            if (device_->IsStaticURI(conn->uri)) {
+                return device_->SendStaticFile(conn);
+            }
+
             Http::Response res = req_manager_.HandleRequest(conn);
             res.Send(conn);
         } else {
@@ -66,6 +72,10 @@ int Service::HttpRequest(struct mg_connection* conn, enum mg_event ev) {
 
 void Service::HttpNotify(const Http::Message& msg) {
     ws_manager_.DoNotify(msg);
+}
+
+const char* Service::id(void) const {
+    return desc_->id();
 }
 
 v8::Local<v8::Object> Service::request_trigger(v8::Isolate* isolate) const {
@@ -91,8 +101,8 @@ ServiceRef::ServiceRef(void)
     // nothing
 }
 
-ServiceRef::ServiceRef(const DeviceRef& device)
-    : impl_(new Service(device)) {
+ServiceRef::ServiceRef(const DeviceRef& device, ServiceDesc* desc)
+    : impl_(new Service(device, desc)) {
     impl_->AddRef();
 }
 

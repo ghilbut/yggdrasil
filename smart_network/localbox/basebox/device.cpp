@@ -4,25 +4,30 @@
 #include "sample.h"
 #include "context.h"
 #include "base_object/device_template.h"
+#include <mongoose.h>
 #include <json/json.h>
 #include <fstream>
 
 
 Device::Device(const IOServiceRef& io_service
-        , const boost::filesystem::path root
-        , const boost::filesystem::path script_root
-        , const boost::filesystem::path static_root
-        , const boost::filesystem::path tempate_root
-        , const boost::filesystem::path document_root)
+        , const std::string& id
+        , const std::string& root
+        , const std::string& script_root
+        , const std::string& static_url
+        , const std::string& static_root
+        , const std::string& template_root
+        , const std::string& document_root)
     : RefObject()
-    , context_(io_service, root_.string().c_str())
+    , context_(io_service, root_.c_str())
     , template_factory_(context_.isolate())
-    , storage_(root_.string().c_str())
+    , id_(id)
     , root_(root)
-    , script_root_(script_root) 
+    , script_root_(script_root)
+    , static_url_(static_url)
     , static_root_(static_root)
-    , tempate_root_(tempate_root)
-    , document_root_(document_root) {
+    , template_root_(template_root)
+    , document_root_(document_root)
+{
 
     v8::Isolate* isolate = context_.isolate();
     v8::Local<v8::Context> context = context_.context();
@@ -36,13 +41,16 @@ Device::Device(const IOServiceRef& io_service
 
 
 
-    v8::Handle<v8::String> source = ReadFile(isolate, storage_.settings());
+
+    boost::filesystem::path main(script_root);
+    main /= "main.js";
+    v8::Handle<v8::String> source = ReadFile(isolate, main.string().c_str());
     if (source.IsEmpty()) {
         //return -1;
     }
     if (!ExecuteString(isolate,
         source,
-        v8::String::NewFromUtf8(isolate, storage_.settings()),
+        v8::String::NewFromUtf8(isolate, "main.js"),
         true, //false,
         true)) { //false)) {
             //return -1;
@@ -67,6 +75,38 @@ void Device::FireServiceLoad(v8::Local<v8::Object> service) {
     }
 }
 
+bool Device::IsStaticURI(const std::string& uri) const {
+    return (uri.find(static_url_) == 0);
+}
+
+int Device::SendStaticFile(mg_connection* conn) const {
+
+    boost::filesystem::path filepath(static_root_);
+    filepath /= conn->uri + static_url_.length();
+    if (boost::filesystem::exists(filepath)) {
+        mg_send_status(conn, 200);
+
+        const char* mime_type = mg_get_mime_type(conn->uri, "octat/stream");
+        mg_send_header(conn, "Content-Type", mime_type);
+
+        FILE* fp = fopen(filepath.string().c_str(), "rb");
+        if (fp) {
+            char buffer[4096];
+            size_t bytes_read = 0;
+            const size_t buffer_size = sizeof(buffer);
+            do {
+                bytes_read = fread(buffer, sizeof(char), buffer_size, fp);
+                mg_send_data(conn, buffer, bytes_read);
+            } while (bytes_read == buffer_size);
+            fclose(fp);
+        }
+    } else {
+        mg_send_status(conn, 404);
+        mg_send_data(conn, 0, 0);
+    }
+    return MG_TRUE;
+}
+
 v8::Isolate* Device::isolate(void) const {
     return context_.isolate();
 }
@@ -79,8 +119,16 @@ TemplateFactory& Device::template_factory(void) const {
     return template_factory_;
 }
 
-Storage& Device::storage(void) const {
-    return storage_;
+const char* Device::id(void) const {
+    return id_.c_str();
+}
+
+const char* Device::name(void) const {
+    return name_.c_str();
+}
+
+const char* Device::model(void) const {
+    return model_.c_str();
 }
 
 v8::Local<v8::Object> Device::self(v8::Isolate* isolate) const {
@@ -117,12 +165,14 @@ DeviceRef::DeviceRef(const IOServiceRef& io_service, const char* basepath)
     boost::filesystem::path settings = rootpath / "settings.json";
 
 
-    boost::filesystem::path script_root;
-    boost::filesystem::path static_root;
-    boost::filesystem::path template_root;
-    boost::filesystem::path document_root;
+    std::string id;
+    std::string static_url;
+    boost::filesystem::path script_root(basepath);
+    boost::filesystem::path static_root(basepath);
+    boost::filesystem::path template_root(basepath);
+    boost::filesystem::path document_root(basepath);
 
-    if (!boost::filesystem::exists(settings)) {
+    if (boost::filesystem::exists(settings)) {
         
         std::ifstream fin(settings.string());
         if (!fin.is_open()) {
@@ -138,61 +188,81 @@ DeviceRef::DeviceRef(const IOServiceRef& io_service, const char* basepath)
             return;
         }
 
+        val = root.get("id", Json::Value(Json::nullValue));
+        if (!val.isString()) {
+            // TODO(ghilbut): error handling
+            return;
+        }
+        id = val.asString();
+
         val = root.get("SCRIPT_ROOT", Json::Value(Json::nullValue));
         if (!val.isString()) {
             // TODO(ghilbut): error handling
             return;
         }
-        script_root = rootpath / val.asString();
+        script_root /= val.asString();
         if (!boost::filesystem::exists(script_root)
             || !boost::filesystem::is_directory(script_root)) {
            // TODO(ghilbut): error handling
             return;
         }
+        script_root = boost::filesystem::canonical(script_root);
+
+        val = root.get("STATIC_URL", Json::Value(Json::nullValue));
+        if (!val.isString()) {
+            // TODO(ghilbut): error handling
+            return;
+        }
+        static_url = val.asString();
 
         val = root.get("STATIC_ROOT", Json::Value(Json::nullValue));
         if (!val.isString()) {
             // TODO(ghilbut): error handling
             return;
         }
-        static_root = rootpath / val.asString();
+        static_root /= val.asString();
         if (!boost::filesystem::exists(static_root)
             || !boost::filesystem::is_directory(static_root)) {
            // TODO(ghilbut): error handling
             return;
         }
+        static_root = boost::filesystem::canonical(static_root);
 
         val = root.get("TEMPLATE_ROOT", Json::Value(Json::nullValue));
         if (!val.isString()) {
             // TODO(ghilbut): error handling
             return;
         }
-        template_root = rootpath / val.asString();
+        template_root /= val.asString();
         if (!boost::filesystem::exists(template_root)
             || !boost::filesystem::is_directory(template_root)) {
            // TODO(ghilbut): error handling
             return;
         }
+        template_root = boost::filesystem::canonical(template_root);
 
         val = root.get("DOCUMENT_ROOT", Json::Value(Json::nullValue));
         if (!val.isString()) {
             // TODO(ghilbut): error handling
             return;
         }
-        document_root = rootpath / val.asString();
+        document_root /= val.asString();
         if (!boost::filesystem::exists(document_root)
             || !boost::filesystem::is_directory(document_root)) {
            // TODO(ghilbut): error handling
             return;
         }
+        document_root = boost::filesystem::canonical(document_root);
     }
 
     impl_ = new Device(io_service
-                       , rootpath
-                       , script_root
-                       , static_root
-                       , template_root
-                       , document_root);
+                       , id
+                       , rootpath.string()
+                       , script_root.string()
+                       , static_url
+                       , static_root.string()
+                       , template_root.string()
+                       , document_root.string());
     impl_->AddRef();
 }
 
