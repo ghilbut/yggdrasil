@@ -26,8 +26,7 @@ Device::Device(const IOServiceRef& io_service
     , static_url_(static_url)
     , static_root_(static_root)
     , template_root_(template_root)
-    , document_root_(document_root)
-{
+    , document_root_(document_root) {
 
     v8::Isolate* isolate = context_.isolate();
     v8::Local<v8::Context> context = context_.context();
@@ -164,7 +163,6 @@ DeviceRef::DeviceRef(const IOServiceRef& io_service, const char* basepath)
     boost::filesystem::path rootpath(basepath);
     boost::filesystem::path settings = rootpath / "settings.json";
 
-
     std::string id;
     std::string static_url;
     boost::filesystem::path script_root(basepath);
@@ -173,7 +171,7 @@ DeviceRef::DeviceRef(const IOServiceRef& io_service, const char* basepath)
     boost::filesystem::path document_root(basepath);
 
     if (boost::filesystem::exists(settings)) {
-        
+
         std::ifstream fin(settings.string());
         if (!fin.is_open()) {
             // TODO(ghilbut): error handling

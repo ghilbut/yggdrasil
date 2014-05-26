@@ -63,7 +63,7 @@ private:
 
 
 
-    
+
     const std::string id_;
     const std::string name_;
     const std::string model_;

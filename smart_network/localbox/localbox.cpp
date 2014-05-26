@@ -70,6 +70,7 @@ LocalBox::LocalBox(const char* rootpath)
 
 
 
+
     net_manager_ = new NetworkManager(io_service_->IO());
     NetworkAdapter::Ptr eth_adapter(new TcpAdapter(io_service_, this, 8070));
     net_manager_->Register("ethernet", eth_adapter);
