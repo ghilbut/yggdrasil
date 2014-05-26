@@ -1,25 +1,26 @@
 #ifndef CHANNEL_REF_H_
 #define CHANNEL_REF_H_
 
-
-class Device;
+//class Device;
 class Channel;
 
 class ChannelRef {
 public:
     ChannelRef(void);
-    explicit ChannelRef(Device& device);
-    explicit ChannelRef(const ChannelRef& other);
+    ChannelRef(const ChannelRef& other);
+    //explicit ChannelRef(Device& device);
     ~ChannelRef(void);
-
-    void Reset(Channel* channel);
 
     ChannelRef& operator= (const ChannelRef& other);
     bool operator== (const ChannelRef& other) const;
     bool operator!= (const ChannelRef& other) const;
 
+    Channel& operator* (void) const;
     Channel* operator-> (void) const;
 
+    Channel* Get(void) const;
+    void Reset(Channel* channel);
+    bool IsNull(void) const;
 
 private:
     Channel* impl_;

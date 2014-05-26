@@ -1,12 +1,13 @@
 #include "service.h"
 #include "service_ref.h"
 
-#include "service_desc.h"
-#include "frontend/http_object_template.h"
-#include "frontend/http_request.h"
 #include "sample.h"
 #include "template_factory.h"
+#include "service_desc.h"
 #include "basebox/device.h"
+#include "backend/channel.h"
+#include "frontend/http_object_template.h"
+#include "frontend/http_request.h"
 #include <mongoose.h>
 
 
@@ -14,7 +15,6 @@
 Service::Service(const DeviceRef& device_ref, ServiceDesc* desc)
     : device_(device_ref)
     , desc_(desc)
-    //, storage_(device_->storage())
     , req_manager_(device_, http_)
     , ws_manager_(device_, self_, http_) {
 
@@ -24,6 +24,7 @@ Service::Service(const DeviceRef& device_ref, ServiceDesc* desc)
     const v8::PropertyAttribute kAttribute = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
     TemplateFactory& tf = device_->template_factory();
     v8::Local<v8::Object> self = tf.NewService(isolate, this);
+    // frontend http
     v8::Local<v8::Object> http = tf.NewHttpObject(isolate, this);
     http_.Reset(isolate, http);
     self->Set(
@@ -31,6 +32,13 @@ Service::Service(const DeviceRef& device_ref, ServiceDesc* desc)
         , http
         , kAttribute);
     http->Set(v8::String::NewFromUtf8(isolate, "service"), self, kAttribute);
+    // backend channel
+    v8::Local<v8::Object> channel = tf.NewChannel(isolate, this);
+    self->Set(
+        v8::String::NewFromUtf8(isolate, "channel")
+        , channel
+        , kAttribute);
+    channel->Set(v8::String::NewFromUtf8(isolate, "service"), self, kAttribute);
 
     device_->FireServiceLoad(self);
     self_.Reset(isolate, self);
@@ -45,7 +53,7 @@ void Service::RunShell(void) {
     ::RunShell(device_->context());
 }
 
-
+// frontend http
 
 int Service::HttpRequest(struct mg_connection* conn, enum mg_event ev) {
 
@@ -74,10 +82,6 @@ void Service::HttpNotify(const Http::Message& msg) {
     ws_manager_.DoNotify(msg);
 }
 
-const char* Service::id(void) const {
-    return desc_->id();
-}
-
 v8::Local<v8::Object> Service::request_trigger(v8::Isolate* isolate) const {
     return req_manager_.request_trigger(isolate);
 }
@@ -92,6 +96,57 @@ v8::Local<v8::Object> Service::open_trigger(v8::Isolate* isolate) const {
 
 void Service::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
     ws_manager_.set_open_trigger(isolate, trigger);
+}
+
+// backend channel
+
+void Service::BindChannel(const ChannelRef& channel) {
+    if (!channel_.IsNull()) {
+        // event closed
+    }
+    if (!channel.IsNull()) {
+        // event open
+    }
+    channel_ = channel;
+}
+
+void Service::UnbindChannel(void) {
+    if (!channel_.IsNull()) {
+        // event closed
+    }
+    channel_.Reset(0);
+}
+
+void Service::ChannelSend(const char* json) const {
+    //channel_->Deliver();
+}
+
+v8::Local<v8::Object> Service::channel_open_trigger(v8::Isolate* isolate) const {
+    return v8::Local<v8::Object>::New(isolate, on_channel_open_);
+}
+
+void Service::set_channel_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+    on_channel_open_.Reset(isolate, trigger);
+}
+
+v8::Local<v8::Object> Service::channel_recv_trigger(v8::Isolate* isolate) const {
+    return v8::Local<v8::Object>::New(isolate, on_channel_recv_);
+}
+
+void Service::set_channel_recv_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+    on_channel_recv_.Reset(isolate, trigger);
+}
+
+v8::Local<v8::Object> Service::channel_closed_trigger(v8::Isolate* isolate) const {
+    return v8::Local<v8::Object>::New(isolate, on_channel_closed_);
+}
+
+void Service::set_channel_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+    on_channel_closed_.Reset(isolate, trigger);
+}
+
+const char* Service::id(void) const {
+    return desc_->id();
 }
 
 

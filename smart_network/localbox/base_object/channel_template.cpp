@@ -1,18 +1,15 @@
 #include "channel_template.h"
 
-#include "basebox/channel.h"
-//#include "basebox/service_broker.h"
-//#include "basebox/service_broker_impl.h"
-
+#include "basebox/service.h"
 
 
 template<typename T>
-static Channel* Unwrap(T _t) {
+static Service* Unwrap(T _t) {
     v8::Local<v8::Object> object = _t.Holder();
     //v8::Handle<v8::External> wrap = v8::Handle<v8::External>::Cast(object->GetInternalField(0));
     //void* ptr = wrap->Value();
     //return static_cast<ServiceBroker*>(ptr);
-    return static_cast<Channel*>(object->GetAlignedPointerFromInternalField(0));
+    return static_cast<Service*>(object->GetAlignedPointerFromInternalField(0));
 }
 
 v8::Local<v8::FunctionTemplate> ChannelTemplate::New(v8::Isolate* isolate) {
@@ -38,30 +35,30 @@ v8::Local<v8::FunctionTemplate> ChannelTemplate::New(v8::Isolate* isolate) {
 }
 
 void ChannelTemplate::GetEventOpen(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
-    //ServiceBroker::Impl* s = Unwrap(info);
-    //info.GetReturnValue().Set(s->request_trigger(info.GetIsolate()));
+    v8::Isolate* isolate = info.GetIsolate();
+    info.GetReturnValue().Set(Unwrap(info)->channel_open_trigger(isolate));
 }
 
 void ChannelTemplate::SetEventOpen(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
-    //Unwrap(info)->set_request_trigger(info.GetIsolate(), value->ToObject());
+    Unwrap(info)->set_channel_open_trigger(info.GetIsolate(), value->ToObject());
 }
 
 void ChannelTemplate::GetEventRecv(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
-    //ServiceBroker::Impl* s = Unwrap(info);
-    //info.GetReturnValue().Set(s->request_trigger(info.GetIsolate()));
+    v8::Isolate* isolate = info.GetIsolate();
+    info.GetReturnValue().Set(Unwrap(info)->channel_recv_trigger(isolate));
 }
 
 void ChannelTemplate::SetEventRecv(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
-    //Unwrap(info)->set_request_trigger(info.GetIsolate(), value->ToObject());
+    Unwrap(info)->set_channel_recv_trigger(info.GetIsolate(), value->ToObject());
 }
 
 void ChannelTemplate::GetEventClosed(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
-    //ServiceBroker::Impl* s = Unwrap(info);
-    //info.GetReturnValue().Set(s->request_trigger(info.GetIsolate()));
+    v8::Isolate* isolate = info.GetIsolate();
+    info.GetReturnValue().Set(Unwrap(info)->channel_closed_trigger(isolate));
 }
 
 void ChannelTemplate::SetEventClosed(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
-    //Unwrap(info)->set_request_trigger(info.GetIsolate(), value->ToObject());
+    Unwrap(info)->set_channel_closed_trigger(info.GetIsolate(), value->ToObject());
 }
 
 void ChannelTemplate::Send(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -73,17 +70,17 @@ void ChannelTemplate::Send(const v8::FunctionCallbackInfo<v8::Value>& args) {
         return;
     }
 
-    if (!args[0]->IsString()) {
+    v8::Local<v8::Value> arg0(args[0]);
+    if (!arg0->IsString()) {
         // TODO(ghilbut): throw exception
         return;
     }
 
-    v8::Local<v8::String> str = args[0]->ToString();
-
-    //const int data_len = str->Utf8Length();
-    //char* data = new char[data_len];
-    //str->WriteUtf8(data, data_len);
-
-    //const Message msg(data, data_len);
-    //Unwrap(args)->DeviceNotify(msg);
+    v8::String::Utf8Value utf8(arg0);
+    const char* param = *utf8;
+    if (param) {
+        Unwrap(args)->ChannelSend(param);
+    } else {
+        // TODO(ghilbut): throw exception
+    }
 }

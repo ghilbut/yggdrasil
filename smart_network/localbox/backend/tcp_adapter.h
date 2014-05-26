@@ -4,6 +4,7 @@
 #include "network_adapter.h"
 #include "ssdp_ethernet_sender.h"
 #include "tcp_channel.h"
+#include "base/io_service_ref.h"
 #include <string>
 
 
@@ -11,7 +12,7 @@ class ConnectionDelegate;
 
 class TcpAdapter : public NetworkAdapter {
 public:
-    TcpAdapter(boost::asio::io_service& io_service, ChannelDelegate* delegate, unsigned short port = 8091);
+    TcpAdapter(const IOServiceRef& io_service, ChannelDelegate* delegate, unsigned short port = 8091);
     ~TcpAdapter(void);
 
     // NetworkAdapter
@@ -26,7 +27,7 @@ private:
 
 
 private:
-    boost::asio::io_service& io_service_;
+    IOServiceRef io_service_;
     TCP::acceptor acceptor_;
     ChannelDelegate* delegate_;
 

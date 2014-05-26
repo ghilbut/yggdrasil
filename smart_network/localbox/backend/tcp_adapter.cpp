@@ -1,14 +1,15 @@
 #include "tcp_adapter.h"
+#include "base/io_service.h"
 #include <algorithm>
 
 
-TcpAdapter::TcpAdapter(boost::asio::io_service& io_service, ChannelDelegate* delegate, unsigned short port) 
+TcpAdapter::TcpAdapter(const IOServiceRef& io_service, ChannelDelegate* delegate, unsigned short port) 
         : io_service_(io_service)
-        , acceptor_(io_service, TCP::endpoint(TCP::v4(), port)) 
+        , acceptor_(io_service->IO(), TCP::endpoint(TCP::v4(), port)) 
         , delegate_(delegate)
         //, acceptor_(io_service, TCP::endpoint(boost::asio::ip::address::from_string("192.168.1.2"), port)) {
         //, acceptor_(io_service, TCP::endpoint(boost::asio::ip::address::from_string("192.168.0.4"), port)) {
-        , ssdp_sender_(io_service) {
+        , ssdp_sender_(io_service->IO()) {
     acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
     DoListen();
 }

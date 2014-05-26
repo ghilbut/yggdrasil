@@ -31,50 +31,8 @@ v8::Local<v8::Object> Channel::self(v8::Isolate* isolate) const {
 
 
 
-ChannelRef::ChannelRef(void)
-    : impl_(0) {
-    // nothing
-}
 
 ChannelRef::ChannelRef(Device& device)
     : impl_(new Channel(device)) {
     impl_->AddRef();
-}
-
-ChannelRef::ChannelRef(const ChannelRef& other)
-    : impl_(0) {
-    Reset(other.impl_);
-}
-
-ChannelRef::~ChannelRef(void) {
-    if (impl_) {
-        impl_->Release();
-    }
-}
-
-void ChannelRef::Reset(Channel* channel) {
-    if (channel) {
-        channel->AddRef();
-    }
-    if (impl_) {
-        impl_->Release();
-    }
-    impl_ = channel;
-}
-
-ChannelRef& ChannelRef::operator= (const ChannelRef& other) {
-    Reset(other.impl_);
-    return *this;
-}
-
-bool ChannelRef::operator== (const ChannelRef& other) const {
-    return (impl_ == other.impl_);
-}
-
-bool ChannelRef::operator!= (const ChannelRef& other) const {
-    return (impl_ != other.impl_);
-}
-
-Channel* ChannelRef::operator-> (void) const {
-    return impl_;
 }

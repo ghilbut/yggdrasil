@@ -1,10 +1,12 @@
 #include "tcp_channel.h"
 #include "boost_lib_fwd.h"
+#include "base/io_service.h"
 #include <json/json.h>
 
 
-TcpChannel::TcpChannel(boost::asio::io_service& io_service)
-    : socket_(io_service) {
+TcpChannel::TcpChannel(const IOServiceRef& io_service)
+    : Channel(io_service)
+    , socket_(io_service->IO()) {
 }
 
 void TcpChannel::Start(void) {

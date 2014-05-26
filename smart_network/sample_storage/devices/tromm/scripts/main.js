@@ -12,16 +12,6 @@ urlpatterns = [
   [/^\/static\/[^?#]+($|[?#]{1}.*)/, static_handler]
 ]
 
-
-print('############################################');
-print(device);
-print(device.constructor);
-print(device.constructor.prototpye);
-
-print(File);
-print(File.constructor);
-print(File.constructor.prototpye);
-
 device.onservice = function (service) {
   print('======== device.onload ========');
   
@@ -87,4 +77,12 @@ device.onservice = function (service) {
             sock_ = false;
         }
     };
+
+    service.channel.onopen = function () {
+    };
+    service.channel.onrecv = function (data) {
+    };
+    service.channel.onclosed = function () {
+    };
+
 };

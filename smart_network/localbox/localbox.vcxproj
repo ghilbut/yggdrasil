@@ -82,6 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="backend\channel.cpp" />
     <ClCompile Include="backend\chat_message.cpp" />
     <ClCompile Include="backend\network_manager.cpp" />
     <ClCompile Include="backend\ssdp_ethernet_sender.cpp" />
@@ -89,12 +90,9 @@
     <ClCompile Include="backend\ssdp_scheduler.cpp" />
     <ClCompile Include="backend\tcp_adapter.cpp" />
     <ClCompile Include="backend\tcp_channel.cpp" />
-    <ClCompile Include="basebox\channel.cpp" />
     <ClCompile Include="basebox\context.cpp" />
     <ClCompile Include="basebox\device.cpp" />
-    <ClCompile Include="basebox\device_desc.cpp" />
     <ClCompile Include="basebox\device_manager.cpp" />
-    <ClCompile Include="basebox\root_storage.cpp" />
     <ClCompile Include="basebox\service.cpp" />
     <ClCompile Include="basebox\service_desc.cpp" />
     <ClCompile Include="basebox\service_manager.cpp" />
@@ -122,12 +120,12 @@
     <ClCompile Include="main_ui_channel.cpp" />
     <ClCompile Include="sample.cpp" />
     <ClCompile Include="server_manager.cpp" />
-    <ClCompile Include="storage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="backend\boost_lib_fwd.h" />
     <ClInclude Include="backend\channel.h" />
     <ClInclude Include="backend\channel_delegate.h" />
+    <ClInclude Include="backend\channel_ref.h" />
     <ClInclude Include="backend\chat_message.h" />
     <ClInclude Include="backend\network_adapter.h" />
     <ClInclude Include="backend\network_manager.h" />
@@ -136,15 +134,10 @@
     <ClInclude Include="backend\ssdp_scheduler.h" />
     <ClInclude Include="backend\tcp_adapter.h" />
     <ClInclude Include="backend\tcp_channel.h" />
-    <ClInclude Include="basebox\channel.h" />
-    <ClInclude Include="basebox\channel_ref.h" />
     <ClInclude Include="basebox\context.h" />
     <ClInclude Include="basebox\device.h" />
-    <ClInclude Include="basebox\device_desc.h" />
     <ClInclude Include="basebox\device_manager.h" />
     <ClInclude Include="basebox\device_ref.h" />
-    <ClInclude Include="basebox\root_storage.h" />
-    <ClInclude Include="basebox\root_storage_ref.h" />
     <ClInclude Include="basebox\service.h" />
     <ClInclude Include="basebox\service_desc.h" />
     <ClInclude Include="basebox\service_manager.h" />
@@ -178,7 +171,6 @@
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="sample.h" />
     <ClInclude Include="server_manager.h" />
-    <ClInclude Include="storage.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">

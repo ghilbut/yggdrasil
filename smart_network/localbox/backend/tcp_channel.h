@@ -16,7 +16,7 @@ class TcpChannel :
 public:
     typedef boost::shared_ptr<TcpChannel> Ptr;
 
-    explicit TcpChannel(boost::asio::io_service& io_service);
+    explicit TcpChannel(const IOServiceRef& io_service);
     
     void Start(void);
     virtual void Deliver(const chat_message& msg);

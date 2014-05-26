@@ -4,7 +4,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_ui_channel.cpp" />
     <ClCompile Include="sample.cpp" />
-    <ClCompile Include="storage.cpp" />
     <ClCompile Include="localbox.cpp" />
     <ClCompile Include="frontend\http_object_template.cpp">
       <Filter>frontend</Filter>
@@ -48,9 +47,6 @@
     <ClCompile Include="base_object\device_template.cpp">
       <Filter>base_object</Filter>
     </ClCompile>
-    <ClCompile Include="basebox\channel.cpp">
-      <Filter>basebox</Filter>
-    </ClCompile>
     <ClCompile Include="base_object\channel_template.cpp">
       <Filter>base_object</Filter>
     </ClCompile>
@@ -73,16 +69,10 @@
     <ClCompile Include="basebox\device_manager.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
-    <ClCompile Include="basebox\root_storage.cpp">
-      <Filter>basebox</Filter>
-    </ClCompile>
     <ClCompile Include="basebox\service_desc.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
     <ClCompile Include="basebox\service_manager.cpp">
-      <Filter>basebox</Filter>
-    </ClCompile>
-    <ClCompile Include="basebox\device_desc.cpp">
       <Filter>basebox</Filter>
     </ClCompile>
     <ClCompile Include="base\utility.cpp">
@@ -112,11 +102,13 @@
     <ClCompile Include="base\ref_object.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="backend\channel.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="sample.h" />
-    <ClInclude Include="storage.h" />
     <ClInclude Include="localbox.h" />
     <ClInclude Include="frontend\http_object_template.h">
       <Filter>frontend</Filter>
@@ -175,12 +167,6 @@
     <ClInclude Include="base_object\device_template.h">
       <Filter>base_object</Filter>
     </ClInclude>
-    <ClInclude Include="basebox\channel.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
-    <ClInclude Include="basebox\channel_ref.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
     <ClInclude Include="base_object\channel_template.h">
       <Filter>base_object</Filter>
     </ClInclude>
@@ -209,16 +195,10 @@
     <ClInclude Include="basebox\device_manager.h">
       <Filter>basebox</Filter>
     </ClInclude>
-    <ClInclude Include="basebox\root_storage.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
     <ClInclude Include="basebox\service_desc.h">
       <Filter>basebox</Filter>
     </ClInclude>
     <ClInclude Include="basebox\service_manager.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
-    <ClInclude Include="basebox\device_desc.h">
       <Filter>basebox</Filter>
     </ClInclude>
     <ClInclude Include="base\utility.h">
@@ -226,9 +206,6 @@
     </ClInclude>
     <ClInclude Include="base\reference.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="basebox\root_storage_ref.h">
-      <Filter>basebox</Filter>
     </ClInclude>
     <ClInclude Include="backend\network_manager.h">
       <Filter>backend</Filter>
@@ -265,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="base\ref_object.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\channel_ref.h">
+      <Filter>backend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

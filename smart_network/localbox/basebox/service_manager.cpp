@@ -1,6 +1,5 @@
 #include "service_manager.h"
 
-#include "root_storage.h"
 #include "service_desc.h"
 #include "service_manager_delegate.h"
 #include <boost/filesystem.hpp>

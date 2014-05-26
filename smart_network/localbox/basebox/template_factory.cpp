@@ -13,7 +13,8 @@
 #include "base_object/file_object.h"
 
 
-static v8::Local<v8::Object> NewObject(v8::Isolate* isolate, void* opaque
+static v8::Local<v8::Object> NewObject(v8::Isolate* isolate
+                                       , void* opaque
                                        , v8::Local<v8::FunctionTemplate>& ft) {
     v8::Local<v8::Function> f = ft->GetFunction();
     v8::Local<v8::Object> obj = f->NewInstance();
