@@ -34,14 +34,17 @@ void TcpAdapter::SendSsdp(void) const {
 
 void TcpAdapter::DoListen(void) {
     TcpChannel* channel = new TcpChannel(io_service_);
-    channel->BindDelegate(delegate_);
+    channel->AddRef();
 
     acceptor_.async_accept(channel->socket()
                            , boost::bind(&TcpAdapter::handle_accept, this, channel, boost::asio::placeholders::error));
 }
 
-void TcpAdapter::handle_accept(TcpChannel* channel, const boost::system::error_code& error) {
-    if (!error) {
+void TcpAdapter::handle_accept(Channel* channel, const boost::system::error_code& error) {
+    if (error) {
+        channel->Release();
+    } else {
+        channel->BindDelegate(delegate_);
         channel->Start();
     }
     DoListen();

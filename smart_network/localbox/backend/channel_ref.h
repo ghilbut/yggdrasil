@@ -8,6 +8,7 @@ class ChannelRef {
 public:
     ChannelRef(void);
     ChannelRef(const ChannelRef& other);
+    explicit ChannelRef(Channel* channel);
     //explicit ChannelRef(Device& device);
     ~ChannelRef(void);
 

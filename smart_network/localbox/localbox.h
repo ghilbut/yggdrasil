@@ -39,10 +39,9 @@ public:
     virtual void OnServiceClosed(const ServiceRef& service);
 
     // ChannelDelegate
-    virtual void OnConnected(const std::string& json, Channel* channel);
-    virtual void OnResponse(const std::string& json);
-    virtual void OnEvent(const std::string& text);
-    virtual void OnDisconnected(void);
+    virtual void OnChannelOpen(const ChannelRef& channel, const std::string& text);
+    virtual void OnChannelRecv(const ChannelRef& channel, const std::string& text);
+    virtual void OnChannelClosed(const ChannelRef& channel);
 
 
 private:

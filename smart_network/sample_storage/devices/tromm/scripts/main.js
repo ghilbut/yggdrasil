@@ -79,10 +79,13 @@ device.onservice = function (service) {
     };
 
     service.channel.onopen = function () {
+      print('channel open');
     };
     service.channel.onrecv = function (data) {
+      print('channel recv : ' + data);
     };
     service.channel.onclosed = function () {
+      print('channel closed');
     };
 
 };

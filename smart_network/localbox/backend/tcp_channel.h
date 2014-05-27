@@ -9,16 +9,12 @@
 
 typedef std::deque<chat_message> chat_message_queue;
 
-class TcpChannel : 
-    public Channel, 
-    public boost::enable_shared_from_this<TcpChannel> {
-
+class TcpChannel : public Channel {
 public:
-    typedef boost::shared_ptr<TcpChannel> Ptr;
-
     explicit TcpChannel(const IOServiceRef& io_service);
-    
-    void Start(void);
+    ~TcpChannel(void);
+
+    virtual void Start(void);
     virtual void Deliver(const chat_message& msg);
 
     TCP::socket& socket();
@@ -36,7 +32,5 @@ private:
     chat_message read_msg_;
     chat_message_queue write_msgs_;
 };
-
-
 
 #endif  // TCP_CHANNEL_H_

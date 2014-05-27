@@ -8,6 +8,7 @@
 #include <string>
 
 
+class Channel;
 class ConnectionDelegate;
 
 class TcpAdapter : public NetworkAdapter {
@@ -23,7 +24,7 @@ public:
 
 private:
     void DoListen(void);
-    void handle_accept(TcpChannel* channel, const boost::system::error_code& error);
+    void handle_accept(Channel* channel, const boost::system::error_code& error);
 
 
 private:

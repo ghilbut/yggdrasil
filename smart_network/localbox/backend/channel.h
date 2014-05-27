@@ -12,7 +12,7 @@ class ChannelDelegate;
 
 class Channel : public RefObject {
 public:
-    //virtual bool Start(void) = 0;
+    virtual void Start(void) = 0;
     //virtual void Stop(void) = 0;
     //virtual void DoCommand() const = 0;
 
@@ -21,10 +21,9 @@ public:
     void BindDelegate(ChannelDelegate* delegate);
     void UnbindDelegate(void);
 
-    void FireOnConnected(const std::string& json);
-    void FireOnResponse(const std::string& json);
-    void FireOnEvent(const std::string& json);
-    void FireOnDisconnected(void);
+    void FireEventOpen(const std::string& text);
+    void FireEventRecv(const std::string& text);
+    void FireEventClosed(void);
 
 
 protected:
@@ -35,6 +34,5 @@ protected:
     IOServiceRef io_service_;
     ChannelDelegate* delegate_;
 };
-
 
 #endif  // CHANNEL_H_

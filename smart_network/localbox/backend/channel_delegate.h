@@ -4,18 +4,16 @@
 #include <string>
 
 
-class Channel;
+class ChannelRef;
 
 class ChannelDelegate {
 public:
-    virtual void OnConnected(const std::string& json, Channel* channel) = 0;
-    virtual void OnResponse(const std::string& json) = 0;
-    virtual void OnEvent(const std::string& text) = 0;
-    virtual void OnDisconnected(void) = 0;
-
+    virtual void OnChannelOpen(const ChannelRef& channel, const std::string& text) = 0;
+    virtual void OnChannelRecv(const ChannelRef& channel, const std::string& text) = 0;
+    virtual void OnChannelClosed(const ChannelRef& channel) = 0;
 
 protected:
-    ~ChannelDelegate(void) {}
+    virtual ~ChannelDelegate(void) {}
 };
 
 #endif  // CHANNEL_DELEGATOR_H_

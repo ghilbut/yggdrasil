@@ -7,6 +7,7 @@
 #include "backend/network_manager.h"
 #include "backend/tcp_adapter.h"
 #include <json/json.h>
+#include <cassert>
 
 
 static int http_request_handler(struct mg_connection* conn, enum mg_event ev) {
@@ -118,11 +119,11 @@ void LocalBox::OnServiceClosed(const ServiceRef& service) {
     servers_.Destroy(service->id());
 }
 
-void LocalBox::OnConnected(const std::string& json, Channel* channel) {
+void LocalBox::OnChannelOpen(const ChannelRef& channel, const std::string& text) {
 
     Json::Value root;
     Json::Reader reader;
-    reader.parse(json.c_str(), root);
+    reader.parse(text.c_str(), root);
 
     const std::string& id = root["id"].asString();
     printf(" id: %s\n device: %s\n nickname: %s\n protocol: %s\n\n"
@@ -130,6 +131,9 @@ void LocalBox::OnConnected(const std::string& json, Channel* channel) {
         , root["device"].asCString()
         , root["nickname"].asCString()
         , root["protocol"].asCString());
+
+    ServiceRef s = (*service_manager_)[id];
+    s->BindChannel(channel);
 
     /*ServiceBroker* s = service_factory_[id];
     // TODO(ghilbut):
@@ -157,14 +161,10 @@ void LocalBox::OnConnected(const std::string& json, Channel* channel) {
     }*/
 }
 
-void LocalBox::OnResponse(const std::string& json) {
-    BOOST_ASSERT(false);
+void LocalBox::OnChannelRecv(const ChannelRef& channel, const std::string& text) {
+    assert(false);
 }
 
-void LocalBox::OnEvent(const std::string& text) {
-    BOOST_ASSERT(false);
-}
-
-void LocalBox::OnDisconnected(void) {
-    BOOST_ASSERT(false);
+void LocalBox::OnChannelClosed(const ChannelRef& channel) {
+    assert(false);
 }

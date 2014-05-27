@@ -3,6 +3,7 @@
 
 #include "basebox/device_ref.h"
 #include "backend/channel_ref.h"
+#include "backend/channel_delegate.h"
 #include "frontend/http_request_manager.h"
 #include "frontend/http_websocket_manager.h"
 #include "base/ref_object.h"
@@ -13,7 +14,8 @@ enum mg_event;
 struct mg_connection;
 class ServiceDesc;
 
-class Service : public RefObject {
+class Service : public RefObject
+                , public ChannelDelegate {
 public:
     Service(const DeviceRef& device_ref, ServiceDesc* desc);
     ~Service(void);
@@ -23,13 +25,18 @@ public:
     int HttpRequest(struct mg_connection* conn, enum mg_event ev);
     void HttpNotify(const Http::Message& msg);
 
-    v8::Local<v8::Object> request_trigger(v8::Isolate* isolate) const;
-    void set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger);
-    v8::Local<v8::Object> open_trigger(v8::Isolate* isolate) const;
-    void set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger);
+    v8::Local<v8::Object> http_request_trigger(v8::Isolate* isolate) const;
+    void set_http_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger);
+    v8::Local<v8::Object> websocket_open_trigger(v8::Isolate* isolate) const;
+    void set_websocket_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger);
 
     void BindChannel(const ChannelRef& channel);
     void UnbindChannel(void);
+
+    // channel delegate
+    virtual void OnChannelOpen(const ChannelRef& channel, const std::string& text);
+    virtual void OnChannelRecv(const ChannelRef& channel, const std::string& text);
+    virtual void OnChannelClosed(const ChannelRef& channel);
 
     void ChannelSend(const char* json) const;
 
@@ -42,18 +49,21 @@ public:
 
     const char* id(void) const;
 
+private:
+    void event_channel_open(void) const;
+    void event_channel_recv(void) const;
+    void event_channel_closed(void) const;
 
 private:
     DeviceRef device_;
     ServiceDesc* desc_;
+    ChannelRef channel_;
 
     Http::RequestManager req_manager_;
     Http::WebSocketManager ws_manager_;
-    ChannelRef channel_;
     
     v8::Persistent<v8::Object> self_;
     v8::Persistent<v8::Object> http_;
-
     v8::Persistent<v8::Object> on_channel_open_;
     v8::Persistent<v8::Object> on_channel_recv_;
     v8::Persistent<v8::Object> on_channel_closed_;

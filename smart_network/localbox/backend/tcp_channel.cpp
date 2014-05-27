@@ -9,6 +9,10 @@ TcpChannel::TcpChannel(const IOServiceRef& io_service)
     , socket_(io_service->IO()) {
 }
 
+TcpChannel::~TcpChannel(void) {
+    // nothing
+}
+
 void TcpChannel::Start(void) {
     boost::asio::async_read(socket_
         , boost::asio::buffer(read_msg_.data(), chat_message::header_length)
@@ -41,7 +45,7 @@ void TcpChannel::handle_read_header(const boost::system::error_code& error) {
     } else {
         // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_header] error: %s\n", error.message().c_str());
-        FireOnDisconnected();
+        FireEventClosed();
     }
 }
 
@@ -54,7 +58,7 @@ void TcpChannel::handle_read_type(const boost::system::error_code& error) {
     } else {
         // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_type] error: %s\n", error.message().c_str());
-        FireOnDisconnected();
+        FireEventClosed();
     }
 }
 
@@ -72,13 +76,11 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
         const chat_message::Type type = read_msg_.type();
         if (type == chat_message::kConnect) {
             //FireOnConnected(json, shared_from_this());
-            FireOnConnected(json);
-        } else if (type == chat_message::kResponse) {
-            FireOnResponse(json);
+            FireEventOpen(json);
         } else if (type == chat_message::kEvent) {
-            FireOnEvent(json);
+            FireEventRecv(json);
         } else if (type == chat_message::kDisconnect) {
-            FireOnDisconnected();
+            FireEventClosed();
         } else {
             // TODO(ghilbut): invalid action.
             printf("[Tcp] invalid data\n");
@@ -103,7 +105,7 @@ void TcpChannel::handle_read_body(const boost::system::error_code& error) {
     } else {
         // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_read_body] error\n");
-        FireOnDisconnected();
+        FireEventClosed();
     }
 }
 
@@ -119,6 +121,6 @@ void TcpChannel::handle_write(const boost::system::error_code& error) {
     } else {
         // TODO(ghilbut) : disconnected ?
         printf("[Tcp][handle_write] error\n");
-        FireOnDisconnected();
+        FireEventClosed();
     }
 }

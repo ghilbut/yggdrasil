@@ -40,22 +40,22 @@ v8::Local<v8::FunctionTemplate> ObjectTemplate::New(v8::Isolate* isolate
 
 void ObjectTemplate::GetEventRequest(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
     v8::Isolate* isolate = info.GetIsolate();
-    info.GetReturnValue().Set(Unwrap(info)->request_trigger(isolate));
+    info.GetReturnValue().Set(Unwrap(info)->http_request_trigger(isolate));
 }
 
 void ObjectTemplate::SetEventRequest(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
     v8::Isolate* isolate = info.GetIsolate();
-    Unwrap(info)->set_request_trigger(isolate, value->ToObject());
+    Unwrap(info)->set_http_request_trigger(isolate, value->ToObject());
 }
 
 void ObjectTemplate::GetEventWebSocket(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
     v8::Isolate* isolate = info.GetIsolate();
-    info.GetReturnValue().Set(Unwrap(info)->open_trigger(isolate));
+    info.GetReturnValue().Set(Unwrap(info)->websocket_open_trigger(isolate));
 }
 
 void ObjectTemplate::SetEventWebSocket(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
     v8::Isolate* isolate = info.GetIsolate();
-    Unwrap(info)->set_open_trigger(isolate, value->ToObject());
+    Unwrap(info)->set_websocket_open_trigger(isolate, value->ToObject());
 }
 
 void ObjectTemplate::Notify(const v8::FunctionCallbackInfo<v8::Value>& args) {

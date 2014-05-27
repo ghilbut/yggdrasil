@@ -24,6 +24,7 @@ Service::Service(const DeviceRef& device_ref, ServiceDesc* desc)
     const v8::PropertyAttribute kAttribute = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
     TemplateFactory& tf = device_->template_factory();
     v8::Local<v8::Object> self = tf.NewService(isolate, this);
+
     // frontend http
     v8::Local<v8::Object> http = tf.NewHttpObject(isolate, this);
     http_.Reset(isolate, http);
@@ -32,6 +33,7 @@ Service::Service(const DeviceRef& device_ref, ServiceDesc* desc)
         , http
         , kAttribute);
     http->Set(v8::String::NewFromUtf8(isolate, "service"), self, kAttribute);
+
     // backend channel
     v8::Local<v8::Object> channel = tf.NewChannel(isolate, this);
     self->Set(
@@ -82,19 +84,19 @@ void Service::HttpNotify(const Http::Message& msg) {
     ws_manager_.DoNotify(msg);
 }
 
-v8::Local<v8::Object> Service::request_trigger(v8::Isolate* isolate) const {
+v8::Local<v8::Object> Service::http_request_trigger(v8::Isolate* isolate) const {
     return req_manager_.request_trigger(isolate);
 }
 
-void Service::set_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger) {
+void Service::set_http_request_trigger(v8::Isolate* isolate, v8::Handle<v8::Object> trigger) {
     req_manager_.set_request_trigger(isolate, trigger);
 }
 
-v8::Local<v8::Object> Service::open_trigger(v8::Isolate* isolate) const {
+v8::Local<v8::Object> Service::websocket_open_trigger(v8::Isolate* isolate) const {
     return ws_manager_.open_trigger(isolate);
 }
 
-void Service::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
+void Service::set_websocket_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& trigger) {
     ws_manager_.set_open_trigger(isolate, trigger);
 }
 
@@ -102,19 +104,37 @@ void Service::set_open_trigger(v8::Isolate* isolate, v8::Handle<v8::Object>& tri
 
 void Service::BindChannel(const ChannelRef& channel) {
     if (!channel_.IsNull()) {
-        // event closed
-    }
-    if (!channel.IsNull()) {
-        // event open
+        channel_->UnbindDelegate();
+        device_->Post(boost::bind(&Service::event_channel_closed, this));
     }
     channel_ = channel;
+    if (!channel_.IsNull()) {
+        channel_->BindDelegate(this);
+        device_->Post(boost::bind(&Service::event_channel_open, this));
+    }
 }
 
 void Service::UnbindChannel(void) {
     if (!channel_.IsNull()) {
-        // event closed
+        device_->Post(boost::bind(&Service::event_channel_closed, this));
     }
     channel_.Reset(0);
+}
+
+void Service::OnChannelOpen(const ChannelRef& channel, const std::string& text) {
+    assert(false);
+}
+
+void Service::OnChannelRecv(const ChannelRef& channel, const std::string& text) {
+    if (!on_channel_recv_.IsEmpty()) {
+        device_->Post(boost::bind(&Service::event_channel_recv, this));
+    }
+}
+
+void Service::OnChannelClosed(const ChannelRef& channel) {
+    if (!on_channel_closed_.IsEmpty()) {
+        device_->Post(boost::bind(&Service::event_channel_closed, this));
+    }
 }
 
 void Service::ChannelSend(const char* json) const {
@@ -147,6 +167,54 @@ void Service::set_channel_closed_trigger(v8::Isolate* isolate, v8::Handle<v8::Ob
 
 const char* Service::id(void) const {
     return desc_->id();
+}
+
+void Service::event_channel_open(void) const {
+    v8::Isolate* isolate = device_->isolate();
+    v8::Isolate::Scope isolate_scope(isolate);
+    v8::HandleScope handle_scope(isolate);
+
+    v8::Local<v8::Object> obj(v8::Local<v8::Object>::New(isolate, on_channel_open_));
+    if (!obj->IsFunction() || !obj->IsCallable()) {
+        return;
+    }
+
+    v8::Local<v8::Object> self(v8::Local<v8::Object>::New(isolate, self_));
+    v8::Local<v8::String> key(v8::String::NewFromUtf8(isolate, "channel"));
+    v8::Local<v8::Value> caller(self->Get(key));
+    obj->CallAsFunction(caller, 0, 0);
+}
+
+void Service::event_channel_recv(void) const {
+    v8::Isolate* isolate = device_->isolate();
+    v8::Isolate::Scope isolate_scope(isolate);
+    v8::HandleScope handle_scope(isolate);
+
+    v8::Local<v8::Object> obj(v8::Local<v8::Object>::New(isolate, on_channel_recv_));
+    if (!obj->IsFunction() || !obj->IsCallable()) {
+        return;
+    }
+
+    v8::Local<v8::Object> self(v8::Local<v8::Object>::New(isolate, self_));
+    v8::Local<v8::String> key(v8::String::NewFromUtf8(isolate, "channel"));
+    v8::Local<v8::Value> caller = self->Get(key);
+    obj->CallAsFunction(caller, 0, 0);
+}
+
+void Service::event_channel_closed(void) const {
+    v8::Isolate* isolate = device_->isolate();
+    v8::Isolate::Scope isolate_scope(isolate);
+    v8::HandleScope handle_scope(isolate);
+
+    v8::Local<v8::Object> obj(v8::Local<v8::Object>::New(isolate, on_channel_closed_));
+    if (!obj->IsFunction() || !obj->IsCallable()) {
+        return;
+    }
+
+    v8::Local<v8::Object> self(v8::Local<v8::Object>::New(isolate, self_));
+    v8::Local<v8::String> key(v8::String::NewFromUtf8(isolate, "channel"));
+    v8::Local<v8::Value> caller = self->Get(key);
+    obj->CallAsFunction(caller, 0, 0);
 }
 
 

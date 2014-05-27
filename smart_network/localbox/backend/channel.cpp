@@ -1,7 +1,8 @@
 #include "channel.h"
 #include "channel_ref.h"
 
-#include "backend/channel.h"
+//#include "backend/channel.h"
+#include "backend/channel_ref.h"
 #include <cassert>
 
 
@@ -21,24 +22,25 @@ void Channel::UnbindDelegate(void) {
     delegate_ = 0;
 }
 
-void Channel::FireOnConnected(const std::string& json) {
+void Channel::FireEventOpen(const std::string& text) {
     assert(delegate_ != 0);
-    delegate_->OnConnected(json, this);
+    if (delegate_) {
+        delegate_->OnChannelOpen(ChannelRef(this), text);
+    }
 }
 
-void Channel::FireOnResponse(const std::string& json) {
+void Channel::FireEventRecv(const std::string& text) {
     assert(delegate_ != 0);
-    delegate_->OnResponse(json);
+    if (delegate_) {
+        delegate_->OnChannelRecv(ChannelRef(this), text);
+    }
 }
 
-void Channel::FireOnEvent(const std::string& json) {
+void Channel::FireEventClosed(void) {
     assert(delegate_ != 0);
-    delegate_->OnEvent(json);
-}
-
-void Channel::FireOnDisconnected(void) {
-    assert(delegate_ != 0);
-    delegate_->OnDisconnected();
+    if (delegate_) {
+        delegate_->OnChannelClosed(ChannelRef(this));
+    }
 }
 
 
@@ -50,7 +52,16 @@ ChannelRef::ChannelRef(void)
 
 ChannelRef::ChannelRef(const ChannelRef& other)
     : impl_(other.impl_) {
-    impl_->AddRef();
+    if (impl_) {
+        impl_->AddRef();
+    }
+}
+
+ChannelRef::ChannelRef(Channel* channel)
+    : impl_(channel) {
+    if (impl_) {
+        impl_->AddRef();
+    }
 }
 
 //ChannelRef::ChannelRef(Device& device) {
