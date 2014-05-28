@@ -17,9 +17,7 @@ public:
     ~TcpAdapter(void);
 
     // NetworkAdapter
-    virtual void RegistTarget(const std::string& target);
-    virtual void UnregistTarget(const std::string& target);
-    virtual void SendSsdp(void) const;
+    virtual void SendSsdp(const char* target) const;
 
 
 private:

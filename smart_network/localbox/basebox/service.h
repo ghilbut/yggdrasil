@@ -22,6 +22,9 @@ public:
 
     void RunShell(void);
 
+    typedef boost::function<void (const char*)> SsdpTrigger;
+    void SendSsdp(SsdpTrigger trigger) const;
+
     int HttpRequest(struct mg_connection* conn, enum mg_event ev);
     void HttpNotify(const Http::Message& msg);
 

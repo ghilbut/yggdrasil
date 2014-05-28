@@ -1,6 +1,8 @@
 #ifndef DEVICE_REF_H_
 #define DEVICE_REF_H_
 
+#include <string>
+
 
 class Device;
 class IOServiceRef;
@@ -8,7 +10,7 @@ class IOServiceRef;
 class DeviceRef {
 public:
     DeviceRef(void);
-    DeviceRef(const IOServiceRef& io_service, const char* basepath);
+    DeviceRef(const IOServiceRef& io_service, const std::string& basepath);
     DeviceRef(const DeviceRef& other);
     ~DeviceRef(void);
 

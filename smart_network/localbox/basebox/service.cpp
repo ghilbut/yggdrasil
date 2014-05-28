@@ -2,11 +2,11 @@
 #include "service_ref.h"
 
 #include "sample.h"
-#include "template_factory.h"
 #include "service_desc.h"
 #include "basebox/device.h"
+#include "js/template_factory.h"
+#include "js/frontend/http_object_template.h"
 #include "backend/channel.h"
-#include "frontend/http_object_template.h"
 #include "frontend/http_request.h"
 #include <mongoose.h>
 
@@ -53,6 +53,12 @@ Service::~Service(void) {
 void Service::RunShell(void) {
     v8::HandleScope handle_scope(device_->isolate());
     ::RunShell(device_->context());
+}
+
+void Service::SendSsdp(SsdpTrigger trigger) const {
+    if (channel_.IsNull()) {
+        trigger(desc_->id());
+    }
 }
 
 // frontend http
@@ -133,6 +139,7 @@ void Service::OnChannelRecv(const ChannelRef& channel, const std::string& text) 
 
 void Service::OnChannelClosed(const ChannelRef& channel) {
     if (!on_channel_closed_.IsEmpty()) {
+        channel_.Reset(0);
         device_->Post(boost::bind(&Service::event_channel_closed, this));
     }
 }

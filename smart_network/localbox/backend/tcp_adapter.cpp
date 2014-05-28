@@ -18,16 +18,8 @@ TcpAdapter::~TcpAdapter(void) {
     // nothing
 }
 
-void TcpAdapter::RegistTarget(const std::string& target) {
-    ssdp_sender_.RegistTarget(target);
-}
-
-void TcpAdapter::UnregistTarget(const std::string& target) {
-    ssdp_sender_.UnregistTarget(target);
-}
-
-void TcpAdapter::SendSsdp(void) const {
-    ssdp_sender_.Send();
+void TcpAdapter::SendSsdp(const char* target) const {
+    ssdp_sender_.Send(target);
 }
 
 

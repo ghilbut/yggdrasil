@@ -1,11 +1,11 @@
 #include "http_request_manager.h"
 
 #include "http_request.h"
-#include "http_request_template.h"
-#include "http_response_template.h"
 #include "http_response_impl.h"
 #include "basebox/device.h"
-#include "basebox/template_factory.h"
+#include "js/template_factory.h"
+#include "js/frontend/http_request_template.h"
+#include "js/frontend/http_response_template.h"
 #include <mongoose.h>
 
 

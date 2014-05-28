@@ -1,6 +1,7 @@
 #include "http_request.h"
-#include "http_request_template.h"
+
 #include "http_server.h"
+#include "js/frontend/http_request_template.h"
 #include <mongoose.h>
 #include <cassert>
 

@@ -1,10 +1,9 @@
 #include "http_websocket_manager.h"
-#include "http_websocket.h"
-#include "http_websocket_template.h"
-#include "http_message.h"
 
-#include "basebox/device.h"
 #include "http_message.h"
+#include "http_websocket.h"
+#include "basebox/device.h"
+#include "js/frontend/http_websocket_template.h"
 #include <mongoose.h>
 #include <boost/bind.hpp>
 

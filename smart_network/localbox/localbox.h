@@ -2,12 +2,13 @@
 #define LOCALBOX_H_
 
 #include "server_manager.h"
-#include "base/io_service_ref.h"
-//#include "basebox/root_storage.h"
+#include "basebox/device_ref.h"
 #include "basebox/service_manager_delegate.h"
 #include "basebox/service_ref.h"
 #include "frontend/http_server.h"
 #include "backend/channel_delegate.h"
+#include "backend/ssdp_scheduler.h"
+#include "base/io_service_ref.h"
 #include <v8.h>
 #include <boost/asio.hpp>
 #include <boost/atomic.hpp>
@@ -32,6 +33,8 @@ public:
 
     void RunShell(void);
 
+    void SendSsdp(void) const;
+
 
 
     // ServiceManagerDelegate
@@ -52,9 +55,13 @@ private:
     IOServiceRef io_service_;
     ServerManager servers_;
 
+    DeviceRef main_ui_;
+
     DeviceManager* device_manager_;
     ServiceManager* service_manager_;
     NetworkManager* net_manager_;
+
+    Ssdp::Scheduler ssdp_scheduler_;
 };
 
 #endif  // LOCALBOX_H_

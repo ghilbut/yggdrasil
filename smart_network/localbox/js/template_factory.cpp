@@ -1,16 +1,14 @@
 #include "template_factory.h"
+
+#include "js/device_template.h"
+#include "js/service_template.h"
+#include "js/file_object.h"
+#include "backend/channel_template.h"
 #include "frontend/http_object_template.h"
 #include "frontend/http_request_template.h"
 #include "frontend/http_response_template.h"
 #include "frontend/http_websocket_template.h"
-//#include "http_server_template.h"
 #include "frontend/http_request.h"
-
-#include "base_object/device_template.h"
-#include "base_object/service_template.h"
-#include "base_object/channel_template.h"
-
-#include "base_object/file_object.h"
 
 
 static v8::Local<v8::Object> NewObject(v8::Isolate* isolate

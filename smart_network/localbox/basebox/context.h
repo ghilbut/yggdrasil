@@ -1,7 +1,7 @@
 #ifndef CONTEXT_H_
 #define CONTEXT_H_
 
-#include "template_factory.h"
+#include "js/template_factory.h"
 #include "base/io_service.h"
 #include "base/io_service_ref.h"
 #include <v8.h>

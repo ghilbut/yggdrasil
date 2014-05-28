@@ -17,6 +17,9 @@ public:
 
     ServiceRef& operator[] (const std::string& id);
 
+    typedef boost::function<void (const char*)> SsdpTrigger;
+    void SendSsdp(SsdpTrigger trigger) const;
+
 
 private:
     typedef std::map<std::string, ServiceRef> ServiceMap;

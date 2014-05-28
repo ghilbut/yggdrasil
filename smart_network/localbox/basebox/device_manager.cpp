@@ -11,7 +11,7 @@ DeviceManager::DeviceManager(const IOServiceRef& io_service, const std::string& 
     boost::filesystem::directory_iterator end;
     for (; itr != end; ++itr) {
         const boost::filesystem::path& path = itr->path();
-        DeviceRef device(io_service, path.string().c_str());
+        DeviceRef device(io_service, path.string());
         if (device.IsNull()) {
             // TODO(ghilbut): error handling.
             continue;

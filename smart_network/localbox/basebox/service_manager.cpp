@@ -1,5 +1,6 @@
 #include "service_manager.h"
 
+#include "service.h"
 #include "service_desc.h"
 #include "service_manager_delegate.h"
 #include <boost/filesystem.hpp>
@@ -47,4 +48,14 @@ ServiceManager::~ServiceManager(void) {
 ServiceRef& ServiceManager::operator[] (const std::string& id) {
     ServiceMap::iterator itr = services_.find(id);
     return (itr != services_.end() ? itr->second : ServiceRef());
+}
+
+void ServiceManager::SendSsdp(SsdpTrigger trigger) const {
+    if (!services_.empty()) {
+        ServiceMap::const_iterator itr = services_.begin();
+        ServiceMap::const_iterator end = services_.end();
+        for (; itr != end; ++itr) {
+            (itr->second)->SendSsdp(trigger);
+        }
+    }
 }

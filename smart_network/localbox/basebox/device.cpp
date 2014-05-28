@@ -3,7 +3,6 @@
 
 #include "sample.h"
 #include "context.h"
-#include "base_object/device_template.h"
 #include <mongoose.h>
 #include <json/json.h>
 #include <fstream>
@@ -157,7 +156,7 @@ DeviceRef::DeviceRef(void)
     // nothing
 }
 
-DeviceRef::DeviceRef(const IOServiceRef& io_service, const char* basepath) 
+DeviceRef::DeviceRef(const IOServiceRef& io_service, const std::string& basepath) 
     : impl_(0) {
 
     boost::filesystem::path rootpath(basepath);

@@ -1,8 +1,6 @@
 #ifndef HTTP_WEBSOCKET_TEMPLATE_H_
 #define HTTP_WEBSOCKET_TEMPLATE_H_
 
-#include "http_websocket.h"
-#include "http_websocket_impl.h"
 #include <v8.h>
 
 

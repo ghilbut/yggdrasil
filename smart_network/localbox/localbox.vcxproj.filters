@@ -2,31 +2,18 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="main_ui_channel.cpp" />
     <ClCompile Include="sample.cpp" />
     <ClCompile Include="localbox.cpp" />
-    <ClCompile Include="frontend\http_object_template.cpp">
-      <Filter>frontend</Filter>
-    </ClCompile>
     <ClCompile Include="frontend\http_request_manager.cpp">
       <Filter>frontend</Filter>
     </ClCompile>
-    <ClCompile Include="frontend\http_request_template.cpp">
-      <Filter>frontend</Filter>
-    </ClCompile>
     <ClCompile Include="frontend\http_response_impl.cpp">
-      <Filter>frontend</Filter>
-    </ClCompile>
-    <ClCompile Include="frontend\http_response_template.cpp">
       <Filter>frontend</Filter>
     </ClCompile>
     <ClCompile Include="frontend\http_websocket_impl.cpp">
       <Filter>frontend</Filter>
     </ClCompile>
     <ClCompile Include="frontend\http_websocket_manager.cpp">
-      <Filter>frontend</Filter>
-    </ClCompile>
-    <ClCompile Include="frontend\http_websocket_template.cpp">
       <Filter>frontend</Filter>
     </ClCompile>
     <ClCompile Include="frontend\http_message_impl.cpp">
@@ -37,21 +24,6 @@
     </ClCompile>
     <ClCompile Include="frontend\http_server.cpp">
       <Filter>frontend</Filter>
-    </ClCompile>
-    <ClCompile Include="base_object\service_template.cpp">
-      <Filter>base_object</Filter>
-    </ClCompile>
-    <ClCompile Include="basebox\template_factory.cpp">
-      <Filter>basebox</Filter>
-    </ClCompile>
-    <ClCompile Include="base_object\device_template.cpp">
-      <Filter>base_object</Filter>
-    </ClCompile>
-    <ClCompile Include="base_object\channel_template.cpp">
-      <Filter>base_object</Filter>
-    </ClCompile>
-    <ClCompile Include="base_object\file_object.cpp">
-      <Filter>base_object</Filter>
     </ClCompile>
     <ClCompile Include="server_manager.cpp" />
     <ClCompile Include="base\io_service.cpp">
@@ -105,30 +77,47 @@
     <ClCompile Include="backend\channel.cpp">
       <Filter>backend</Filter>
     </ClCompile>
+    <ClCompile Include="js\frontend\http_websocket_template.cpp">
+      <Filter>js\frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="js\template_factory.cpp">
+      <Filter>js</Filter>
+    </ClCompile>
+    <ClCompile Include="js\frontend\http_request_template.cpp">
+      <Filter>js\frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="js\frontend\http_response_template.cpp">
+      <Filter>js\frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="js\frontend\http_object_template.cpp">
+      <Filter>js\frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="js\backend\channel_template.cpp">
+      <Filter>js\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="js\device_template.cpp">
+      <Filter>js</Filter>
+    </ClCompile>
+    <ClCompile Include="js\file_object.cpp">
+      <Filter>js</Filter>
+    </ClCompile>
+    <ClCompile Include="js\service_template.cpp">
+      <Filter>js</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main_ui_channel.h" />
     <ClInclude Include="sample.h" />
     <ClInclude Include="localbox.h" />
-    <ClInclude Include="frontend\http_object_template.h">
-      <Filter>frontend</Filter>
-    </ClInclude>
     <ClInclude Include="frontend\http_request_manager.h">
       <Filter>frontend</Filter>
     </ClInclude>
     <ClInclude Include="frontend\http_request.h">
       <Filter>frontend</Filter>
     </ClInclude>
-    <ClInclude Include="frontend\http_request_template.h">
-      <Filter>frontend</Filter>
-    </ClInclude>
     <ClInclude Include="frontend\http_response.h">
       <Filter>frontend</Filter>
     </ClInclude>
     <ClInclude Include="frontend\http_response_impl.h">
-      <Filter>frontend</Filter>
-    </ClInclude>
-    <ClInclude Include="frontend\http_response_template.h">
       <Filter>frontend</Filter>
     </ClInclude>
     <ClInclude Include="frontend\http_websocket.h">
@@ -140,12 +129,6 @@
     <ClInclude Include="frontend\http_websocket_manager.h">
       <Filter>frontend</Filter>
     </ClInclude>
-    <ClInclude Include="frontend\http_websocket_template.h">
-      <Filter>frontend</Filter>
-    </ClInclude>
-    <ClInclude Include="frontend\http_forward.h">
-      <Filter>frontend</Filter>
-    </ClInclude>
     <ClInclude Include="frontend\http_message.h">
       <Filter>frontend</Filter>
     </ClInclude>
@@ -155,23 +138,8 @@
     <ClInclude Include="frontend\http_server.h">
       <Filter>frontend</Filter>
     </ClInclude>
-    <ClInclude Include="base_object\service_template.h">
-      <Filter>base_object</Filter>
-    </ClInclude>
-    <ClInclude Include="basebox\template_factory.h">
-      <Filter>basebox</Filter>
-    </ClInclude>
     <ClInclude Include="basebox\service_ref.h">
       <Filter>basebox</Filter>
-    </ClInclude>
-    <ClInclude Include="base_object\device_template.h">
-      <Filter>base_object</Filter>
-    </ClInclude>
-    <ClInclude Include="base_object\channel_template.h">
-      <Filter>base_object</Filter>
-    </ClInclude>
-    <ClInclude Include="base_object\file_object.h">
-      <Filter>base_object</Filter>
     </ClInclude>
     <ClInclude Include="server_manager.h" />
     <ClInclude Include="base\io_service.h">
@@ -246,6 +214,33 @@
     <ClInclude Include="backend\channel_ref.h">
       <Filter>backend</Filter>
     </ClInclude>
+    <ClInclude Include="js\frontend\http_websocket_template.h">
+      <Filter>js\frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="js\template_factory.h">
+      <Filter>js</Filter>
+    </ClInclude>
+    <ClInclude Include="js\frontend\http_request_template.h">
+      <Filter>js\frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="js\frontend\http_response_template.h">
+      <Filter>js\frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="js\frontend\http_object_template.h">
+      <Filter>js\frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="js\backend\channel_template.h">
+      <Filter>js\backend</Filter>
+    </ClInclude>
+    <ClInclude Include="js\device_template.h">
+      <Filter>js</Filter>
+    </ClInclude>
+    <ClInclude Include="js\file_object.h">
+      <Filter>js</Filter>
+    </ClInclude>
+    <ClInclude Include="js\service_template.h">
+      <Filter>js</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -254,14 +249,20 @@
     <Filter Include="frontend">
       <UniqueIdentifier>{4ef6ddbb-3959-4564-89c0-884cbbd60739}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base_object">
-      <UniqueIdentifier>{7a58b962-1c9f-4e9a-8ce8-8423f6434031}</UniqueIdentifier>
-    </Filter>
     <Filter Include="basebox">
       <UniqueIdentifier>{fb29eb0e-071d-4fe9-8d09-74d1f9ec6991}</UniqueIdentifier>
     </Filter>
     <Filter Include="backend">
       <UniqueIdentifier>{277b012d-ff44-4bb1-a85a-0d5df70c820b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="js">
+      <UniqueIdentifier>{ff75a0a9-9997-4e01-84df-09cff00adeba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="js\frontend">
+      <UniqueIdentifier>{e8673c6b-e4b7-4a84-afce-6f5b3d5956b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="js\backend">
+      <UniqueIdentifier>{b0876d47-1dce-49a4-9ae5-64a8348172a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

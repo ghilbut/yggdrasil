@@ -16,18 +16,12 @@ public:
     void Register(const std::string& protocol, NetworkAdapter::Ptr& adapter);
     void Unregister(const std::string& protocol);
 
-    void RegisterSsdpTarget(const std::string& protocol, const std::string& target);
-    void UnregisterSsdpTarget(const std::string& protocol, const std::string& target);
-    void SendSsdp(void) const;
-
-    void Start(void);
-    void Stop(void);
+    void SendSsdp(const char* target) const;
 
 
 private:
     typedef std::map<std::string, NetworkAdapter::Ptr> NetworkAdapterMap;
     NetworkAdapterMap net_adapters_;
-    Ssdp::Scheduler ssdp_scheduler_;
 };
 
 #endif  // NETWORK_MANAGER_H_

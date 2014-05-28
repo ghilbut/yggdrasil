@@ -1,13 +1,12 @@
 #include "network_manager.h"
 
 
-NetworkManager::NetworkManager(boost::asio::io_service& io_service) 
-    : ssdp_scheduler_(io_service) {
-    ssdp_scheduler_.BindTrigger(boost::bind(&NetworkManager::SendSsdp, this));
+NetworkManager::NetworkManager(boost::asio::io_service& io_service) {
+    // nothing
 }
 
 NetworkManager::~NetworkManager(void) {
-    ssdp_scheduler_.UnbindTrigger();
+    // nothing
 }
 
 bool NetworkManager::IsAlreadyRegistered(const std::string& protocol) {
@@ -22,37 +21,13 @@ void NetworkManager::Unregister(const std::string& protocol) {
     net_adapters_.erase(protocol);
 }
 
-void NetworkManager::RegisterSsdpTarget(const std::string& protocol, const std::string& target) {
-    NetworkAdapterMap::iterator itr = net_adapters_.find(protocol);
-    if (itr != net_adapters_.end()) {
-        NetworkAdapter::Ptr adapter = itr->second;
-        adapter->RegistTarget(target);
-    }
-}
-
-void NetworkManager::UnregisterSsdpTarget(const std::string& protocol, const std::string& target) {
-    NetworkAdapterMap::iterator itr = net_adapters_.find(protocol);
-    if (itr != net_adapters_.end()) {
-        NetworkAdapter::Ptr adapter = itr->second;
-        adapter->UnregistTarget(target);
-    }
-}
-
-void NetworkManager::SendSsdp(void) const {
+void NetworkManager::SendSsdp(const char* target) const {
     if (!net_adapters_.empty()) {
         NetworkAdapterMap::const_iterator itr = net_adapters_.begin();
         NetworkAdapterMap::const_iterator end = net_adapters_.end();
         for (; itr != end; ++itr) {
             NetworkAdapter::Ptr adapter = itr->second;
-            adapter->SendSsdp();
+            adapter->SendSsdp(target);
         }
     }
-}
-
-void NetworkManager::Start(void) {
-    ssdp_scheduler_.Start();
-}
-
-void NetworkManager::Stop(void) {
-    ssdp_scheduler_.Stop();
 }

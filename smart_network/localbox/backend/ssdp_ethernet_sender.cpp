@@ -12,27 +12,9 @@ EthernetSender::~EthernetSender(void) {
     // nothing
 }
 
-void EthernetSender::RegistTarget(const std::string& target) {
-    boost::mutex::scoped_lock lock(mutex_);
-    targets_.insert(target);
-}
-
-void EthernetSender::UnregistTarget(const std::string& target) {
-    boost::mutex::scoped_lock lock(mutex_);
-    targets_.erase(target);
-}
-
-void EthernetSender::Send(void) const {
-    if (!targets_.empty()) {
-        UDP::endpoint endpoint(boost::asio::ip::address_v4::broadcast(), 9432);
-        boost::unique_lock<boost::mutex> lock(mutex_);
-        std::set<std::string>::const_iterator itr = targets_.begin();
-        std::set<std::string>::const_iterator end = targets_.end();
-        for (; itr != end; ++itr) {
-            const std::string& target = *itr;
-            socket_.send_to(boost::asio::buffer(&target[0], target.length()), endpoint);
-        }
-    }
+void EthernetSender::Send(const char* target) const {
+    UDP::endpoint endpoint(boost::asio::ip::address_v4::broadcast(), 9432);
+    socket_.send_to(boost::asio::buffer(target, strlen(target)), endpoint);
 }
 
 }  // namespace Ssdp

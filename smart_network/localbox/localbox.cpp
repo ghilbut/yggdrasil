@@ -10,14 +10,10 @@
 #include <cassert>
 
 
-static int http_request_handler(struct mg_connection* conn, enum mg_event ev) {
-    LocalBox* s = static_cast<LocalBox*>(conn->server_param);
-    return s->HttpRequest(conn, ev);
-};
-
 LocalBox::LocalBox(const char* rootpath) 
     : isolate_(v8::Isolate::GetCurrent())
-    , handle_scope_(isolate_) {
+    , handle_scope_(isolate_)
+    , ssdp_scheduler_(io_service_->IO()) {
 
     //isolate_->SetData(0, &io_service_);
 
@@ -55,6 +51,23 @@ LocalBox::LocalBox(const char* rootpath)
 
 
 
+    boost::filesystem::path main_ui_root(rootpath);
+    main_ui_root /= "main";
+    if (!boost::filesystem::exists(main_ui_root)) {
+        // TODO(ghilbut): error handling
+    }
+
+    main_ui_ = DeviceRef(io_service_, main_ui_root.string());
+    if (main_ui_.IsNull()) {
+        // TODO(ghilbut): error handling
+    }
+
+    //servers_.Create("__main__", boost::bind(&LocalBox::HttpRequest, this, _1, _2));
+
+
+
+
+
     
     boost::filesystem::path device_root(rootpath);
     device_root /= "devices";
@@ -75,13 +88,21 @@ LocalBox::LocalBox(const char* rootpath)
     net_manager_ = new NetworkManager(io_service_->IO());
     NetworkAdapter::Ptr eth_adapter(new TcpAdapter(io_service_, this, 8070));
     net_manager_->Register("ethernet", eth_adapter);
-    net_manager_->Start();
 
     device_manager_ = new DeviceManager(io_service_, device_root.string());
     service_manager_ = new ServiceManager(*device_manager_, *this, service_root.string());
+
+
+
+
+
+    ssdp_scheduler_.BindTrigger(boost::bind(&LocalBox::SendSsdp, this));
+    ssdp_scheduler_.Start();
 }
 
 LocalBox::~LocalBox(void) {
+
+    ssdp_scheduler_.Stop();
 
     context_->Exit();
 
@@ -92,7 +113,6 @@ LocalBox::~LocalBox(void) {
         delete device_manager_;
     }
     if (net_manager_) {
-        net_manager_->Stop();
         delete net_manager_;
     }
 }
@@ -107,12 +127,17 @@ void LocalBox::RunShell(void) {
 
 
 
+void LocalBox::SendSsdp(void) const {
+    service_manager_->SendSsdp(boost::bind(&NetworkManager::SendSsdp, net_manager_, _1));
+}
+
+
+
 
 
 void LocalBox::OnServiceOpen(const ServiceRef& service) {
     const char* id = service->id();
     servers_.Create(id, boost::bind(&Service::HttpRequest, service.Get(), _1, _2));
-    net_manager_->RegisterSsdpTarget("ethernet", id);
 }
 
 void LocalBox::OnServiceClosed(const ServiceRef& service) {
@@ -134,21 +159,6 @@ void LocalBox::OnChannelOpen(const ChannelRef& channel, const std::string& text)
 
     ServiceRef s = (*service_manager_)[id];
     s->BindChannel(channel);
-
-    /*ServiceBroker* s = service_factory_[id];
-    // TODO(ghilbut):
-    // I'm worryed about channel's life cycle
-    {
-        // TODO(ghilbut):
-        // if service proxy created here bind handlers
-        // or, it is not necessary.
-        // s->BindCommonPathHandler(boost::bind(&CtrlPoint::handle_get_common_path, this, _1, _2));
-        // s->BindDisconnectedHandler(boost::bind(&CtrlPoint::handle_disconnected, this, _1));
-    }
-    s->BindChannel(channel);*/
-
-    //connecting_list_.insert(id);
-    net_manager_->UnregisterSsdpTarget("ethernet", id);
 
     /*{
         Json::Value root(Json::objectValue);

@@ -1,5 +1,8 @@
 #include "http_websocket_template.h"
-#include "http_message.h"
+
+#include "frontend/http_message.h"
+#include "frontend/http_websocket.h"
+#include "frontend/http_websocket_impl.h"
 
 
 namespace Http {
