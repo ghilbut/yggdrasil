@@ -65,7 +65,7 @@ t7zip = {
 }
 
 boost = {
-  'url': 'http://jaist.dl.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.%s' % ('7z' if is_win else 'tar.gz'),
+  'url': 'http://jaist.dl.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.%s' % ('7z' if is_win else 'tar.gz'),
   'success': (lambda num, path: None),
   'failed':  (lambda num, path: failed(num, path))
 }
@@ -77,13 +77,13 @@ bzip2 = {
 }
 
 icu4c = {
-  'url': 'http://download.icu-project.org/files/icu4c/51.2/icu4c-51_2-src.tgz',
+  'url': 'http://download.icu-project.org/files/icu4c/53.1/icu4c-53_1-src.tgz',
   'success': (lambda num, path: None),
   'failed':  (lambda num, path: failed(num, path))
 }
 
 python27 = {
-  'url': 'http://python.org/ftp/python/2.7.6/Python-2.7.6.tgz',
+  'url': 'http://python.org/ftp/python/2.7.8/Python-2.7.8.tgz',
   'success': (lambda num, path: None),
   'failed':  (lambda num, path: failed(num, path))
 }
@@ -112,7 +112,7 @@ for thread in threads:
 
 if is_win:
   os.chdir(rootpath)
-  call(os.path.join(rootpath, 'boost_1_55_0.bat'), shell=True)
+  call(os.path.join(rootpath, 'boost_1_56_0.bat'), shell=True)
 
 
 #import shutil
